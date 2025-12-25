@@ -76,6 +76,7 @@ if (instructions.length === 0) {
 
 let knowledgeBase = [];
 let pendingFolderFiles = []; // Files from folder upload waiting to be saved
+let pendingImageBase64 = null; // Store pending image base64 for saving
 
 // Load knowledge base from Firebase immediately
 (async function initKnowledgeBase() {
@@ -281,23 +282,29 @@ if (knowledgeImageInput) {
     const reader = new FileReader();
     reader.onload = async (event) => {
       const base64 = event.target.result;
+      
+      // Store the base64 for saving later
+      pendingImageBase64 = base64;
+      
       knowledgePreviewImg.src = base64;
       knowledgeImagePreview.style.display = 'block';
+      
+      // Auto-fill title with filename if empty
+      if (!knowledgeTitleInput.value) {
+        knowledgeTitleInput.value = "Image: " + file.name;
+      }
+      
+      // Try to analyze the image (optional - won't block saving)
       imageAnalyzing.style.display = 'flex';
-      saveKnowledgeBtn.disabled = true;
-
       try {
         const description = await analyzeKnowledgeImage(base64);
         knowledgeTextInput.value = description;
-        if (!knowledgeTitleInput.value) {
-          knowledgeTitleInput.value = "Image Analysis: " + file.name;
-        }
       } catch (error) {
         console.error('Image analysis error:', error);
-        alert('Failed to analyze image. You can still type the description manually.');
+        // Set default description - analysis is optional
+        knowledgeTextInput.value = '[Image stored as base64]';
       } finally {
         imageAnalyzing.style.display = 'none';
-        saveKnowledgeBtn.disabled = false;
       }
     };
     reader.readAsDataURL(file);
@@ -309,6 +316,7 @@ if (removeKnowledgeImg) {
     knowledgeImagePreview.style.display = 'none';
     knowledgeImageInput.value = '';
     knowledgePreviewImg.src = '';
+    pendingImageBase64 = null; // Clear pending image
   });
 }
 
@@ -353,17 +361,20 @@ if (saveKnowledgeBtn) {
       return;
     }
 
-    if (!title || !content) {
-      alert('Please provide at least a title and some content.');
+    // Allow saving with just an image (no text content required if image exists)
+    if (!title || (!content && !pendingImageBase64)) {
+      alert('Please provide at least a title and some content or an image.');
       return;
     }
 
     const newItem = {
       id: Date.now().toString(),
       title,
-      content,
+      content: content || '[Image stored]',
       link: link || null,
-      timestamp: Date.now()
+      timestamp: Date.now(),
+      type: pendingImageBase64 ? 'image' : 'text',
+      imageBase64: pendingImageBase64 || null
     };
 
     // Add to local array first for immediate UI update
@@ -384,6 +395,7 @@ if (saveKnowledgeBtn) {
     knowledgeTitleInput.value = '';
     knowledgeTextInput.value = '';
     knowledgeLinkInput.value = '';
+    pendingImageBase64 = null;
 
     // Reset Image Preview
     if (knowledgeImagePreview) knowledgeImagePreview.style.display = 'none';
@@ -404,11 +416,22 @@ function renderKnowledgeList() {
 
   knowledgeList.innerHTML = knowledgeBase.map(item => {
     const isFolder = item.type === 'folder';
-    const icon = isFolder 
-      ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" style="margin-right: 6px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`
-      : '';
+    const isImage = item.type === 'image';
+    
+    let icon = '';
+    if (isFolder) {
+      icon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" style="margin-right: 6px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`;
+    } else if (isImage) {
+      icon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" style="margin-right: 6px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>`;
+    }
+    
     const subtitle = isFolder 
       ? `<span style="font-size: 0.75rem; color: var(--accent); margin-left: 8px;">(${item.fileCount} files)</span>`
+      : '';
+    
+    // Show image thumbnail if available
+    const imagePreview = item.imageBase64 
+      ? `<img src="${item.imageBase64}" style="width: 100%; max-height: 150px; object-fit: cover; border-radius: 6px; margin-bottom: 8px;" alt="${item.title}">`
       : '';
     
     return `
@@ -422,8 +445,9 @@ function renderKnowledgeList() {
           </svg>
         </button>
       </div>
+      ${imagePreview}
       <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
-        ${item.content.substring(0, 150)}...
+        ${item.content.substring(0, 150)}${item.content.length > 150 ? '...' : ''}
       </p>
       ${item.link ? `<a href="${item.link}" target="_blank" style="font-size: 0.75rem; color: var(--accent); text-decoration: none; margin-top: 5px; display: inline-block;">View Source</a>` : ''}
     </div>
