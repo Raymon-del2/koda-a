@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Koda</title>
+  <link rel="stylesheet" href="styles.css?v=1.1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <!-- PayPal SDK -->
+  <script
+    src="https://www.paypal.com/sdk/js?client-id=AcSUhzjUKWpMGom3Z2QQl_eVwcsAiULaJOaAoI7g11Nd2OR6mMhrxJ-yksBJUlx_qkmX-OJHVrfMMzjX&currency=USD"></script>
+</head>
+
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-top">
+        <button class="sidebar-btn" id="menuToggle" title="Toggle sidebar">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+          <span class="sidebar-label">Menu</span>
+        </button>
+        <button class="sidebar-btn" id="newChatBtn" title="New chat">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 20h9"></path>
+            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+          </svg>
+          <span class="sidebar-label">New chat</span>
+        </button>
+      </div>
+
+      <div class="chat-history" id="chatHistory">
+        <div class="history-label">Chats</div>
+      </div>
+
+      <div class="sidebar-bottom">
+        <button class="sidebar-btn" id="whatsNewBtn" title="What's new">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+            <path d="M2 17l10 5 10-5"></path>
+            <path d="M2 12l10 5 10-5"></path>
+          </svg>
+          <span class="sidebar-label">What's new</span>
+        </button>
+        <button class="sidebar-btn" id="settingsBtn" title="Settings">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+            </path>
+          </svg>
+          <span class="sidebar-label">Settings</span>
+        </button>
+        <button class="sidebar-btn" id="donateBtn" title="Donate">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+          <span class="sidebar-label">Donate</span>
+        </button>
+        <button class="sidebar-btn" id="knowledgeBtn" title="Increase AI Knowledge">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+            <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+            <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+          </svg>
+          <span class="sidebar-label">Knowledge</span>
+        </button>
+        <button class="sidebar-btn" id="devBtn" title="Developer Portal">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+          </svg>
+          <span class="sidebar-label">Developer</span>
+        </button>
+        <button class="sidebar-btn" id="profileBtn" title="Sign in">
+          <div class="sidebar-avatar-container">
+            <svg id="profileIcon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <path d="M12 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path>
+            </svg>
+            <img id="sidebarAvatar" src="" alt="Profile" class="sidebar-avatar" style="display: none;">
+          </div>
+          <span class="sidebar-label" id="profileLabel">Sign in</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="header">
+        <h1 class="logo">Koda</h1>
+      </header>
+
+      <div class="chat-container" id="chatContainer">
+        <div class="welcome-screen" id="welcomeScreen">
+          <img src="logo.png" alt="KODA Logo" class="welcome-logo">
+          <h2 class="welcome-title">Hello there</h2>
+          <p class="welcome-subtitle">How can I help you today?</p>
+          <div class="suggestions">
+            <button class="suggestion-card" onclick="useSuggestion(this)">
+              <span class="suggestion-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon
+                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                  </polygon>
+                </svg>
+              </span>
+              <span class="suggestion-text">Help me write a creative story</span>
+            </button>
+            <button class="suggestion-card" onclick="useSuggestion(this)">
+              <span class="suggestion-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </span>
+              <span class="suggestion-text">Explain a complex topic simply</span>
+            </button>
+            <button class="suggestion-card" onclick="useSuggestion(this)">
+              <span class="suggestion-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+              </span>
+              <span class="suggestion-text">Help me brainstorm ideas</span>
+            </button>
+            <button class="suggestion-card" onclick="useSuggestion(this)">
+              <span class="suggestion-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                </svg>
+              </span>
+              <span class="suggestion-text">Review and improve my writing</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="messages" id="messages"></div>
+      </div>
+
+      <div class="input-area">
+        <div class="input-container">
+          <textarea id="messageInput" placeholder="Enter a prompt here" rows="1"></textarea>
+          <button class="input-icon-btn" title="Voice input">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+              <line x1="12" y1="19" x2="12" y2="23"></line>
+              <line x1="8" y1="23" x2="16" y2="23"></line>
+            </svg>
+          </button>
+          <button class="send-btn" id="sendBtn" title="Send">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </div>
+        <p class="disclaimer">Koda can make mistakes, so double-check it</p>
+      </div>
+    </main>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="settings-modal" id="settingsModal">
+    <div class="settings-content">
+      <div class="settings-header">
+        <h3>Settings</h3>
+        <button class="close-btn" id="closeSettings">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="settings-list">
+        <button class="settings-item" id="openReportProblem">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+          <span>Report a problem</span>
+        </button>
+        <button class="settings-item" id="openInstructions">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          <span>Instructions to Koda</span>
+        </button>
+        <button class="settings-item has-submenu" id="themeBtn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <span>Theme</span>
+          <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+        <button class="settings-item" id="openDonateFromSettings">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path
+              d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+            </path>
+          </svg>
+          <span>Donate to support Koda</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Report Problem Modal -->
+  <div class="settings-modal" id="reportModal">
+    <div class="settings-content report-content">
+      <div class="settings-header">
+        <button class="back-btn" id="backFromReport">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <h3>Report a problem</h3>
+        <button class="close-btn" id="closeReport">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-description">Describe the issue you're experiencing. We'll review your feedback to improve Koda.
+        </p>
+        <textarea id="problemInput" class="modal-textarea" placeholder="Describe the problem..." rows="5"></textarea>
+        <button class="submit-btn" id="submitProblem">Submit</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Instructions Modal -->
+  <div class="settings-modal" id="instructionsModal">
+    <div class="settings-content instructions-content">
+      <div class="settings-header">
+        <button class="back-btn" id="backFromInstructions">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <h3>Instructions to Koda</h3>
+        <div class="toggle-switch">
+          <input type="checkbox" id="instructionsToggle" checked>
+          <label for="instructionsToggle"></label>
+        </div>
+      </div>
+      <div class="modal-body">
+        <p class="modal-description">Share info about your preferences to get more helpful responses. Add new info here
+          or ask Koda to remember something during a chat.</p>
+        <div class="instructions-list" id="instructionsList"></div>
+        <div class="instructions-actions">
+          <button class="action-btn" id="addInstruction">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Add
+          </button>
+          <button class="action-btn secondary" id="deleteAllInstructions">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+            Delete all
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Instruction Modal -->
+  <div class="settings-modal" id="addInstructionModal">
+    <div class="settings-content">
+      <div class="settings-header">
+        <button class="back-btn" id="backFromAddInstruction">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <h3>Add instruction</h3>
+        <button class="close-btn" id="closeAddInstruction">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <textarea id="newInstructionInput" class="modal-textarea" placeholder="e.g., I love coding."
+          rows="3"></textarea>
+        <button class="submit-btn" id="saveInstruction">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Theme Submenu (separate floating panel) -->
+  <div class="theme-submenu" id="themeSubmenu">
+    <button class="submenu-item active" data-theme="dark">Dark</button>
+  </div>
+
+  <!-- What's New Panel -->
+  <div class="whats-new-panel" id="whatsNewPanel">
+    <div class="whats-new-header">
+      <h3>What's New</h3>
+      <button class="close-btn" id="closeWhatsNew">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <div class="whats-new-content" id="whatsNewList">
+      <!-- Items will be loaded dynamically -->
+    </div>
+
+    <!-- Admin Add Form (Hidden by default) -->
+    <div class="admin-whats-new-form" id="adminWhatsNewForm" style="display: none;">
+      <div class="divider"></div>
+      <h4>Add New Update</h4>
+      <input type="text" id="newUpdateDate" placeholder="Date (e.g. Dec 2024)" class="auth-input">
+      <input type="text" id="newUpdateTitle" placeholder="Update Title" class="auth-input">
+      <textarea id="newUpdateDesc" placeholder="Update Details..." class="auth-input" rows="3"></textarea>
+      <button class="submit-btn" id="saveWhatsNewBtn">Add Update</button>
+    </div>
+  </div>
+
+  <!-- Donate Modal -->
+  <div class="settings-modal" id="donateModal">
+    <div class="settings-content donate-content">
+      <div class="settings-header">
+        <h3>Support Koda</h3>
+        <button class="close-btn" id="closeDonate">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body donate-body">
+        <div class="donate-icon-main">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path
+              d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+            </path>
+          </svg>
+        </div>
+        <p class="donate-text">Koda is built with passion by Codedwaves. Your support helps us cover server costs, API
+          fees, and continuous development of new features.</p>
+        <p class="donate-subtext">If you find Koda helpful, consider buying us a coffee or making a small donation. It
+          truly makes a difference!</p>
+
+        <div class="donation-options">
+          <div id="paypal-button-container"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Thank You Modal -->
+  <div class="settings-modal" id="thankYouModal">
+    <div class="settings-content donate-content">
+      <div class="modal-body donate-body">
+        <div class="donate-icon-main">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#d96570" stroke-width="2">
+            <path
+              d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+            </path>
+          </svg>
+        </div>
+        <h2 id="thankYouUserTitle">Thank You!</h2>
+        <p class="donate-text" id="thankYouMsg">Your support means everything to us. It helps Koda grow and stay free
+          for everyone.</p>
+        <button class="submit-btn" id="closeThankYou">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sign In Modal -->
+  <div class="settings-modal" id="signInModal">
+    <div class="settings-content sign-in-content">
+      <div class="settings-header">
+        <h3 id="signInTitle">Sign in to Koda</h3>
+        <button class="close-btn" id="closeSignIn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body sign-in-body">
+        <!-- Main sign in options -->
+        <div id="signInOptions">
+          <p class="sign-in-description">Sign in to save your chats and preferences across devices.</p>
+
+          <button class="sign-in-btn google-btn" id="googleSignIn">
+            <svg width="20" height="20" viewBox="0 0 24 24">
+              <path fill="#4285F4"
+                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+              <path fill="#34A853"
+                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+              <path fill="#FBBC05"
+                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+              <path fill="#EA4335"
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+            </svg>
+            <span>Continue with Google</span>
+          </button>
+
+          <button class="sign-in-btn email-btn" id="showEmailForm">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+            <span>Continue with Email</span>
+          </button>
+
+          <p class="sign-in-terms">By signing in, you agree to our <a href="terms.html" target="_blank">Terms of
+              Service</a> and <a href="privacy.html" target="_blank">Privacy Policy</a>.</p>
+        </div>
+
+        <!-- Email form (hidden by default) -->
+        <div id="emailForm" style="display: none;">
+          <input type="email" id="emailInput" class="auth-input" placeholder="Email address">
+          <input type="password" id="passwordInput" class="auth-input" placeholder="Password">
+          <p class="auth-error" id="authError"></p>
+          <button class="submit-btn" id="submitEmail">Sign In</button>
+          <p class="auth-toggle">Don't have an account? <a href="#" id="toggleSignUp">Sign up</a></p>
+          <button class="back-link-btn" id="backToOptions">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            Back to options
+          </button>
+        </div>
+
+        <!-- Profile Setup (for new users) -->
+        <div id="profileSetup" style="display: none;">
+          <p class="setup-title">Set up your profile</p>
+          <div class="avatar-picker">
+            <img id="setupAvatar" src="" alt="Avatar" class="profile-avatar-large clickable">
+            <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+            <button class="change-avatar-btn" id="changeAvatarBtn">Change Photo</button>
+          </div>
+          <input type="text" id="usernameInput" class="auth-input" placeholder="Choose a username" maxlength="20">
+          <p class="username-hint">This is how you'll appear in chats</p>
+          <button class="submit-btn" id="saveProfileBtn">Save Profile</button>
+          <button class="skip-btn" id="skipSetupBtn">Skip for now</button>
+        </div>
+
+        <!-- Signed in view -->
+        <div id="signedInView" style="display: none;">
+          <div class="user-profile">
+            <img id="userAvatar" src="" alt="Profile" class="profile-avatar-large clickable"
+              onclick="document.getElementById('editAvatarInput').click()">
+            <input type="file" id="editAvatarInput" accept="image/*" style="display: none;">
+            <p id="userDisplayName" class="user-name"></p>
+            <p id="userEmail" class="user-email"></p>
+            <button class="edit-profile-btn" id="editProfileBtn">Edit Profile</button>
+          </div>
+          <button class="sign-out-btn" id="signOutBtn">Sign Out</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Knowledge Modal -->
+  <div class="settings-modal" id="knowledgeModal">
+    <div class="settings-content knowledge-content">
+      <div class="settings-header">
+        <h3>AI Knowledge Base</h3>
+        <button class="close-btn" id="closeKnowledge">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-description">Add links or documents to expand Koda's intelligence. This knowledge will be shared
+          across all conversations.</p>
+
+        <div class="knowledge-input-group">
+          <h4 style="margin-bottom: 12px; color: var(--accent);">Add New Knowledge</h4>
+          <div class="input-row" style="display: flex; gap: 10px; margin-bottom: 10px;">
+            <input type="text" id="knowledgeLinkInput" class="auth-input" placeholder="Enter URL to read"
+              style="margin-bottom: 0;">
+            <button class="action-btn" id="fetchLinkBtn">Fetch</button>
+          </div>
+          <div class="input-row" style="margin-bottom: 10px; display: flex; gap: 10px;">
+            <input type="text" id="knowledgeTitleInput" class="auth-input" placeholder="Knowledge Title"
+              style="margin-bottom: 0; flex: 1;">
+            <button class="action-btn" id="knowledgeImageBtn" title="Upload Image to Analyze">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+              </svg>
+            </button>
+            <button class="action-btn" id="knowledgeFolderBtn" title="Upload Folder">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+              </svg>
+            </button>
+            <input type="file" id="knowledgeImageInput" accept="image/*" style="display: none;">
+            <input type="file" id="knowledgeFolderInput" webkitdirectory directory multiple style="display: none;">
+          </div>
+          <div id="folderUploadStatus" style="display: none; margin-bottom: 10px; padding: 10px; background: rgba(138, 180, 248, 0.1); border-radius: 8px; border: 1px solid var(--accent);">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 5px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+              </svg>
+              <span id="folderName" style="color: var(--accent); font-weight: 500;">Folder Name</span>
+              <button id="removeFolderUpload" style="margin-left: auto; background: none; border: none; color: #ff6b6b; cursor: pointer; padding: 2px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <p id="folderFilesCount" style="font-size: 0.8rem; color: var(--text-secondary); margin: 0;">0 files selected</p>
+            <div id="folderProcessing" style="display: none; margin-top: 8px;">
+              <div style="height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden;">
+                <div id="folderProgressBar" style="height: 100%; width: 0%; background: var(--accent); transition: width 0.3s;"></div>
+              </div>
+              <p id="folderProcessingText" style="font-size: 0.75rem; color: var(--text-secondary); margin: 5px 0 0 0;">Processing files...</p>
+            </div>
+          </div>
+          <div id="knowledgeImagePreview"
+            style="display: none; margin-bottom: 10px; position: relative; border-radius: 8px; overflow: hidden; border: 1px solid var(--accent);">
+            <img id="knowledgePreviewImg" src="" style="width: 100%; display: block;">
+            <div id="imageAnalyzing"
+              style="position: absolute; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; color: white; font-size: 0.8rem;">
+              Analyzing image...
+            </div>
+            <button id="removeKnowledgeImg"
+              style="position: absolute; top: 5px; right: 5px; background: rgba(255,107,107,0.8); border: none; color: white; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px;">×</button>
+          </div>
+          <textarea id="knowledgeTextInput" class="modal-textarea" placeholder="Or paste text content directly here..."
+            rows="4" style="background: rgba(255,255,255,0.05);"></textarea>
+          <button class="submit-btn" id="saveKnowledgeBtn" style="margin-top: 10px;">Save Knowledge</button>
+        </div>
+
+        <div class="divider" style="margin: 20px 0;"></div>
+
+        <h4 style="margin-bottom: 12px;">Saved Knowledge</h4>
+        <div class="knowledge-list" id="knowledgeList">
+          <p class="empty-msg" style="text-align: center; color: var(--text-secondary); padding: 20px;">No extra
+            knowledge added yet.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </div>
+
+  <!-- Developer Modal -->
+  <div class="settings-modal" id="devModal">
+    <div class="settings-content dev-content">
+      <div class="settings-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <h3 id="devModalTitle">Developer Portal</h3>
+          <div class="dev-tabs">
+            <button class="dev-tab active" data-tab="keys">API Keys</button>
+            <button class="dev-tab" data-tab="docs">DevDocs</button>
+            <button class="dev-tab" data-tab="contribute">Contribute</button>
+          </div>
+        </div>
+        <button class="close-btn" id="closeDev">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body" id="devKeysSection">
+        <p class="modal-description">Create API keys to integrate Koda's intelligence into your own applications. These
+          keys grant access to the global Knowledge Base.</p>
+
+        <div class="knowledge-input-group">
+          <h4>Generate New API Key</h4>
+          <div class="input-row" style="margin-bottom: 10px;">
+            <input type="text" id="apiKeyNameInput" class="auth-input" placeholder="Key Name (e.g. Mobile App)"
+              style="margin-bottom: 0;">
+          </div>
+          <div class="input-row" style="display: flex; gap: 10px;">
+            <input type="text" id="generatedKeyDisplay" class="auth-input" readonly
+              placeholder="Generated Key will appear here"
+              style="margin-bottom: 0; flex: 1; font-family: monospace; font-size: 0.8rem; background: rgba(0,0,0,0.2);">
+            <button class="action-btn" id="generateKeyBtn">Generate</button>
+          </div>
+          <button class="submit-btn" id="saveKeyBtn" style="margin-top: 10px;">Save & Register Key</button>
+        </div>
+
+        <div class="divider" style="margin: 20px 0;"></div>
+
+        <h4>Your API Keys</h4>
+        <div class="api-key-list" id="apiKeyList">
+          <p class="empty-msg" style="text-align: center; color: var(--text-secondary); padding: 20px;">No API keys
+            generated yet.</p>
+        </div>
+      </div>
+
+      <div class="modal-body" id="devDocsSection" style="display: none;">
+        <div class="dev-docs-content">
+          <h4>Koda API Integration</h4>
+          <p>Use your API keys to query Koda programmatically. All queries automatically include the latest Knowledge
+            Base entries added by the administrator.</p>
+
+          <div class="doc-item">
+            <h5>Base URL</h5>
+            <code class="doc-code">https://koda-api.codedwaves.com/v1</code>
+          </div>
+
+          <div class="doc-item">
+            <h5>Headers</h5>
+            <pre class="doc-code">Authorization: Bearer YOUR_API_KEY
+Content-Type: application/json</pre>
+          </div>
+
+          <div class="doc-item">
+            <h5>Chat Completions</h5>
+            <p>Send a POST request to get a response from Koda.</p>
+            <pre class="doc-code-block">{
+  "messages": [
+    {"role": "user", "content": "How does the project work?"}
+  ],
+  "includeKnowledge": true
+}</pre>
+          </div>
+
+          <div class="doc-item">
+            <h5>Knowledge Access</h5>
+            <p>Keys bypass user-specific restrictions to read the global brain, ensuring consistent intelligence across
+              platforms.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-body" id="devContributeSection" style="display: none;">
+        <p class="modal-description">Developers can contribute to the global Knowledge Base. Your submissions help
+          improve Koda for everyone.</p>
+        <div class="knowledge-input-group">
+          <h4>Add Dev Knowledge</h4>
+          <div class="input-row" style="margin-bottom: 10px;">
+            <input type="text" id="devKnowledgeTitle" class="auth-input" placeholder="Title (e.g. API Update)"
+              style="margin-bottom: 0;">
+          </div>
+          <textarea id="devKnowledgeText" class="modal-textarea"
+            placeholder="Paste documentation or code snippets here..." rows="4"
+            style="background: rgba(255,255,255,0.05);"></textarea>
+          <button class="submit-btn" id="saveDevKnowledgeBtn" style="margin-top: 10px;">Submit to Brain</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+  <script src="firebase-config.js?v=3.2"></script>
+  <script src="script.js?v=3.2"></script>
+</body>
+
+</html>
