@@ -59,6 +59,24 @@ const devDocsSection = document.getElementById('devDocsSection');
 const devContributeSection = document.getElementById('devContributeSection');
 const devReportsSection = document.getElementById('devReportsSection');
 const reportsTab = document.getElementById('reportsTab');
+// Reference the DevDocs tab element
+const devDocsTab = document.querySelector('.dev-tab[data-tab="docs"]');
+
+// Enforce privacy of DevDocs for non-admin users
+function enforceDevDocPrivacy() {
+  if (!isAdmin()) {
+    if (devDocsTab) devDocsTab.style.display = 'none';
+    if (devDocsSection) devDocsSection.style.display = 'none';
+  } else {
+    if (devDocsTab) devDocsTab.style.display = '';
+  }
+}
+
+
+// Re-evaluate after any auth state change
+if (typeof auth !== 'undefined' && typeof auth.onAuthStateChanged === 'function') {
+  auth.onAuthStateChanged(() => enforceAdminUI());
+}
 const problemsBtn = document.getElementById('problemsBtn');
 const problemsModal = document.getElementById('problemsModal');
 const problemsList = document.getElementById('problemsList');
@@ -66,10 +84,115 @@ const closeProblems = document.getElementById('closeProblems');
 const devKnowledgeTitle = document.getElementById('devKnowledgeTitle');
 const devKnowledgeText = document.getElementById('devKnowledgeText');
 
+// Run once on script load (after DOM references are initialized)
+enforceAdminUI();
+
+// ---------- Admin Reports / Problems ----------
+function enforceAdminUI() {
+  // Keep Dev Docs privacy rules
+  enforceDevDocPrivacy();
+  if (isAdmin()) {
+    if (problemsBtn) problemsBtn.style.display = '';
+    if (reportsTab) reportsTab.style.display = '';
+  } else {
+    if (problemsBtn) problemsBtn.style.display = 'none';
+    if (reportsTab) reportsTab.style.display = 'none';
+    if (problemsModal) problemsModal.classList.remove('open');
+  }
+}
+
+// Open modal via sidebar button
+if (problemsBtn) {
+  problemsBtn.addEventListener('click', () => {
+    if (!isAdmin()) return;
+    if (problemsModal) problemsModal.classList.add('open');
+    loadReports();
+  });
+}
+
+if (closeProblems) {
+  closeProblems.addEventListener('click', () => problemsModal.classList.remove('open'));
+}
+
+if (problemsModal) {
+  problemsModal.addEventListener('click', (e) => {
+    if (e.target === problemsModal) problemsModal.classList.remove('open');
+  });
+}
+
+// Fetch and render user reports (admin only)
+async function loadReports() {
+  if (!isAdmin()) return;
+  if (problemsList) {
+    problemsList.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:20px;">Loading...</p>';
+  }
+  try {
+    if (typeof db === 'undefined') throw new Error('Firestore not ready');
+    const snapshot = await db.collection('reports').orderBy('timestamp', 'desc').limit(100).get();
+    const items = [];
+    snapshot.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
+    renderReports(items);
+  } catch (err) {
+    console.error('loadReports error:', err);
+  }
+}
+
+function renderReports(reports = []) {
+  if (!problemsList) return;
+  if (reports.length === 0) {
+    problemsList.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:20px;">No reports.</p>';
+    return;
+  }
+  problemsList.innerHTML = reports.map(r => {
+    const email = r.email || 'Anonymous';
+    const ts = r.timestamp && r.timestamp.toDate ? r.timestamp.toDate().toLocaleString() : '';
+    return `
+      <div class="report-item" style="border-bottom:1px solid rgba(255,255,255,0.05);padding:10px;">
+        <div style="display:flex;justify-content:space-between;align-items:start;gap:6px;">
+          <div>
+            <strong style="color:var(--accent);">${email}</strong>
+            <span style="font-size:0.75rem;color:var(--text-secondary);margin-left:6px;">${ts}</span>
+          </div>
+          <button onclick="deleteReport('${r.id}')" title="Delete report" style="background:none;border:none;color:#ff6b6b;cursor:pointer;padding:2px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <p style="margin:5px 0;font-size:0.85rem;white-space:pre-wrap;">${r.description || ''}</p>
+      </div>`;
+  }).join('');
+}
+
+// Global delete function for admin
+window.deleteReport = async function(id) {
+  if (!isAdmin()) return;
+  if (!confirm('Delete this report?')) return;
+  try {
+    await db.collection('reports').doc(id).delete();
+    // Refresh list
+    loadReports();
+  } catch (e) {
+    console.error('deleteReport error', e);
+    alert('Failed to delete.');
+  }
+};
+
+// Backward compatibility
+function loadProblems() { loadReports(); }
+
 // -------- Developer Docs (private markdown) --------
 const DEV_DOC_RAW_URL = 'https://raw.githubusercontent.com/Raymon-del2/koda-a/master/DEV_DOCS_PRIVATE.md';
 let devDocsLoaded = false;
 async function loadDevDocs() {
+  // Only allow admins to view private developer docs
+  if (!isAdmin()) {
+    if (devDocsSection) {
+      devDocsSection.innerHTML = '<p style="color:#ff6b6b">Developer docs are restricted to admins.</p>';
+    }
+    return;
+  }
   if (devDocsLoaded) return;
   try {
     const res = await fetch(DEV_DOC_RAW_URL);
@@ -840,16 +963,18 @@ devTabs.forEach(tab => {
     const target = tab.dataset.tab;
     devKeysSection.style.display = target === 'keys' ? 'block' : 'none';
     devDocsSection.style.display = target === 'docs' ? 'block' : 'none';
-    devContributeSection.style.display = target === 'contribute' ? 'block' : 'none';
-    devReportsSection.style.display = target === 'reports' ? 'block' : 'none';
+    if (devContributeSection) devContributeSection.style.display = target === 'contribute' ? 'block' : 'none';
+    if (devReportsSection) devReportsSection.style.display = target === 'reports' ? 'block' : 'none';
 
     if (target === 'keys') {
       renderApiKeyList();
     } else if (target === 'docs') {
       loadDevDocs();
     } else if (target === 'contribute') {
-      devContributeSection.style.display = 'block';
+      if (devContributeSection) devContributeSection.style.display = 'block';
     } else if (target === 'reports') {
+      if (problemsModal) problemsModal.classList.add('open');
+      loadProblems();
       loadReports();
       devReportsSection.style.display = 'block';
       loadDevDocs();
