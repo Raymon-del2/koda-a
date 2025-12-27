@@ -92,6 +92,30 @@ async function fetchKnowledgeFromHub() {
     return [];
   }
 }
+
+// --- Direct Firestore REST fallback (no SDK needed) ---
+async function loadKodaKnowledgeREST() {
+  const url = "https://firestore.googleapis.com/v1/projects/voices-d80ae/databases/(default)/documents/knowledge?pageSize=1000";
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('REST fetch failed');
+    const json = await res.json();
+    const items = (json.documents || []).map(d => {
+      const f = d.fields;
+      return {
+        title: f.title?.stringValue || '',
+        content: f.content?.stringValue || '',
+        link: f.link?.stringValue || ''
+      };
+    });
+    localStorage.setItem('koda_knowledge', JSON.stringify(items));
+    return items;
+  } catch (e) {
+    console.warn('Could not fetch knowledge via REST:', e);
+    return [];
+  }
+}
+
 let pendingFolderFiles = []; // Files from folder upload waiting to be saved
 let pendingImageBase64 = null; // Store pending image base64 for saving
 
@@ -117,12 +141,20 @@ let pendingImageBase64 = null; // Store pending image base64 for saving
 
   // Final fallback: fetch from external hub if still empty
   if (knowledgeBase.length === 0) {
+    // try external hub first
     const hubItems = await fetchKnowledgeFromHub();
     if (hubItems.length) {
       knowledgeBase = hubItems;
       console.log('Knowledge Base synced from external hub:', knowledgeBase.length);
-      if (typeof renderKnowledgeList === 'function') renderKnowledgeList();
+    } else {
+      // final fallback: public REST endpoint
+      const restItems = await loadKodaKnowledgeREST();
+      if (restItems.length) {
+        knowledgeBase = restItems;
+        console.log('Knowledge Base loaded via REST:', knowledgeBase.length);
+      }
     }
+    if (knowledgeBase.length && typeof renderKnowledgeList === 'function') renderKnowledgeList();
   }
 })();
 
