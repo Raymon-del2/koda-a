@@ -1820,6 +1820,18 @@ ${knowledgeText}
     .then(response => {
       div.remove();
       typeResponse(response);
+
+      // Admin-only: store chat pair globally for future training
+      try {
+        if (typeof db !== 'undefined' && currentUser && typeof isAdmin === 'function' && isAdmin()) {
+          await db.collection('all_chats').add({
+            userText: userInput,
+            aiText: response,
+            uid: currentUser.uid,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+          });
+        }
+      } catch (e) { console.warn('all_chats write failed', e); }
     })
     .catch(error => {
       div.remove();
