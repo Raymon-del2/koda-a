@@ -59,6 +59,27 @@ const devDocsSection = document.getElementById('devDocsSection');
 const devContributeSection = document.getElementById('devContributeSection');
 const devKnowledgeTitle = document.getElementById('devKnowledgeTitle');
 const devKnowledgeText = document.getElementById('devKnowledgeText');
+
+// -------- Developer Docs (private markdown) --------
+const DEV_DOC_RAW_URL = 'https://raw.githubusercontent.com/Raymon-del2/koda-a/master/DEV_DOCS_PRIVATE.md';
+let devDocsLoaded = false;
+async function loadDevDocs() {
+  if (devDocsLoaded) return;
+  try {
+    const res = await fetch(DEV_DOC_RAW_URL);
+    if (!res.ok) throw new Error('fetch fail');
+    const text = await res.text();
+    const pre = document.createElement('pre');
+    pre.className = 'doc-code-block';
+    pre.style.whiteSpace = 'pre-wrap';
+    // escape to avoid HTML injection but keep markdown readable
+    pre.textContent = text;
+    devDocsSection.appendChild(pre);
+    devDocsLoaded = true;
+  } catch (e) {
+    devDocsSection.innerHTML = '<p style="color:red">Failed to load DEV_DOCS_PRIVATE.md</p>';
+  }
+}
 const saveDevKnowledgeBtn = document.getElementById('saveDevKnowledgeBtn');
 
 let isTyping = false;
@@ -815,7 +836,11 @@ devTabs.forEach(tab => {
     devDocsSection.style.display = target === 'docs' ? 'block' : 'none';
     devContributeSection.style.display = target === 'contribute' ? 'block' : 'none';
 
-    if (target === 'keys') renderApiKeyList();
+    if (target === 'keys') {
+      renderApiKeyList();
+    } else if (target === 'docs') {
+      loadDevDocs();
+    }
   });
 });
 
