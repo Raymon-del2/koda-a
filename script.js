@@ -57,6 +57,8 @@ const devTabs = document.querySelectorAll('.dev-tab');
 const devKeysSection = document.getElementById('devKeysSection');
 const devDocsSection = document.getElementById('devDocsSection');
 const devContributeSection = document.getElementById('devContributeSection');
+const devReportsSection = document.getElementById('devReportsSection');
+const reportsTab = document.getElementById('reportsTab');
 const devKnowledgeTitle = document.getElementById('devKnowledgeTitle');
 const devKnowledgeText = document.getElementById('devKnowledgeText');
 
@@ -835,10 +837,15 @@ devTabs.forEach(tab => {
     devKeysSection.style.display = target === 'keys' ? 'block' : 'none';
     devDocsSection.style.display = target === 'docs' ? 'block' : 'none';
     devContributeSection.style.display = target === 'contribute' ? 'block' : 'none';
+    devReportsSection.style.display = target === 'reports' ? 'block' : 'none';
 
     if (target === 'keys') {
       renderApiKeyList();
-    } else if (target === 'docs') {
+    } else if (target === 'contribute') {
+      devContributeSection.style.display = 'block';
+    } else if (target === 'reports') {
+      loadReports();
+      devReportsSection.style.display = 'block';
       loadDevDocs();
     }
   });
@@ -1454,12 +1461,25 @@ document.getElementById('closeReport').addEventListener('click', () => {
   reportModal.classList.remove('open');
 });
 
-document.getElementById('submitProblem').addEventListener('click', () => {
+document.getElementById('submitProblem').addEventListener('click', async () => {
   const problem = document.getElementById('problemInput').value.trim();
   if (problem) {
-    alert('Thank you for your feedback!');
-    document.getElementById('problemInput').value = '';
-    reportModal.classList.remove('open');
+    try {
+      if (typeof db !== 'undefined') {
+        await db.collection('reports').add({
+          uid: currentUser ? currentUser.uid : null,
+          email: currentUser ? currentUser.email : null,
+          description: problem,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        alert('Thank you for your feedback!');
+        document.getElementById('problemInput').value = '';
+        reportModal.classList.remove('open');
+      }
+    } catch (e) {
+      console.error('Report save error', e);
+      alert('Failed to submit. Please try again later.');
+    }
   }
 });
 
@@ -2437,6 +2457,43 @@ function updateSuggestions() {
 
   suggestionIndex = (suggestionIndex + 1) % suggestionSets.length;
 }
+
+// === Reports ===
+async function loadReports() {
+  if (!isAdmin() || typeof db === 'undefined') return;
+  devReportsSection.innerHTML = '<p style="color: var(--text-secondary);">Loading reports...</p>';
+  try {
+    const snap = await db.collection('reports').orderBy('timestamp', 'desc').limit(100).get();
+    if (snap.empty) {
+      devReportsSection.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:20px;">No reports yet.</p>';
+      return;
+    }
+    const list = document.createElement('div');
+    list.className = 'reports-list';
+    snap.forEach(doc => {
+      const d = doc.data();
+      const item = document.createElement('div');
+      item.className = 'report-item';
+      item.style = 'border:1px solid var(--border);border-radius:6px;padding:10px;margin-bottom:10px;font-size:0.85rem;';
+      const ts = d.timestamp?.toDate ? d.timestamp.toDate().toLocaleString() : '';
+      item.innerHTML = `<strong>${d.email || 'Anonymous'}</strong> <span style="color:var(--text-secondary);">${ts}</span><br>${d.description}`;
+      list.appendChild(item);
+    });
+    devReportsSection.innerHTML = '';
+    devReportsSection.appendChild(list);
+  } catch (e) {
+    console.error('Load reports error', e);
+    devReportsSection.innerHTML = '<p style="color:red;">Failed to load reports.</p>';
+  }
+}
+
+// Show reports tab for admin
+function maybeShowReportsTab() {
+  if (isAdmin && isAdmin()) {
+    reportsTab.style.display = 'inline-block';
+  }
+}
+maybeShowReportsTab();
 
 // Start suggestion rotation
 setInterval(updateSuggestions, 10000);
