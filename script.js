@@ -1886,8 +1886,9 @@ ${knowledgeText}
       // Admin-only: store chat pair globally for future training
       try {
         if (typeof db !== 'undefined' && currentUser && typeof isAdmin === 'function' && isAdmin()) {
+          const lastUserMsg = messages.length ? messages[messages.length-1].text : '';
           await db.collection('all_chats').add({
-            userText: userInput,
+            userText: lastUserMsg,
             aiText: response,
             uid: currentUser.uid,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
@@ -2394,9 +2395,10 @@ function formatMessage(text) {
 }
 
 function useSuggestion(btn) {
-  messageInput.value = btn.querySelector('.suggestion-text').textContent;
+  const text = btn.querySelector('.suggestion-text').textContent;
+  messageInput.value = text;
   sendBtn.classList.add('active');
-  messageInput.focus();
+  sendMessage();
 }
 
 function startNewChat() {
