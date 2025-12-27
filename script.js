@@ -75,6 +75,23 @@ if (instructions.length === 0) {
 }
 
 let knowledgeBase = [];
+
+// Optional: external knowledge hub endpoint (Cloud Function)
+const KNOWLEDGE_DUMP_URL = window.KNOWLEDGE_DUMP_URL || '';
+
+async function fetchKnowledgeFromHub() {
+  if (!KNOWLEDGE_DUMP_URL) return [];
+  try {
+    const res = await fetch(KNOWLEDGE_DUMP_URL);
+    if (!res.ok) throw new Error('Hub fetch failed');
+    const data = await res.json();
+    localStorage.setItem('koda_knowledge', JSON.stringify(data));
+    return data;
+  } catch (e) {
+    console.warn('Could not fetch knowledge hub:', e);
+    return [];
+  }
+}
 let pendingFolderFiles = []; // Files from folder upload waiting to be saved
 let pendingImageBase64 = null; // Store pending image base64 for saving
 
@@ -95,6 +112,16 @@ let pendingImageBase64 = null; // Store pending image base64 for saving
         knowledgeBase = JSON.parse(localKB);
         console.log('Knowledge Base loaded from local storage (fallback):', knowledgeBase.length);
       } catch (e) { console.error('Error parsing local knowledge base', e); }
+    }
+  }
+
+  // Final fallback: fetch from external hub if still empty
+  if (knowledgeBase.length === 0) {
+    const hubItems = await fetchKnowledgeFromHub();
+    if (hubItems.length) {
+      knowledgeBase = hubItems;
+      console.log('Knowledge Base synced from external hub:', knowledgeBase.length);
+      if (typeof renderKnowledgeList === 'function') renderKnowledgeList();
     }
   }
 })();
