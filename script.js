@@ -1817,7 +1817,7 @@ ${knowledgeText}
 
   
   clarifaiTextCompletion(systemPrompt, conversationHistory)
-    .then(response => {
+    .then(async (response) => {
       div.remove();
       typeResponse(response);
 
