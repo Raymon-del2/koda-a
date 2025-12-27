@@ -1666,11 +1666,16 @@ async function generateChatTitle(chatId) {
 }
 
 function deleteChat(id, event) {
+  // Soft-delete: mark as deleted but keep for training
   event.stopPropagation();
-  chats = chats.filter(c => c.id !== id);
+  const chatToDel = chats.find(c => c.id === id);
+  if (chatToDel) chatToDel.deleted = true;
+  chats = chats.filter(c => !c.deleted);
 
   // Delete from Firebase if available
-  if (typeof deleteChatFromDB === 'function') {
+  if (typeof db !== 'undefined' && currentUser) {
+    db.collection('users').doc(currentUser.uid).collection('chats').doc(id).set({deleted:true},{merge:true});
+  } else if (typeof deleteChatFromDB === 'function') {
     deleteChatFromDB(id);
   }
 
