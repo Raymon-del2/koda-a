@@ -59,6 +59,7 @@ const devDocsSection = document.getElementById('devDocsSection');
 const devContributeSection = document.getElementById('devContributeSection');
 const devReportsSection = document.getElementById('devReportsSection');
 const reportsTab = document.getElementById('reportsTab');
+const problemsBtn = document.getElementById('problemsBtn');
 const devKnowledgeTitle = document.getElementById('devKnowledgeTitle');
 const devKnowledgeText = document.getElementById('devKnowledgeText');
 
@@ -841,6 +842,8 @@ devTabs.forEach(tab => {
 
     if (target === 'keys') {
       renderApiKeyList();
+    } else if (target === 'docs') {
+      loadDevDocs();
     } else if (target === 'contribute') {
       devContributeSection.style.display = 'block';
     } else if (target === 'reports') {
@@ -2474,9 +2477,21 @@ async function loadReports() {
       const d = doc.data();
       const item = document.createElement('div');
       item.className = 'report-item';
-      item.style = 'border:1px solid var(--border);border-radius:6px;padding:10px;margin-bottom:10px;font-size:0.85rem;';
+      item.style = 'border:1px solid var(--border);border-radius:6px;padding:10px;margin-bottom:10px;font-size:0.85rem;position:relative;';
       const ts = d.timestamp?.toDate ? d.timestamp.toDate().toLocaleString() : '';
       item.innerHTML = `<strong>${d.email || 'Anonymous'}</strong> <span style="color:var(--text-secondary);">${ts}</span><br>${d.description}`;
+      // delete button
+      const del = document.createElement('button');
+      del.textContent = '×';
+      del.title = 'Delete';
+      del.style = 'position:absolute;top:4px;right:4px;background:none;border:none;color:#ff6b6b;font-size:16px;cursor:pointer;';
+      del.onclick = async () => {
+        if (confirm('Delete this report?')) {
+          try { await db.collection('reports').doc(doc.id).delete(); item.remove(); }
+          catch(e){ alert('Delete failed'); }
+        }
+      };
+      item.appendChild(del);
       list.appendChild(item);
     });
     devReportsSection.innerHTML = '';
@@ -2491,9 +2506,19 @@ async function loadReports() {
 function maybeShowReportsTab() {
   if (isAdmin && isAdmin()) {
     reportsTab.style.display = 'inline-block';
+    if (problemsBtn) problemsBtn.style.display = 'flex';
   }
 }
 maybeShowReportsTab();
+
+// Problems sidebar button
+if (problemsBtn) {
+  problemsBtn.addEventListener('click', () => {
+    if (!isAdmin || !isAdmin()) return;
+    devModal.classList.add('open');
+    reportsTab.click();
+  });
+}
 
 // Start suggestion rotation
 setInterval(updateSuggestions, 10000);
