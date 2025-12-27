@@ -112,10 +112,134 @@ if (apiKeys.length === 0) {
 let currentChatId = null;
 let suggestionIndex = 0;
 let username = window.username || 'You';
-// OpenRouter API Configuration
-const OPENROUTER_API_KEY = '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';
-const MODEL = 'kwaipilot/kat-coder-pro:free';
 const YOUTUBE_API_KEY = 'AIzaSyA82ZQFsZYuf_yzCsd4QN0tkpRMvKcs6EA';
+
+// ===================== CLARIFAI CONFIG =====================
+// Insert your Clarifai PAT (Personal Access Token) below. Keep it secret.
+// Clarifai free tier: 5 000 ops / month. We enforce a 4 500 soft-cap per user.
+const CLARIFAI_API_KEY = '06029c783ca84bbd9b9cfe224e469796';
+const CLARIFAI_SOFT_CAP   = 4500; // stop before the 5 000 hard cap
+
+// Optional: if running purely from browser, Clarifai blocks CORS. Prefix requests with proxy.
+const CORS_PROXY = 'https://corsproxy.io/?'; // Change/remove if you deploy server-side
+const CLARIFAI_BASE_URL = 'https://api.clarifai.com/v2';
+function clarifaiFetch(path, options) {
+  return fetch(CORS_PROXY + CLARIFAI_BASE_URL + path, options);
+}
+
+// Clarifai text LLM settings
+const CLARIFAI_USER_ID = 'anthropic';
+const CLARIFAI_APP_ID  = 'completion';
+const CLARIFAI_TEXT_MODEL_ID = 'claude-opus-4_5';
+
+// Simple local cache to avoid duplicate requests (keyed by SHA-256 of input)
+let clarifaiCache = {};
+try { clarifaiCache = JSON.parse(localStorage.getItem('clarifai_cache') || '{}'); } catch { clarifaiCache = {}; }
+
+function saveClarifaiCache() {
+  localStorage.setItem('clarifai_cache', JSON.stringify(clarifaiCache));
+}
+
+// Utility: current month as YYYYMM (e.g. 202512)
+function currentMonthKey() {
+  const now = new Date();
+  return String(now.getFullYear()) + String(now.getMonth() + 1).padStart(2, '0');
+}
+
+// ------- Usage tracking (Firestore fallback to localStorage) -------
+async function getClarifaiUsage(monthKey = currentMonthKey()) {
+  let used = 0;
+  if (typeof db !== 'undefined' && currentUser) {
+    try {
+      const doc = await db.collection('usage').doc(`${currentUser.uid}_${monthKey}`).get();
+      used = doc.exists ? (doc.data().ops || 0) : 0;
+    } catch { used = 0; }
+  } else {
+    used = parseInt(localStorage.getItem('clarifai_usage_' + monthKey) || '0', 10);
+  }
+  return used;
+}
+
+async function incrementClarifaiUsage(monthKey = currentMonthKey(), delta = 1) {
+  const used = await getClarifaiUsage(monthKey);
+  if (used + delta > CLARIFAI_SOFT_CAP) {
+    throw new Error('Clarifai monthly quota near limit');
+  }
+  const newVal = used + delta;
+
+  if (typeof db !== 'undefined' && currentUser) {
+    try {
+      await db.collection('usage').doc(`${currentUser.uid}_${monthKey}`).set({ ops: newVal }, { merge: true });
+    } catch (err) {
+      console.warn('Firestore usage write failed, falling back to localStorage:', err.message || err);
+      localStorage.setItem('clarifai_usage_' + monthKey, String(newVal));
+    }
+  } else {
+    localStorage.setItem('clarifai_usage_' + monthKey, String(newVal));
+  }
+  return newVal;
+}
+
+// ------- SHA-256 helper (returns hex string) -------
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// ------- Clarifai generic call with usage enforcement -------
+async function clarifaiCall(base64Body, modelId = 'aaa03c23b3724a16a56b629203edc62c') {
+  if (!CLARIFAI_API_KEY || CLARIFAI_API_KEY.startsWith('YOUR_')) {
+    throw new Error('Clarifai API key not configured');
+  }
+
+  await incrementClarifaiUsage(); // will throw if cap reached
+
+  const res = await clarifaiFetch(`/models/${modelId}/outputs`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Key ${CLARIFAI_API_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ inputs: [{ data: { image: { base64: base64Body } } }] })
+  });
+
+  if (!res.ok) throw new Error('Clarifai API error');
+  const json = await res.json();
+  const concepts = json?.outputs?.[0]?.data?.concepts || [];
+  return concepts.slice(0, 10).map(c => `${c.name} (${(c.value * 100).toFixed(1)}%)`).join(', ');
+}
+// =============================================================
+
+// ------- Clarifai text completion (Claude) -------
+async function clarifaiTextCompletion(systemPrompt, conversationHistoryArr) {
+  // Build a single prompt string Anthropic-style
+  const historyText = conversationHistoryArr.map(m => `${m.role.toUpperCase()}: ${m.content}`).join('\n\n');
+  const fullPrompt = `${systemPrompt}\n\n${historyText}\n\nASSISTANT:`;
+
+  await incrementClarifaiUsage(); // quota guard
+
+  const res = await clarifaiFetch(`/models/${CLARIFAI_TEXT_MODEL_ID}/outputs`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Key ${CLARIFAI_API_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      user_app_id: { user_id: CLARIFAI_USER_ID, app_id: CLARIFAI_APP_ID },
+      inputs: [{ data: { text: { raw: fullPrompt } } }]
+    })
+  });
+
+  if (!res.ok) {
+    const errData = await res.text();
+    throw new Error('Clarifai text API error: ' + errData);
+  }
+  const json = await res.json();
+  const outputText = json.outputs?.[0]?.data?.text?.raw || '[No response]';
+  return outputText.trim();
+}
+// =============================================================
+
 
 // Suggestion sets - 5 per card, rotating every 10 seconds
 const suggestionSets = [
@@ -322,33 +446,27 @@ if (removeKnowledgeImg) {
 
 async function analyzeKnowledgeImage(base64) {
   const pureBase64 = base64.split(',')[1];
-  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-      'Content-Type': 'application/json',
-      'HTTP-Referer': window.location.href,
-      'X-Title': 'Koda AI Knowledge'
-    },
-    body: JSON.stringify({
-      model: 'google/gemini-2.0-flash-exp:free',
-      messages: [
-        {
-          role: 'user',
-          content: [
-            { type: 'text', text: 'Analyze this image in detail. Extract all text, describe diagrams, charts, code, or visual elements clearly so I can save this as knowledge for an AI assistant. Format it cleanly.' },
-            { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${pureBase64}` } }
-          ]
-        }
-      ]
-    })
-  });
 
-  if (!response.ok) throw new Error('Vision API failed');
-  const data = await response.json();
-  return data.choices[0].message.content;
+  // Caching based on image hash
+  let hash;
+  try { hash = await sha256(pureBase64); } catch { hash = null; }
+  if (hash && clarifaiCache[hash]) {
+    return clarifaiCache[hash];
+  }
+
+  // Attempt Clarifai analysis with quota guard
+  try {
+    const clarifaiDesc = await clarifaiCall(pureBase64);
+    if (hash) { clarifaiCache[hash] = clarifaiDesc; saveClarifaiCache(); }
+    return clarifaiDesc;
+  } catch (err) {
+    console.warn('Clarifai analysis failed or quota exceeded:', err.message);
+    // No fallback
+    return '[Image analysis unavailable]';
+  }
 }
 
+// Save knowledge
 if (saveKnowledgeBtn) {
   saveKnowledgeBtn.addEventListener('click', async () => {
     const title = knowledgeTitleInput.value.trim();
@@ -420,7 +538,7 @@ function renderKnowledgeList() {
     
     let icon = '';
     if (isFolder) {
-      icon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" style="margin-right: 6px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`;
+      icon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" style="margin-right: 6px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2v2"></path></svg>`;
     } else if (isImage) {
       icon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" style="margin-right: 6px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>`;
     }
@@ -591,10 +709,9 @@ async function saveFolderFilesAsKnowledge() {
 
   // Save to Firebase for permanent storage
   if (typeof saveKnowledgeItem === 'function') {
+    console.log('Saving folder knowledge to Firebase...');
     const saved = await saveKnowledgeItem(newItem);
-    if (saved) {
-      console.log('✓ Folder knowledge permanently saved to cloud');
-    }
+    console.log('Save result:', saved);
   }
 
   // Reset UI
@@ -1055,7 +1172,7 @@ document.getElementById('changeAvatarBtn').addEventListener('click', () => {
   document.getElementById('avatarInput').click();
 });
 
-document.getElementById('avatarInput').addEventListener('change', (e) => {
+document.getElementById('avatarInput').addEventListener('change', async (e) => {
   const file = e.target.files[0];
   if (file) {
     if (file.size > 2 * 1024 * 1024) {
@@ -1063,7 +1180,7 @@ document.getElementById('avatarInput').addEventListener('change', (e) => {
       return;
     }
     const reader = new FileReader();
-    reader.onload = (event) => {
+    reader.onload = async (event) => {
       pendingAvatarData = event.target.result;
       document.getElementById('setupAvatar').src = pendingAvatarData;
     };
@@ -1441,51 +1558,24 @@ function createNewChat(firstMessage) {
   return chat;
 }
 
-// Generate a smart title for the chat using AI
+// Generate a smart title for the chat using Clarifai
 async function generateChatTitle(chatId) {
   const chat = chats.find(c => c.id === chatId);
   if (!chat || chat.messages.length < 2) return;
 
   // Get first user message and AI response
-  const context = chat.messages.slice(0, 2).map(m => m.text).join('\n');
+  const context = chat.messages.slice(0, 2).map(msg => msg.text).join('\n');
 
   try {
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': window.location.href,
-        'X-Title': 'Koda AI'
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        messages: [
-          {
-            role: 'system',
-            content: 'Generate a very short title (2-5 words max) for this conversation. Just respond with the title, nothing else. No quotes, no punctuation at the end.'
-          },
-          {
-            role: 'user',
-            content: context
-          }
-        ]
-      })
-    });
+    const titleResp = await clarifaiTextCompletion(
+      'Generate a very short title (2-5 words max) for this conversation. Just respond with the title, nothing else. No quotes, no punctuation at the end.',
+      [{ role: 'user', content: context }]
+    );
 
-    if (response.ok) {
-      const data = await response.json();
-      let title = data.choices[0].message.content.trim();
-      // Clean up the title
-      title = title.replace(/^["']|["']$/g, '').trim();
-      if (title.length > 30) {
-        title = title.substring(0, 30) + '...';
-      }
-
-      // Update chat title
-      chat.title = title;
-      renderChatHistory();
-    }
+    let title = titleResp.trim();
+    if (title.length > 30) title = title.substring(0, 30) + '...';
+    chat.title = title;
+    renderChatHistory();
   } catch (error) {
     console.error('Failed to generate title:', error);
   }
@@ -1698,45 +1788,17 @@ ${knowledgeText}
     console.log(`✓ Prompt injected with ${knowledgeBase.length} knowledge items`);
   }
 
-  const modelToUse = MODEL;
-
-  callOpenRouter(systemPrompt, conversationHistory, modelToUse)
+  
+  clarifaiTextCompletion(systemPrompt, conversationHistory)
     .then(response => {
       div.remove();
       typeResponse(response);
     })
     .catch(error => {
       div.remove();
-      console.error('API Error:', error);
-      typeResponse("Sorry, I encountered an error. This might be due to the daily credit limit or the model being unavailable. Please try again later.");
+      console.error('Clarifai API Error:', error);
+      typeResponse("Sorry, I encountered an error with the AI model. Please try again later.");
     });
-}
-
-async function callOpenRouter(systemPrompt, conversationHistory, modelToUse = MODEL) {
-  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-      'Content-Type': 'application/json',
-      'HTTP-Referer': window.location.href,
-      'X-Title': 'Koda AI'
-    },
-    body: JSON.stringify({
-      model: modelToUse,
-      messages: [
-        { role: 'system', content: systemPrompt },
-        ...conversationHistory
-      ]
-    })
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.error?.message || 'API request failed');
-  }
-
-  const data = await response.json();
-  return data.choices[0].message.content;
 }
 
 function typeResponse(text) {

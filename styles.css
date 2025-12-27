@@ -318,6 +318,22 @@ body {
 }
 
 /* Messages */
+.message.user {
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
+.message.user .message-avatar{
+  display: none;
+}
+.message.user .message-content{
+  text-align: right;
+  background: var(--bg-secondary);
+  padding: 12px 16px;
+  border-radius: 16px;
+  max-width: 70%;
+  margin-right: 0;
+  display: inline-block;
+}
 .messages {
   display: none;
   flex-direction: column;
