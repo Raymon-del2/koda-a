@@ -83,6 +83,27 @@ const problemsList = document.getElementById('problemsList');
 const closeProblems = document.getElementById('closeProblems');
 const devKnowledgeTitle = document.getElementById('devKnowledgeTitle');
 const devKnowledgeText = document.getElementById('devKnowledgeText');
+const apiBtn = document.getElementById('apiBtn');
+const apiModal = document.getElementById('apiModal');
+const closeApi = document.getElementById('closeApi');
+const apiKeyName = document.getElementById('apiKeyName');
+const apiKeyValue = document.getElementById('apiKeyValue');
+const addApiKeyBtn = document.getElementById('addApiKeyBtn');
+const openRouterApiKeyList = document.getElementById('openRouterApiKeyList');
+
+// OpenRouter API Keys storage (using Turso)
+let openRouterApiKeys = [];
+let selectedApiKeyIndex = 0;
+
+// Initialize Turso schema on load
+(async function initTurso() {
+  try {
+    await initTursoSchema();
+    console.log('✓ Turso database initialized');
+  } catch (error) {
+    console.error('Failed to initialize Turso:', error);
+  }
+})();
 
 // Run once on script load (after DOM references are initialized)
 enforceAdminUI();
@@ -94,10 +115,13 @@ function enforceAdminUI() {
   if (isAdmin()) {
     if (problemsBtn) problemsBtn.style.display = '';
     if (reportsTab) reportsTab.style.display = '';
+    if (apiBtn) apiBtn.style.display = '';
   } else {
     if (problemsBtn) problemsBtn.style.display = 'none';
     if (reportsTab) reportsTab.style.display = 'none';
     if (problemsModal) problemsModal.classList.remove('open');
+    if (apiBtn) apiBtn.style.display = 'none';
+    if (apiModal) apiModal.classList.remove('open');
   }
 }
 
@@ -107,6 +131,161 @@ if (problemsBtn) {
     if (!isAdmin()) return;
     if (problemsModal) problemsModal.classList.add('open');
     loadReports();
+  });
+}
+
+// API Keys Modal (admin)
+if (apiBtn) {
+  apiBtn.addEventListener('click', () => {
+    if (!isAdmin()) return;
+    if (apiModal) apiModal.classList.add('open');
+    loadOpenRouterApiKeys();
+  });
+}
+
+if (closeApi) {
+  closeApi.addEventListener('click', () => apiModal.classList.remove('open'));
+}
+
+if (apiModal) {
+  apiModal.addEventListener('click', (e) => {
+    if (e.target === apiModal) apiModal.classList.remove('open');
+  });
+}
+
+// Load OpenRouter API keys from Turso
+async function loadOpenRouterApiKeys() {
+  try {
+    const keys = await getApiKeysFromTurso();
+    openRouterApiKeys = keys;
+    
+    // Find selected key index
+    const selectedKey = keys.find(k => k.isSelected);
+    if (selectedKey) {
+      selectedApiKeyIndex = openRouterApiKeys.findIndex(k => k.id === selectedKey.id);
+    } else if (keys.length > 0) {
+      selectedApiKeyIndex = 0;
+    }
+    
+    renderOpenRouterApiKeys();
+  } catch (error) {
+    console.error('Error loading API keys from Turso:', error);
+    openRouterApiKeys = [];
+    renderOpenRouterApiKeys();
+  }
+}
+
+// Render OpenRouter API keys list
+function renderOpenRouterApiKeys() {
+  if (!openRouterApiKeyList) return;
+  
+  if (openRouterApiKeys.length === 0) {
+    openRouterApiKeyList.innerHTML = '<p class="empty-msg" style="text-align: center; color: var(--text-secondary); padding: 20px;">No API keys added yet.</p>';
+    return;
+  }
+  
+  openRouterApiKeyList.innerHTML = openRouterApiKeys.map((key, index) => `
+    <div class="api-key-item ${index === selectedApiKeyIndex ? 'active' : ''}" data-index="${index}">
+      <div style="flex: 1;">
+        <strong>${key.name}</strong>
+        <div style="font-size: 0.8rem; color: var(--text-secondary);">${key.key.substring(0, 20)}...</div>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <button class="action-btn select-key-btn" data-index="${index}" title="Select this key">
+          ${index === selectedApiKeyIndex ? '✓' : 'Use'}
+        </button>
+        <button class="action-btn delete-key-btn" data-index="${index}" title="Delete key">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  `).join('');
+  
+  // Add event listeners
+  openRouterApiKeyList.querySelectorAll('.select-key-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const index = parseInt(btn.dataset.index);
+      selectOpenRouterApiKey(index);
+    });
+  });
+  
+  openRouterApiKeyList.querySelectorAll('.delete-key-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const index = parseInt(btn.dataset.index);
+      deleteOpenRouterApiKey(index);
+    });
+  });
+}
+
+// Select an API key
+async function selectOpenRouterApiKey(index) {
+  try {
+    const key = openRouterApiKeys[index];
+    if (key && key.id) {
+      await selectApiKeyInTurso(key.id);
+      selectedApiKeyIndex = index;
+      renderOpenRouterApiKeys();
+    }
+  } catch (error) {
+    console.error('Error selecting API key:', error);
+  }
+}
+
+// Delete an API key
+async function deleteOpenRouterApiKey(index) {
+  if (!confirm('Delete this API key?')) return;
+  
+  try {
+    const key = openRouterApiKeys[index];
+    if (key && key.id) {
+      await deleteApiKeyFromTurso(key.id);
+      openRouterApiKeys.splice(index, 1);
+      
+      // Adjust selected index if needed
+      if (selectedApiKeyIndex >= openRouterApiKeys.length) {
+        selectedApiKeyIndex = Math.max(0, openRouterApiKeys.length - 1);
+        // Select the new first key if exists
+        if (openRouterApiKeys.length > 0) {
+          await selectApiKeyInTurso(openRouterApiKeys[selectedApiKeyIndex].id);
+        }
+      }
+      
+      renderOpenRouterApiKeys();
+    }
+  } catch (error) {
+    console.error('Error deleting API key:', error);
+  }
+}
+
+// Add new API key
+if (addApiKeyBtn) {
+  addApiKeyBtn.addEventListener('click', async () => {
+    const name = apiKeyName.value.trim();
+    const key = apiKeyValue.value.trim();
+    
+    if (!name || !key) {
+      alert('Please enter both a name and API key');
+      return;
+    }
+    
+    try {
+      const success = await addApiKeyToTurso(name, key);
+      if (success) {
+        // Reload keys from Turso
+        await loadOpenRouterApiKeys();
+        
+        apiKeyName.value = '';
+        apiKeyValue.value = '';
+      }
+    } catch (error) {
+      console.error('Error adding API key:', error);
+      alert('Failed to add API key. Please try again.');
+    }
   });
 }
 
@@ -323,23 +502,15 @@ let suggestionIndex = 0;
 let username = window.username || 'You';
 const YOUTUBE_API_KEY = 'AIzaSyA82ZQFsZYuf_yzCsd4QN0tkpRMvKcs6EA';
 
-// ===================== CLARIFAI CONFIG =====================
-// Insert your Clarifai PAT (Personal Access Token) below. Keep it secret.
-// Clarifai free tier: 5 000 ops / month. We enforce a 4 500 soft-cap per user.
-const CLARIFAI_API_KEY = '06029c783ca84bbd9b9cfe224e469796';
-const CLARIFAI_SOFT_CAP   = 4500; // stop before the 5 000 hard cap
+// ===================== OPENROUTER CONFIG =====================
+// OpenRouter API Key for DeepSeek R1T2 Chimera (free)
+const OPENROUTER_API_KEY = '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';
+const OPENROUTER_MODEL = 'tngtech/deepseek-r1t2-chimera:free';
+const OPENROUTER_BASE_URL = 'https://openrouter.ai/api/v1';
 
-// Optional: if running purely from browser, Clarifai blocks CORS. Prefix requests with proxy.
-const CORS_PROXY = 'https://corsproxy.io/?'; // Change/remove if you deploy server-side
-const CLARIFAI_BASE_URL = 'https://api.clarifai.com/v2';
-function clarifaiFetch(path, options) {
-  return fetch(CORS_PROXY + CLARIFAI_BASE_URL + path, options);
+function openRouterFetch(path, options) {
+  return fetch(OPENROUTER_BASE_URL + path, options);
 }
-
-// Clarifai text LLM settings
-const CLARIFAI_USER_ID = 'anthropic';
-const CLARIFAI_APP_ID  = 'completion';
-const CLARIFAI_TEXT_MODEL_ID = 'claude-opus-4_5';
 
 // Simple local cache to avoid duplicate requests (keyed by SHA-256 of input)
 let clarifaiCache = {};
@@ -419,33 +590,70 @@ async function clarifaiCall(base64Body, modelId = 'aaa03c23b3724a16a56b629203edc
 }
 // =============================================================
 
-// ------- Clarifai text completion (Claude) -------
+// ------- OpenRouter text completion (DeepSeek R1T2 Chimera) -------
 async function clarifaiTextCompletion(systemPrompt, conversationHistoryArr) {
-  // Build a single prompt string Anthropic-style
-  const historyText = conversationHistoryArr.map(m => `${m.role.toUpperCase()}: ${m.content}`).join('\n\n');
-  const fullPrompt = `${systemPrompt}\n\n${historyText}\n\nASSISTANT:`;
+  // Get selected API key from Turso
+  let apiKey = OPENROUTER_API_KEY; // fallback to hardcoded key
+  
+  try {
+    const selectedKey = await getSelectedApiKeyFromTurso();
+    if (selectedKey) {
+      apiKey = selectedKey;
+    } else if (openRouterApiKeys.length > 0 && openRouterApiKeys[selectedApiKeyIndex]) {
+      apiKey = openRouterApiKeys[selectedApiKeyIndex].key;
+    }
+  } catch (error) {
+    console.error('Error getting selected API key:', error);
+  }
+  
+  // Build messages array for OpenRouter
+  const messages = conversationHistoryArr.map(m => ({
+    role: m.role,
+    content: m.content
+  }));
 
-  await incrementClarifaiUsage(); // quota guard
-
-  const res = await clarifaiFetch(`/models/${CLARIFAI_TEXT_MODEL_ID}/outputs`, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Key ${CLARIFAI_API_KEY}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      user_app_id: { user_id: CLARIFAI_USER_ID, app_id: CLARIFAI_APP_ID },
-      inputs: [{ data: { text: { raw: fullPrompt } } }]
-    })
+  // Add system prompt as first message
+  messages.unshift({
+    role: 'system',
+    content: systemPrompt
   });
 
-  if (!res.ok) {
-    const errData = await res.text();
-    throw new Error('Clarifai text API error: ' + errData);
+  // Add timeout to prevent hanging
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 second timeout
+
+  try {
+    const res = await openRouterFetch('/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': window.location.href,
+        'X-Title': 'Koda'
+      },
+      body: JSON.stringify({
+        model: OPENROUTER_MODEL,
+        messages: messages
+      }),
+      signal: controller.signal
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!res.ok) {
+      const errData = await res.text();
+      throw new Error('OpenRouter API error: ' + errData);
+    }
+    const json = await res.json();
+    const outputText = json.choices?.[0]?.message?.content || '[No response]';
+    return outputText.trim();
+  } catch (error) {
+    clearTimeout(timeoutId);
+    if (error.name === 'AbortError') {
+      throw new Error('Request timeout - the AI model took too long to respond');
+    }
+    throw error;
   }
-  const json = await res.json();
-  const outputText = json.outputs?.[0]?.data?.text?.raw || '[No response]';
-  return outputText.trim();
 }
 // =============================================================
 

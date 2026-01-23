@@ -1882,6 +1882,11 @@ body {
   align-items: center;
 }
 
+.api-key-item.active {
+  background: rgba(138, 180, 248, 0.1);
+  border-color: var(--accent);
+}
+
 .api-key-info {
   flex: 1;
 }

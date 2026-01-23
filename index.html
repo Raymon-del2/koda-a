@@ -82,6 +82,14 @@
           </svg>
           <span class="sidebar-label">Developer</span>
         </button>
+        <button class="sidebar-btn" id="apiBtn" title="API Keys" style="display:none;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            <path d="M8 11h8"></path>
+            <path d="M12 7v8"></path>
+          </svg>
+          <span class="sidebar-label">API</span>
+        </button>
         <button class="sidebar-btn" id="problemsBtn" title="Reports" style="display:none;">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
@@ -718,6 +726,42 @@ Content-Type: application/json</pre>
     </div>
   </div>
 
+  <!-- API Keys Modal (admin) -->
+  <div class="settings-modal" id="apiModal">
+    <div class="settings-content dev-content">
+      <div class="settings-header">
+        <h3>OpenRouter API Keys</h3>
+        <button class="close-btn" id="closeApi">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-description">Manage your OpenRouter API keys. Add new keys, delete old ones, and select which key to use for AI responses.</p>
+
+        <div class="knowledge-input-group">
+          <h4>Add New API Key</h4>
+          <div class="input-row" style="margin-bottom: 10px;">
+            <input type="text" id="apiKeyName" class="auth-input" placeholder="Key Name (e.g. My Key)" style="margin-bottom: 0;">
+          </div>
+          <div class="input-row" style="margin-bottom: 10px;">
+            <input type="password" id="apiKeyValue" class="auth-input" placeholder="API Key (sk-or-v1-...)" style="margin-bottom: 0;">
+          </div>
+          <button class="submit-btn" id="addApiKeyBtn">Add API Key</button>
+        </div>
+
+        <div class="divider" style="margin: 20px 0;"></div>
+
+        <h4>Your API Keys</h4>
+        <div class="api-key-list" id="openRouterApiKeyList">
+          <p class="empty-msg" style="text-align: center; color: var(--text-secondary); padding: 20px;">No API keys added yet.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
@@ -726,6 +770,7 @@ Content-Type: application/json</pre>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+  <script src="turso-client.js?v=3.2"></script>
   <script src="firebase-config.js?v=3.2"></script>
   <script src="script.js?v=3.2"></script>
 </body>

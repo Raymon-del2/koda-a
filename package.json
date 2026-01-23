@@ -1,0 +1,8 @@
+{
+  "name": "koda-chat",
+  "version": "1.0.0",
+  "description": "Koda AI Chat Application",
+  "scripts": {
+    "start": "python -m http.server 8080"
+  }
+}
