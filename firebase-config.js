@@ -21,6 +21,7 @@ let chats = [];
 let instructions = [];
 let currentUser = null;
 let userProfile = null;
+
 let whatsNewItems = [];
 let apiKeys = [];
 
@@ -29,7 +30,6 @@ const ADMIN_EMAIL = 'codedwaves01@gmail.com'.toLowerCase(); // Admin account
 function isAdmin() {
   const userEmail = (currentUser && currentUser.email) ? currentUser.email.toLowerCase() : '';
   const result = userEmail === ADMIN_EMAIL;
-  console.log('Admin Check:', { userEmail, ADMIN_EMAIL, isAdmin: result });
   return result;
 }
 
@@ -88,21 +88,17 @@ async function deleteWhatsNewItem(id) {
 // Load user instructions from Firestore
 async function loadInstructions() {
   if (!currentUser) {
-    console.log('loadInstructions: No user logged in');
     return [];
   }
 
   try {
-    console.log('Loading instructions from Firebase for user:', currentUser.uid);
     const doc = await db.collection('users').doc(currentUser.uid).get();
 
     if (doc.exists && doc.data().instructions && Array.isArray(doc.data().instructions)) {
       const loadedInstructions = doc.data().instructions;
-      console.log('✓ Loaded', loadedInstructions.length, 'instructions from Firebase');
       return loadedInstructions;
     }
 
-    console.log('No instructions found in Firebase');
     return [];
   } catch (error) {
     console.error('Error loading instructions:', error);
@@ -113,7 +109,6 @@ async function loadInstructions() {
 // Save user instructions to Firestore
 async function saveInstructions(instructionsArray) {
   if (!currentUser) {
-    console.log('saveInstructions: No user logged in');
     return false;
   }
 
@@ -161,7 +156,6 @@ async function loadUserChats() {
   if (!currentUser) return;
 
   try {
-    console.log('Loading chats from Firebase for user:', currentUser.uid);
     const snapshot = await db.collection('users').doc(currentUser.uid)
       .collection('chats')
       .orderBy('updatedAt', 'desc')
@@ -173,7 +167,6 @@ async function loadUserChats() {
       ...doc.data()
     }));
 
-    console.log('Loaded', chats.length, 'chats from Firebase');
     if (typeof renderChatHistory === 'function') {
       renderChatHistory();
     }
@@ -187,7 +180,6 @@ async function saveChat(chat) {
   if (!currentUser) return;
 
   try {
-    console.log('Saving chat to Firebase:', chat.id);
     await db.collection('users').doc(currentUser.uid)
       .collection('chats').doc(chat.id)
       .set({
@@ -211,7 +203,6 @@ async function deleteChatFromDB(chatId) {
   try {
     await db.collection('users').doc(currentUser.uid)
       .collection('chats').doc(chatId).delete();
-    console.log('Chat deleted from Firebase:', chatId);
   } catch (error) {
     console.error('Error deleting chat:', error);
   }
@@ -222,7 +213,6 @@ async function deleteChatFromDB(chatId) {
 // Load knowledge base from Firebase (global collection)
 async function loadKnowledgeBase() {
   try {
-    console.log('Loading Knowledge Base from Firebase...');
     const snapshot = await db.collection('knowledge').orderBy('timestamp', 'desc').get();
     const items = [];
     snapshot.forEach(doc => {
@@ -251,7 +241,6 @@ async function loadKnowledgeBase() {
 // Save a knowledge item to Firebase
 async function saveKnowledgeItem(item) {
   try {
-    console.log('Saving knowledge item to Firebase:', item.title);
     await db.collection('knowledge').doc(item.id).set({
       ...item,
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
@@ -306,7 +295,6 @@ async function loadUserApiKeys() {
   if (!currentUser) return;
 
   try {
-    console.log('Loading API keys from Firebase for user:', currentUser.uid);
     // If admin, load all admin keys, else load keys created by user
     let query = db.collection('api_keys');
     if (!isAdmin()) {
@@ -324,7 +312,6 @@ async function loadUserApiKeys() {
     // Update local storage for fallback
     localStorage.setItem('koda_api_keys', JSON.stringify(apiKeys));
 
-    console.log('Loaded', apiKeys.length, 'API keys from Firebase');
     if (typeof renderApiKeyList === 'function') {
       renderApiKeyList();
     }
@@ -339,8 +326,6 @@ auth.onAuthStateChanged(async (user) => {
   currentUser = user;
 
   if (user) {
-    console.log('User signed in:', user.email);
-
     // 1. Load Profile
     userProfile = await loadUserProfile(user.uid);
     updateUIForAuth(user);
@@ -352,7 +337,6 @@ auth.onAuthStateChanged(async (user) => {
     const firebaseInstructions = await loadInstructions();
     if (firebaseInstructions && firebaseInstructions.length > 0) {
       instructions = firebaseInstructions;
-      console.log('Instructions synced from Firebase:', instructions.length);
       if (typeof renderInstructions === 'function') {
         renderInstructions();
       }
@@ -366,7 +350,6 @@ auth.onAuthStateChanged(async (user) => {
       showProfileSetup(user);
     }
   } else {
-    console.log('User signed out');
     userProfile = null;
     updateUIForAuth(null);
     chats = [];
@@ -458,7 +441,6 @@ function updateUIForAuth(user, retryCount = 0) {
   const name = userProfile?.username || user.displayName || user.email.split('@')[0];
   const avatar = userProfile?.avatarURL || user.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(name) + '&background=8ab4f8&color=131314&size=80';
 
-  console.log('Updating UI for user:', name, 'Avatar:', avatar ? 'Yes' : 'No');
 
   // Update Profile Modal (Top)
   const userAvatar = document.getElementById('userAvatar');

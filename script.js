@@ -170,6 +170,7 @@ async function loadOpenRouterApiKeys() {
     renderOpenRouterApiKeys();
   } catch (error) {
     console.error('Error loading API keys from Turso:', error);
+    // Don't break the app if Turso fails - just show empty list
     openRouterApiKeys = [];
     renderOpenRouterApiKeys();
   }
@@ -264,29 +265,49 @@ async function deleteOpenRouterApiKey(index) {
 
 // Add new API key
 if (addApiKeyBtn) {
+  console.log('✓ Add API Key button found, attaching event listener');
   addApiKeyBtn.addEventListener('click', async () => {
+    console.log('Add API Key button clicked');
     const name = apiKeyName.value.trim();
     const key = apiKeyValue.value.trim();
+    
+    console.log('Name:', name, 'Key length:', key ? key.length : 0);
     
     if (!name || !key) {
       alert('Please enter both a name and API key');
       return;
     }
     
+    // Show loading state
+    const originalText = addApiKeyBtn.textContent;
+    addApiKeyBtn.textContent = 'Adding...';
+    addApiKeyBtn.disabled = true;
+    
     try {
+      console.log('Attempting to add API key to Turso...');
       const success = await addApiKeyToTurso(name, key);
+      console.log('Add result:', success);
+      
       if (success) {
         // Reload keys from Turso
         await loadOpenRouterApiKeys();
         
         apiKeyName.value = '';
         apiKeyValue.value = '';
+        alert('API key added successfully!');
+      } else {
+        alert('Failed to add API key. Please check your connection and try again.');
       }
     } catch (error) {
       console.error('Error adding API key:', error);
       alert('Failed to add API key. Please try again.');
+    } finally {
+      addApiKeyBtn.textContent = originalText;
+      addApiKeyBtn.disabled = false;
     }
   });
+} else {
+  console.error('Add API Key button not found!');
 }
 
 if (closeProblems) {
@@ -592,16 +613,20 @@ async function clarifaiCall(base64Body, modelId = 'aaa03c23b3724a16a56b629203edc
 
 // ------- OpenRouter text completion (DeepSeek R1T2 Chimera) -------
 async function clarifaiTextCompletion(systemPrompt, conversationHistoryArr) {
-  // Get selected API key from Turso
+  // Get selected API key from Firebase
   let apiKey = OPENROUTER_API_KEY; // fallback to hardcoded key
+  let apiKeySource = 'hardcoded fallback';
   
   try {
     const selectedKey = await getSelectedApiKeyFromTurso();
     if (selectedKey) {
       apiKey = selectedKey;
+      apiKeySource = 'Firebase (selected)';
     } else if (openRouterApiKeys.length > 0 && openRouterApiKeys[selectedApiKeyIndex]) {
       apiKey = openRouterApiKeys[selectedApiKeyIndex].key;
+      apiKeySource = 'local array (fallback)';
     }
+    console.log('Using API key from:', apiKeySource);
   } catch (error) {
     console.error('Error getting selected API key:', error);
   }

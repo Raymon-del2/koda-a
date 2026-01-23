@@ -1,0 +1,43 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Allow anyone to read API keys (so AI works for all users)
+    match /api_keys/{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    // Knowledge base - public read, admin write
+    match /knowledge/{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    // Chats - user can read/write their own
+    match /chats/{document=**} {
+      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
+    }
+    
+    // Instructions - user can read/write their own
+    match /instructions/{document=**} {
+      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
+    }
+    
+    // Reports - admin only
+    match /reports/{document=**} {
+      allow read, write: if request.auth != null && request.auth.token.email == 'codedwaves01@gmail.com';
+    }
+    
+    // Users - user can read/write their own profile
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Whats new - admin write, public read
+    match /whats_new/{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.token.email == 'codedwaves01@gmail.com';
+    }
+  }
+}
