@@ -3,6 +3,34 @@
   "version": "1.0.0",
   "description": "Koda AI Chat Application",
   "scripts": {
-    "start": "python -m http.server 8080"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@ai-sdk/groq": "^3.0.26",
+    "@ai-sdk/openai": "^3.0.37",
+    "@qdrant/js-client-rest": "^1.17.0",
+    "@types/node": "^25.3.3",
+    "@types/react": "^19.2.14",
+    "@types/ws": "^8.18.1",
+    "ai": "^6.0.105",
+    "autoprefixer": "^10.4.27",
+    "firebase": "^12.10.0",
+    "framer-motion": "^12.34.3",
+    "highlight.js": "^11.9.0",
+    "lucide-react": "^0.575.0",
+    "next": "^16.1.6",
+    "openai": "^6.25.0",
+    "postcss": "^8.5.6",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-markdown": "^9.0.1",
+    "rehype-highlight": "^7.0.0",
+    "remark-gfm": "^4.0.0",
+    "tailwindcss": "^3.4.19",
+    "tailwindcss-animate": "^1.0.7",
+    "ws": "^8.19.0"
   }
 }

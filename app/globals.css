@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 5.5%;
+    --foreground: 0 0% 89%;
+    --card: 0 0% 7%;
+    --card-foreground: 0 0% 89%;
+    --popover: 0 0% 5.5%;
+    --popover-foreground: 0 0% 89%;
+    --primary: 217 91% 75%;
+    --primary-foreground: 0 0% 5.5%;
+    --secondary: 0 0% 11.8%;
+    --secondary-foreground: 0 0% 89%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 60%;
+    --accent: 174 100% 50%;
+    --accent-foreground: 0 0% 5.5%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 89%;
+    --border: 0 0% 23.5%;
+    --input: 0 0% 23.5%;
+    --ring: 217 91% 75%;
+    --radius: 0.5rem;
+    --sidebar-background: 0 0% 9%;
+    --sidebar-foreground: 0 0% 60%;
+    --sidebar-primary: 217 91% 75%;
+    --sidebar-primary-foreground: 0 0% 5.5%;
+    --sidebar-accent: 0 0% 15%;
+    --sidebar-accent-foreground: 0 0% 89%;
+    --sidebar-border: 0 0% 23.5%;
+    --sidebar-ring: 217 91% 75%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-[#0e0e0e] text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* Custom scrollbar - Gemini style */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3c4043;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #5f6368;
+}
+
+/* Prose streaming cursor */
+.prose-stream::after {
+  content: "▊";
+  display: inline-block;
+  vertical-align: middle;
+  animation: blink 1s step-start infinite;
+  color: #8ab4f8;
+  margin-left: 2px;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* Shimmer loading effect */
+.thinking-shimmer {
+  background: linear-gradient(90deg, #1e1f20 25%, #2d2d2e 50%, #1e1f20 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+  height: 16px;
+  width: 60%;
+  margin: 8px 0;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Glassmorphism */
+.glass {
+  background: rgba(30, 31, 32, 0.9);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Focus styles */
+.focus-ring:focus-within {
+  border-color: rgba(138, 180, 248, 0.5);
+  box-shadow: 0 8px 32px rgba(138, 180, 248, 0.2);
+}
+
+/* Hide scrollbar for suggestion chips */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

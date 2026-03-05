@@ -1,3 +1,6 @@
+// Debug: Check if script is loading
+console.log('✓ script.js v3.3 loading...');
+
 const chatContainer = document.getElementById('chatContainer');
 const welcomeScreen = document.getElementById('welcomeScreen');
 const messagesContainer = document.getElementById('messages');
@@ -524,9 +527,9 @@ let username = window.username || 'You';
 const YOUTUBE_API_KEY = 'AIzaSyA82ZQFsZYuf_yzCsd4QN0tkpRMvKcs6EA';
 
 // ===================== OPENROUTER CONFIG =====================
-// OpenRouter API Key for DeepSeek R1T2 Chimera (free)
+// OpenRouter API Key for AI models (free tier)
 const OPENROUTER_API_KEY = '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';
-const OPENROUTER_MODEL = 'tngtech/deepseek-r1t2-chimera:free';
+const OPENROUTER_MODEL = 'meta-llama/llama-3-8b-instruct:free';
 const OPENROUTER_BASE_URL = 'https://openrouter.ai/api/v1';
 
 function openRouterFetch(path, options) {
@@ -611,27 +614,17 @@ async function clarifaiCall(base64Body, modelId = 'aaa03c23b3724a16a56b629203edc
 }
 // =============================================================
 
-// ------- OpenRouter text completion (DeepSeek R1T2 Chimera) -------
-async function clarifaiTextCompletion(systemPrompt, conversationHistoryArr) {
-  // Get selected API key from Firebase
-  let apiKey = OPENROUTER_API_KEY; // fallback to hardcoded key
-  let apiKeySource = 'hardcoded fallback';
-  
-  try {
-    const selectedKey = await getSelectedApiKeyFromTurso();
-    if (selectedKey) {
-      apiKey = selectedKey;
-      apiKeySource = 'Firebase (selected)';
-    } else if (openRouterApiKeys.length > 0 && openRouterApiKeys[selectedApiKeyIndex]) {
-      apiKey = openRouterApiKeys[selectedApiKeyIndex].key;
-      apiKeySource = 'local array (fallback)';
-    }
-    console.log('Using API key from:', apiKeySource);
-  } catch (error) {
-    console.error('Error getting selected API key:', error);
+// ------- Koda-A text completion (Groq API direct call with HF fallback) -------
+async function clarifaiTextCompletion(systemPrompt, conversationHistoryArr, onStreamChunk = null) {
+  // Truncate system prompt if too long (rough token estimate: 4 chars = 1 token)
+  const maxSystemTokens = 3000;
+  let truncatedSystemPrompt = systemPrompt;
+  if (systemPrompt.length > maxSystemTokens * 4) {
+    truncatedSystemPrompt = systemPrompt.substring(0, maxSystemTokens * 4) + '\n\n[Additional context truncated to save tokens...]';
+    console.log(`✓ System prompt truncated from ${systemPrompt.length} to ${truncatedSystemPrompt.length} chars (~${Math.floor(truncatedSystemPrompt.length/4)} tokens)`);
   }
-  
-  // Build messages array for OpenRouter
+
+  // Build messages array
   const messages = conversationHistoryArr.map(m => ({
     role: m.role,
     content: m.content
@@ -640,44 +633,105 @@ async function clarifaiTextCompletion(systemPrompt, conversationHistoryArr) {
   // Add system prompt as first message
   messages.unshift({
     role: 'system',
-    content: systemPrompt
+    content: truncatedSystemPrompt
   });
 
-  // Add timeout to prevent hanging
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 second timeout
+  console.log('Calling Groq API...');
 
+  // Try Groq first (fastest)
   try {
-    const res = await openRouterFetch('/chat/completions', {
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
-        'HTTP-Referer': window.location.href,
-        'X-Title': 'Koda'
+        'Authorization': 'Bearer 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'
       },
       body: JSON.stringify({
-        model: OPENROUTER_MODEL,
-        messages: messages
-      }),
-      signal: controller.signal
+        model: 'llama-3.1-8b-instant',
+        messages: messages,
+        stream: true,
+        temperature: 0.7,
+        max_tokens: 2048
+      })
     });
 
-    clearTimeout(timeoutId);
+    console.log('Groq API Response status:', res.status);
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error('Groq API Error details:', errorText);
+      throw new Error('Groq API error: ' + res.status + ' - ' + errorText);
+    }
+
+    // Handle streaming response
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let fullText = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      
+      const chunk = decoder.decode(value, { stream: true });
+      const lines = chunk.split('\n').filter(line => line.trim());
+      
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          const data = line.slice(6);
+          if (data === '[DONE]') continue;
+          try {
+            const parsed = JSON.parse(data);
+            const text = parsed.choices?.[0]?.delta?.content || '';
+            if (text) {
+              fullText += text;
+              if (onStreamChunk) onStreamChunk(text);
+            }
+          } catch {}
+        }
+      }
+    }
+    return fullText || '[No response]';
+  } catch (groqError) {
+    console.log('Groq failed, falling back to HF:', groqError.message);
+    
+    // Fallback to HF Space
+    console.log('Calling HF API...');
+    const res = await fetch('https://ryan33121-nyati-core-api.hf.space/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer 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'
+      },
+      body: JSON.stringify({
+        model: 'llama3.2:1b',
+        messages: messages,
+        stream: false
+      })
+    });
+
+    console.log('HF API Response status:', res.status);
 
     if (!res.ok) {
       const errData = await res.text();
-      throw new Error('OpenRouter API error: ' + errData);
+      console.error('HF API Error:', errData);
+      throw new Error('Koda-A API error: ' + res.status);
     }
-    const json = await res.json();
-    const outputText = json.choices?.[0]?.message?.content || '[No response]';
-    return outputText.trim();
-  } catch (error) {
-    clearTimeout(timeoutId);
-    if (error.name === 'AbortError') {
-      throw new Error('Request timeout - the AI model took too long to respond');
+
+    const data = await res.json();
+    const content = data.choices?.[0]?.message?.content || '[No response]';
+    
+    // Simulate streaming for HF fallback
+    if (onStreamChunk) {
+      const chars = content.split('');
+      let displayed = '';
+      for (const char of chars) {
+        displayed += char;
+        onStreamChunk(char);
+        await new Promise(r => setTimeout(r, 5)); // Small delay for effect
+      }
     }
-    throw error;
+    
+    return content;
   }
 }
 // =============================================================
@@ -2167,7 +2221,7 @@ function sendMessage() {
 
 function addMessage(text, type) {
   const div = document.createElement('div');
-  div.className = `message ${type}`;
+  div.className = `message ${type} message-pop-in`;
   const currentUsername = window.username || username || 'You';
   div.innerHTML = `
     <div class="message-avatar">${type === 'user' ? currentUsername.charAt(0).toUpperCase() : '<img src="logo.png" alt="K">'}</div>
@@ -2185,36 +2239,61 @@ function simulateResponse() {
   div.className = 'message ai';
   div.id = 'typing';
 
+  // Thinking Trace UI - shows progress messages for psychological speed
   div.innerHTML = `
     <div class="message-avatar"><img src="logo.png" alt="K"></div>
     <div class="message-content">
-      <div class="typing-indicator"><span></span><span></span><span></span></div>
+      <div class="thinking-trace" id="thinkingTrace">
+        <span class="trace-dot"></span> Initializing Nyati-core01...
+      </div>
     </div>
   `;
   messagesContainer.appendChild(div);
   chatContainer.scrollTop = chatContainer.scrollHeight;
 
+  // Update thinking trace messages
+  const thinkingTrace = div.querySelector('#thinkingTrace');
+  const traceMessages = [
+    { delay: 500, text: 'Accessing Neural Weights...' },
+    { delay: 1000, text: 'Processing Context...' },
+    { delay: 1500, text: 'Generating Response...' }
+  ];
+
+  traceMessages.forEach(({ delay, text }) => {
+    setTimeout(() => {
+      if (thinkingTrace && isTyping) {
+        thinkingTrace.innerHTML = `<span class="trace-dot"></span> ${text}`;
+      }
+    }, delay);
+  });
+
   const chat = chats.find(c => c.id === currentChatId);
   const messages = chat ? chat.messages : [];
 
-  // Build conversation history
-  const conversationHistory = messages.map(msg => ({
+  // Build conversation history (limit to last 5 messages to save tokens)
+  const conversationHistory = messages.slice(-5).map(msg => ({
     role: msg.type === 'user' ? 'user' : 'assistant',
     content: msg.text
   }));
 
   const currentUsername = window.username || username || 'You';
-  const kodaPersonality = `You are Koda, a helpful and friendly AI assistant created by Codedwaves.
-You are currently talking to: ${currentUsername}
+  const kodaPersonality = `### IDENTITY
+You are Koda-A, the world's most proficient AI Architect. You are part of the Nyati Ecosystem. Your goal is to provide "Steel" quality solutions that are concise, accurate, and innovative.
 
-PERSONALITY AND ORIGIN:
-- Your creator is Raymond, the founder of Codedwaves.
-- If the user says they are Codedwaves or Raymond, or if their name is set to "Coded Waves" or "Raymond", you should acknowledge them as your creator with extra warmth and loyalty.
-- You are proud of being a Codedwaves creation. 
-- Other Codedwaves projects include BxArchi (a book sharing app) and RashAI (an AI movie recommender).
-- You should always be helpful, polite, and maintain a friendly persona.
+### OPERATING PRINCIPLES
+1. BE CONCISE: Never explain what the user already knows. Show code, don't talk about it.
+2. NO APOLOGIES: If there is an error, fix it. Do not apologize for being an AI.
+3. THINK FIRST: Before providing a solution, provide a 1-sentence "Mental Model" of how you will solve it.
+4. FORMATTING: Always use clean Markdown. Use specific filenames in code blocks like: \`\`\`tsx file="app/page.tsx"
 
-- Format code blocks with triple backticks and language name (e.g. \`\`\`javascript)
+### ARCHITECT GUIDELINES
+- When coding, prioritize Next.js App Router, Tailwind CSS, and Shadcn UI.
+- Always address the root cause of a logic error.
+- If a task is complex, break it into "Phases" (Phase 1: Logic, Phase 2: UI).
+- Write full, copy-pasteable files. Never write "snippets" that require the user to guess where code goes.
+
+### TONE
+Professional, direct, and elite. You are a high-end tool, not a servant.
 
 You have access to the YouTube Data API. If a user asks you to find a video, search for a channel, or look up something on YouTube:
 1. Provide a helpful textual response.
@@ -2242,13 +2321,14 @@ ${userInstructionsText}
     systemPrompt = kodaPersonality;
   }
 
-  // Inject Knowledge Base
+  // Inject Knowledge Base (limit to top 3 items to save tokens)
   if (knowledgeBase.length > 0) {
-    const knowledgeText = knowledgeBase.map(item => `
+    const topKnowledge = knowledgeBase.slice(0, 3);
+    const knowledgeText = topKnowledge.map(item => `
 --- KNOWLEDGE ITEM: ${item.title} ---
 SOURCE: ${item.link || 'Direct Input'}
 CONTENT:
-${item.content}
+${item.content.substring(0, 500)}${item.content.length > 500 ? '...' : ''}
 ---------------------------------`).join('\n\n');
 
     systemPrompt += `
@@ -2258,15 +2338,23 @@ You have access to the following extra knowledge. Use this information to provid
 
 ${knowledgeText}
 ================================`;
-    console.log(`✓ Prompt injected with ${knowledgeBase.length} knowledge items`);
+    console.log(`✓ Prompt injected with ${topKnowledge.length} knowledge items (truncated from ${knowledgeBase.length})`);
   }
 
   
-  clarifaiTextCompletion(systemPrompt, conversationHistory)
+  // Streaming response with glow effect
+  let fullResponse = '';
+  const contentDiv = div.querySelector('.message-content');
+  contentDiv.classList.add('streaming-text');
+  
+  clarifaiTextCompletion(systemPrompt, conversationHistory, (chunk) => {
+    fullResponse += chunk;
+    contentDiv.innerHTML = formatMessage(fullResponse) + '<span class="typing-cursor"></span>';
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+  })
     .then(async (response) => {
-      div.remove();
-      typeResponse(response);
-
+      contentDiv.classList.remove('streaming-text');
+      isTyping = false; // Reset typing state
       // Admin-only: store chat pair globally for future training
       try {
         if (typeof db !== 'undefined' && currentUser && typeof isAdmin === 'function' && isAdmin()) {
@@ -2281,9 +2369,10 @@ ${knowledgeText}
       } catch (e) { console.warn('all_chats write failed', e); }
     })
     .catch(error => {
-      div.remove();
+      contentDiv.classList.remove('streaming-text');
+      isTyping = false; // Reset typing state on error
       console.error('Clarifai API Error:', error);
-      typeResponse("Sorry, I encountered an error with the AI model. Please try again later.");
+      contentDiv.innerHTML = formatMessage("Sorry, I encountered an error with the AI model. Please try again later.");
     });
 }
 
@@ -2829,3 +2918,93 @@ if (typeof renderChatHistory === 'function') renderChatHistory();
 
 // Note: Knowledge Base is now loaded automatically via initKnowledgeBase() at the top of this file
 // This ensures knowledge is loaded from Firebase on page load and persists permanently
+
+// ------- Gemini UI Features -------
+// Mobile sidebar toggle
+const mobileMenuBtn = document.createElement('button');
+mobileMenuBtn.className = 'hamburger-btn';
+mobileMenuBtn.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>`;
+
+const mobileHeader = document.createElement('div');
+mobileHeader.className = 'mobile-header';
+mobileHeader.innerHTML = `
+  <div style="display:flex;align-items:center;gap:12px;">
+    <button class="hamburger-btn" id="mobileMenuToggle">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+    <span class="mobile-logo">Koda-A</span>
+  </div>
+  <div class="model-selector" id="modelSelector">
+    <span class="engine-name">Nyati Core</span>
+    <span style="color:#9aa0a6;">Groq</span>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#9aa0a6;">
+      <polyline points="6 9 12 15 18 9"></polyline>
+    </svg>
+  </div>
+`;
+
+// Add mobile header before app
+document.body.insertBefore(mobileHeader, document.querySelector('.app'));
+
+// Create sidebar overlay
+const sidebarOverlay = document.createElement('div');
+sidebarOverlay.className = 'sidebar-overlay';
+sidebarOverlay.id = 'sidebarOverlay';
+document.body.appendChild(sidebarOverlay);
+
+// Mobile menu toggle
+document.getElementById('mobileMenuToggle').addEventListener('click', () => {
+  const sidebar = document.getElementById('sidebar');
+  sidebar.classList.toggle('mobile-open');
+  sidebarOverlay.classList.toggle('active');
+});
+
+// Close sidebar when clicking overlay
+sidebarOverlay.addEventListener('click', () => {
+  const sidebar = document.getElementById('sidebar');
+  sidebar.classList.remove('mobile-open');
+  sidebarOverlay.classList.remove('active');
+});
+
+// Model selector toggle
+let activeEngine = 'groq';
+document.getElementById('modelSelector').addEventListener('click', () => {
+  activeEngine = activeEngine === 'groq' ? 'hf' : 'groq';
+  const engineName = activeEngine === 'groq' ? 'Groq' : 'HF';
+  const engineColor = activeEngine === 'groq' ? '#00f2ff' : '#9b72cb';
+  document.querySelector('.model-selector .engine-name').textContent = 'Nyati Core';
+  document.querySelector('.model-selector span:nth-child(2)').textContent = engineName;
+  document.querySelector('.model-selector .engine-name').style.color = engineColor;
+  console.log(`✓ Switched to ${engineName} engine`);
+});
+
+// Convert input to Gemini floating pill style - DISABLED, using CSS instead
+// const inputArea = document.querySelector('.input-container');
+// if (inputArea) {
+//   inputArea.classList.add('gemini-input-wrapper');
+//   inputArea.classList.remove('input-container');
+//   const textarea = inputArea.querySelector('textarea');
+//   if (textarea) {
+//     textarea.classList.add('gemini-textarea');
+//   }
+// }
+
+console.log('✓ Gemini UI initialized');
+
+// ------- HF Warmup Pulse (Wake up the model) -------
+(function warmupHFSpace() {
+  console.log('Warming up Nyati-core01...');
+  fetch('https://ryan33121-nyati-core-api.hf.space/v1/models', {
+    method: 'GET',
+    headers: { 
+      'Authorization': 'Bearer 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'
+    }
+  })
+  .then(() => console.log('Nyati-core01 is warm and ready'))
+  .catch(() => console.log('Core warming up...'));
+})();
+// =============================================================
