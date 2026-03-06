@@ -8616,58 +8616,47 @@ _This link expires in 24 hours._`;
                 }
                 // Fetch entertainment data for movie/TV/actor queries
                 let entertainmentEntities = [];
-                const entertainmentKeywords = [
-                    'movie',
-                    'film',
-                    'actor',
-                    'actress',
-                    'director',
-                    'tv show',
-                    'series',
-                    'netflix',
-                    'disney',
-                    'marvel',
-                    'dc',
-                    'hollywood',
-                    'cinema'
-                ];
-                const isEntertainmentQuery = entertainmentKeywords.some((kw)=>userQuery.toLowerCase().includes(kw)) || /\b(played|cast|starring|in)\s+(?:the\s+)?(?:movie|film|show)/i.test(userQuery);
-                if (isEntertainmentQuery) {
-                    console.log('🎬 Entertainment query detected - fetching TMDB data...');
-                    try {
-                        // Import and call entertainment API directly
-                        const { POST } = await __turbopack_context__.A("[project]/app/api/entertainment/route.ts [app-route] (ecmascript, async loader)");
-                        const req = new Request('http://internal/api/entertainment', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                message: userQuery
-                            })
-                        });
-                        const res = await POST(req);
-                        const data = await res.json();
-                        if (data.hasEntity && data.entity) {
-                            entertainmentEntities = [
-                                data.entity
-                            ];
-                            // Add to context for AI to reference
-                            memoryContext += '\n\n### ENTERTAINMENT DATA\n';
-                            memoryContext += `Title: ${data.entity.title}\n`;
-                            memoryContext += `Type: ${data.entity.type}\n`;
-                            memoryContext += `Overview: ${data.entity.overview.substring(0, 200)}...\n`;
-                            if (data.entity.rating) {
-                                memoryContext += `Rating: ${data.entity.rating}/10\n`;
-                            }
-                            if (data.entity.known_for) {
-                                memoryContext += `Known For: ${data.entity.known_for.map((m)=>m.title).join(', ')}\n`;
-                            }
-                            console.log('✅ Entertainment data fetched:', data.entity.title);
+                // Always try to extract entertainment entities - let the LLM decide
+                console.log('🎬 Checking for entertainment entities in:', userQuery);
+                try {
+                    // Import and call entertainment API directly
+                    const { POST } = await __turbopack_context__.A("[project]/app/api/entertainment/route.ts [app-route] (ecmascript, async loader)");
+                    const req = new Request('http://internal/api/entertainment', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            message: userQuery
+                        })
+                    });
+                    const res = await POST(req);
+                    const data = await res.json();
+                    console.log('📡 TMDB API response:', {
+                        hasEntity: data.hasEntity,
+                        entity: data.entity?.title
+                    });
+                    if (data.hasEntity && data.entity) {
+                        entertainmentEntities = [
+                            data.entity
+                        ];
+                        console.log('✅ Entertainment entity set:', entertainmentEntities.length, 'entities');
+                        // Add to context for AI to reference
+                        memoryContext += '\n\n### ENTERTAINMENT DATA\n';
+                        memoryContext += `Title: ${data.entity.title}\n`;
+                        memoryContext += `Type: ${data.entity.type}\n`;
+                        memoryContext += `Overview: ${data.entity.overview.substring(0, 200)}...\n`;
+                        if (data.entity.rating) {
+                            memoryContext += `Rating: ${data.entity.rating}/10\n`;
                         }
-                    } catch (error) {
-                        console.error('Entertainment fetch error:', error);
+                        if (data.entity.known_for) {
+                            memoryContext += `Known For: ${data.entity.known_for.map((m)=>m.title).join(', ')}\n`;
+                        }
+                    } else {
+                        console.log('❌ No entity found in TMDB response');
                     }
+                } catch (error) {
+                    console.error('❌ Entertainment fetch error:', error);
                 }
                 // Send sources metadata (including live resources, news, movies)
                 const sourcesMetadata = JSON.stringify({
@@ -8679,6 +8668,10 @@ _This link expires in 24 hours._`;
                     movieResults,
                     personResults: movieResults.filter((r)=>r.type === 'person'),
                     entertainmentEntities
+                });
+                console.log('📤 Sending metadata with entertainment:', {
+                    hasEntertainment: entertainmentEntities.length > 0,
+                    entertainmentCount: entertainmentEntities.length
                 });
                 controller.enqueue(new TextEncoder().encode(sourcesMetadata + '\n'));
                 // ==========================================

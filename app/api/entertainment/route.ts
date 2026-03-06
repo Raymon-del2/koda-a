@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { generateText } from 'ai';
 import { createOpenAI } from '@ai-sdk/openai';
 
-const TMDB_API_KEY = process.env.TMDB_API_KEY || '';
+const TMDB_KEY = process.env.TMDB_API_KEY || '';
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
 
 // Initialize Groq for entity extraction
@@ -10,6 +10,25 @@ const groq = createOpenAI({
   baseURL: 'https://api.groq.com/openai/v1',
   apiKey: process.env.GROQ_API_KEY || '',
 });
+
+// Fallback: Simple keyword-based extraction when Groq API fails
+function fallbackExtractEntity(message: string): { hasEntity: boolean; type?: 'movie' | 'tv' | 'person'; query?: string; confidence?: number } {
+  const lower = message.toLowerCase();
+  
+  // Simple pattern: "Tell me about X" or "What is X"
+  const aboutMatch = message.match(/(?:tell me about|what is|who is)\s+(.+?)(?:\?|$|\.)/i);
+  if (aboutMatch) {
+    const query = aboutMatch[1].trim();
+    return {
+      hasEntity: true,
+      type: 'movie', // Default to movie, TMDB search will find it
+      query: query,
+      confidence: 0.6
+    };
+  }
+  
+  return { hasEntity: false };
+}
 
 // Entity extraction prompt
 const ENTITY_EXTRACTION_PROMPT = `You are an Entertainment Entity Extractor. Analyze the user's message and extract any movie, TV show, or actor mentions.
@@ -74,7 +93,9 @@ async function extractEntity(userMessage: string): Promise<{ hasEntity: boolean;
     return { hasEntity: false };
   } catch (error) {
     console.error('Entity extraction error:', error);
-    return { hasEntity: false };
+    // Fallback to keyword-based extraction when Groq fails
+    console.log('🔄 Using fallback entity extraction');
+    return fallbackExtractEntity(userMessage);
   }
 }
 
@@ -83,7 +104,7 @@ async function fetchTMDBData(type: 'movie' | 'tv' | 'person', query: string): Pr
     // Search for the entity
     const searchUrl = `${TMDB_BASE_URL}/search/${type}`;
     const searchParams = new URLSearchParams({
-      api_key: TMDB_API_KEY,
+      api_key: TMDB_KEY,
       query: query,
       language: 'en-US',
     });
@@ -101,7 +122,7 @@ async function fetchTMDBData(type: 'movie' | 'tv' | 'person', query: string): Pr
     // Get detailed info
     const detailsUrl = `${TMDB_BASE_URL}/${type}/${entityId}`;
     const detailsParams = new URLSearchParams({
-      api_key: TMDB_API_KEY,
+      api_key: TMDB_KEY,
       language: 'en-US',
     });
 

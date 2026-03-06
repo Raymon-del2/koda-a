@@ -2423,6 +2423,7 @@ body {
 .media-overview {
   color: #ccc;
   -webkit-line-clamp: 4;
+  line-clamp: 4;
   -webkit-box-orient: vertical;
   flex: 1;
   margin-bottom: 12px;

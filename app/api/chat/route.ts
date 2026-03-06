@@ -584,50 +584,43 @@ _This link expires in 24 hours._`;
         
         // Fetch entertainment data for movie/TV/actor queries
         let entertainmentEntities: any[] = [];
-        const entertainmentKeywords = ['movie', 'film', 'actor', 'actress', 'director', 'tv show', 'series', 'netflix', 'disney', 'marvel', 'dc', 'hollywood', 'cinema'];
-        const isEntertainmentQuery = entertainmentKeywords.some(kw => userQuery.toLowerCase().includes(kw)) || 
-                                     /\b(played|cast|starring|in)\s+(?:the\s+)?(?:movie|film|show)/i.test(userQuery);
         
-        console.log('🔍 Query check:', { userQuery, isEntertainmentQuery });
+        // Always try to extract entertainment entities - let the LLM decide
+        console.log('🎬 Checking for entertainment entities in:', userQuery);
         
-        if (isEntertainmentQuery) {
-          console.log('🎬 Entertainment query detected - fetching TMDB data...');
-          try {
-            // Import and call entertainment API directly
-            const { POST } = await import('../entertainment/route');
-            const req = new Request('http://internal/api/entertainment', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ message: userQuery }),
-            });
-            const res = await POST(req);
-            const data = await res.json();
+        try {
+          // Import and call entertainment API directly
+          const { POST } = await import('../entertainment/route');
+          const req = new Request('http://internal/api/entertainment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: userQuery }),
+          });
+          const res = await POST(req);
+          const data = await res.json();
+          
+          console.log('📡 TMDB API response:', { hasEntity: data.hasEntity, entity: data.entity?.title });
+          
+          if (data.hasEntity && data.entity) {
+            entertainmentEntities = [data.entity];
+            console.log('✅ Entertainment entity set:', entertainmentEntities.length, 'entities');
             
-            console.log('📡 TMDB API response:', { hasEntity: data.hasEntity, entity: data.entity?.title });
-            
-            if (data.hasEntity && data.entity) {
-              entertainmentEntities = [data.entity];
-              console.log('✅ Entertainment entity set:', entertainmentEntities.length, 'entities');
-              
-              // Add to context for AI to reference
-              memoryContext += '\n\n### ENTERTAINMENT DATA\n';
-              memoryContext += `Title: ${data.entity.title}\n`;
-              memoryContext += `Type: ${data.entity.type}\n`;
-              memoryContext += `Overview: ${data.entity.overview.substring(0, 200)}...\n`;
-              if (data.entity.rating) {
-                memoryContext += `Rating: ${data.entity.rating}/10\n`;
-              }
-              if (data.entity.known_for) {
-                memoryContext += `Known For: ${data.entity.known_for.map((m: any) => m.title).join(', ')}\n`;
-              }
-            } else {
-              console.log('❌ No entity found in TMDB response');
+            // Add to context for AI to reference
+            memoryContext += '\n\n### ENTERTAINMENT DATA\n';
+            memoryContext += `Title: ${data.entity.title}\n`;
+            memoryContext += `Type: ${data.entity.type}\n`;
+            memoryContext += `Overview: ${data.entity.overview.substring(0, 200)}...\n`;
+            if (data.entity.rating) {
+              memoryContext += `Rating: ${data.entity.rating}/10\n`;
             }
-          } catch (error) {
-            console.error('❌ Entertainment fetch error:', error);
+            if (data.entity.known_for) {
+              memoryContext += `Known For: ${data.entity.known_for.map((m: any) => m.title).join(', ')}\n`;
+            }
+          } else {
+            console.log('❌ No entity found in TMDB response');
           }
-        } else {
-          console.log('🚫 Not an entertainment query');
+        } catch (error) {
+          console.error('❌ Entertainment fetch error:', error);
         }
         
         // Send sources metadata (including live resources, news, movies)
@@ -779,6 +772,7 @@ _This link expires in 24 hours._`;
               newsArticles,
               movieResults,
               personResults: movieResults.filter((r: any) => r.type === 'person'),
+              entertainmentEntities, // Add TMDB data for slow mode too
             });
             controller.enqueue(new TextEncoder().encode(slowSourcesMetadata + '\n'));
           } else {

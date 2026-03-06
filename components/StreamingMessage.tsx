@@ -492,6 +492,9 @@ export default function StreamingMessage({
   personResults = [],
   entertainmentEntities = [],
 }: StreamingMessageProps) {
+  // Debug logging
+  console.log('🎬 StreamingMessage received entertainmentEntities:', entertainmentEntities.length, entertainmentEntities);
+  
   const [displayedContent, setDisplayedContent] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const isAI = role === "assistant";
