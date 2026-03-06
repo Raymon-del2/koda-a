@@ -487,9 +487,15 @@ export default function StreamingMessage({
 
   // Parse thinking tags and Nyati JSON metadata
   const parseThinking = (text: string): { thought: string | null; message: string } => {
+    // Remove metadata JSON blocks first
+    const metadataPattern = /\{[\s\S]*?"type"\s*:\s*"metadata"[\s\S]*?\}/;
+    const metadataMatch = text.match(metadataPattern);
+    if (metadataMatch) {
+      text = text.replace(metadataMatch[0], '').trim();
+    }
+    
     // Try to find JSON blocks that look like Nyati plan metadata
-    // This handles cases where text like "Nyati" appears before the JSON
-    const planPattern = /{[\s\S]*?"type"\s*:\s*"plan"[\s\S]*?}/;
+    const planPattern = /\{[\s\S]*?"type"\s*:\s*"plan"[\s\S]*?\}/;
     const match = text.match(planPattern);
     
     if (match) {

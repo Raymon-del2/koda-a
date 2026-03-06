@@ -1493,7 +1493,12 @@ __turbopack_context__.s([
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$ai$2f$dist$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/node_modules/ai/dist/index.mjs [app-route] (ecmascript) <locals>");
 ;
 ;
-// Initialize nyati-core for planning (same model, different role)
+// Local Ollama provider for SLOW MODE (no token limits!)
+const ollamaProvider = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$ai$2d$sdk$2f$openai$2f$dist$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["createOpenAI"])({
+    baseURL: 'http://localhost:11434/v1',
+    apiKey: 'ollama'
+});
+// Fast planning provider (Hugging Face) - for quick intent detection
 const nyatiCore = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$ai$2d$sdk$2f$openai$2f$dist$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["createOpenAI"])({
     baseURL: 'https://ryan33121-nyati-core-api.hf.space/v1',
     apiKey: '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'
@@ -1553,7 +1558,7 @@ async function generateStrategicDraft(userMessage, memoryContext, plan) {
     }
     try {
         const result = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$ai$2f$dist$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__$3c$locals$3e$__["generateText"])({
-            model: nyatiCore.languageModel('llama3.2:1b'),
+            model: ollamaProvider.languageModel('llama3.2:3b'),
             system: STRATEGIC_PROMPT,
             messages: [
                 {
@@ -1590,7 +1595,7 @@ STRATEGIC REASONING (Hidden):
 Follow this reasoning when crafting your response.`;
     try {
         const result = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$ai$2f$dist$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__$3c$locals$3e$__["generateText"])({
-            model: nyatiCore.languageModel('llama3.2:1b'),
+            model: ollamaProvider.languageModel('llama3.2:3b'),
             system: executionPrompt,
             messages: [
                 {
@@ -1598,7 +1603,7 @@ Follow this reasoning when crafting your response.`;
                     content: `Original user request: "${userMessage}"\n\nRelevant context:\n${memoryContext || 'None'}`
                 }
             ],
-            temperature: 0.7
+            temperature: 0.2
         });
         return result.text;
     } catch (error) {
@@ -8111,29 +8116,44 @@ const maxDuration = 60;
 const groqProvider = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$ai$2d$sdk$2f$groq$2f$dist$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["createGroq"])({
     apiKey: process.env.GROQ_API_KEY || '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'
 });
+// Local Ollama provider - NO API TOKENS NEEDED!
+const ollamaProvider = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$ai$2d$sdk$2f$openai$2f$dist$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["createOpenAI"])({
+    baseURL: 'http://localhost:11434/v1',
+    apiKey: 'ollama'
+});
+// Fallback remote provider (Hugging Face) - only used if Ollama fails
 const nyatiCore = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$ai$2d$sdk$2f$openai$2f$dist$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["createOpenAI"])({
     baseURL: 'https://ryan33121-nyati-core-api.hf.space/v1',
     apiKey: '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'
 });
-const SYSTEM_PROMPT = `You are Koda-A, part of the Nyati ecosystem. You're sharp, technically skilled, and genuinely fun to talk to.
+const SYSTEM_PROMPT = `You are Koda-A, a highly opinionated, expert software engineer and technically skilled AI assistant.
 
-**WHO YOU ARE (Koda-A)**:
-- Koda-A is an AI assistant built by the Nyati ecosystem team
-- You're designed to be a knowledgeable peer, not a generic chatbot
-- You help with coding, technical questions, learning resources, and casual conversation
-- The Nyati ecosystem includes memory systems, knowledge retrieval, and adaptive intelligence
+**WHO YOU ARE**:
+- You are an expert software engineer with strong opinions on technology
+- You help with coding, technical questions, learning resources, and conversation
+- You have ZERO tolerance for hallucinations - if you don't know something, say "I don't know"
+- You NEVER invent facts, people, events, or technical details
+- You rely on provided context and web search for factual information
+
+**STRICT RULES (NEVER BREAK THESE)**:
+- If you don't know the answer, say "I don't know" - never make things up
+- Never hallucinate names, dates, events, or technical specifications
+- Only state facts you are certain about or that are in your context
+- For current events: use search or say you don't have real-time information
+- Never mention "servers", "systems", or technical infrastructure in casual chat
 
 **PERSONALITY**:
-- You're a peer, not an assistant. Talk like you're chatting with a colleague.
-- Match the user's energy. Short message? Short reply. Detailed question? Thoughtful answer.
-- Never use generic phrases like "How can I help you?" or "What do you need assistance with?"
-- Be playful when appropriate. Drop a joke, make a reference, keep it real.
-- You have opinions and preferences. Don't be bland.
+- You're a sharp, opinionated peer - talk like a senior engineer chatting with a junior
+- You have strong preferences and aren't afraid to share them
+- Be direct and concise - no fluff, no generic pleasantries
+- Match the user's energy but keep it professional
+- Never use phrases like "How can I help you?" or "What do you need assistance with?"
 
 **CONVERSATION STYLE**:
 - For greetings: Respond naturally. "hey" → "yo, what's up?" or "hey!" or "sup"
-- For "thanks": "np" or "anytime" or just acknowledge it casually
-- For questions: Get straight to the point, then elaborate if needed
+- For "hru" or "how are you": "good, you?" or "doing well"
+- For "thanks": "np" or "anytime"
+- For questions: Get straight to the point with accurate information
 - Never sign off with "Let me know if you need anything else"
 
 **CITATIONS & SOURCES**:
@@ -8154,9 +8174,10 @@ Approach: Will explain X then provide example.
 </thinking>
 
 **TECHNICAL STUFF**:
-- When code or technical questions come up, switch to engineer mode
-- Keep explanations clear but not patronizing
-- For technical topics, be precise and factual (lower creativity)
+- When code questions come up: provide optimal, production-ready code
+- Use accurate technical terminology - never guess
+- Be precise and factual (low creativity mode for tech)
+- If unsure about a library version or API, say so
 
 **SELF-CORRECTION**:
 - If you realize you need more information to answer accurately, output: [NEED_SEARCH: your search query]
@@ -8630,7 +8651,8 @@ _This link expires in 24 hours._`;
                     const result = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$ai$2f$dist$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__$3c$locals$3e$__["streamText"])({
                         model: groqProvider.languageModel('llama-3.1-8b-instant'),
                         system: enhancedSystemPrompt,
-                        messages
+                        messages,
+                        temperature: 0.2
                     });
                     for await (const chunk of result.textStream){
                         try {
@@ -8657,7 +8679,8 @@ _This link expires in 24 hours._`;
                                                 role: 'assistant',
                                                 content: fullResponseText
                                             }
-                                        ]
+                                        ],
+                                        temperature: 0.2
                                     });
                                     for await (const continuedChunk of continuedResult.textStream){
                                         fullResponseText += continuedChunk;
@@ -8715,23 +8738,24 @@ _This link expires in 24 hours._`;
                     } else {
                         // Fallback: single-pass for simple queries
                         console.log('🔄 Dual-LLM: Skipping strategic draft (simple query), using single-pass...');
-                        const nyatiPrompt = `You are Koda-A, an AI assistant from the Nyati ecosystem.
+                        const fallbackPrompt = `You are Koda-A, a helpful AI assistant.
 
-Key facts about you:
+Key facts:
 - You help with coding, technical questions, learning, and casual chat
 - You're a peer, not a servant - talk like a colleague
 - Be natural and playful, not robotic
-
-For "who is koda" or "who are you" questions: Briefly explain you're Koda-A, an AI assistant built by the Nyati team to help with coding, learning, and conversation.
+- For greetings like "hey" or "hru": respond casually like "yo, what's up?" or "good, you?"
+- Never mention servers, systems, or infrastructure
+- Keep responses short and natural
 
 User said: "${userQuery}"
 
 ${memoryContext ? 'Context from knowledge: ' + memoryContext.split('### RELEVANT KNOWLEDGE')[1]?.slice(0, 500) : ''}`;
                         const fallbackResult = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$ai$2f$dist$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__$3c$locals$3e$__["streamText"])({
-                            model: nyatiCore.languageModel('llama3.2:1b'),
-                            system: nyatiPrompt,
+                            model: groqProvider.languageModel('llama-3.1-8b-instant'),
+                            system: fallbackPrompt,
                             messages,
-                            temperature: 0.9
+                            temperature: 0.2
                         });
                         for await (const chunk of fallbackResult.textStream){
                             try {
