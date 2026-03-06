@@ -27,8 +27,13 @@ export interface FirestoreMessage {
     id: number;
     title: string;
     url: string;
-    type: 'qdrant' | 'google' | 'youtube';
+    type: 'qdrant' | 'google' | 'video' | 'website' | 'article' | 'news' | 'movie' | 'person';
     snippet?: string;
+    favicon?: string;
+    source?: string;
+    image?: string | null;
+    date?: string;
+    rating?: number;
   }[];
   youtubeVideos?: {
     id: string;
