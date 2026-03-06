@@ -1828,6 +1828,11 @@ body {
   line-height: 2.25rem;
 }
 
+.text-4xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+}
+
 .text-\[10px\] {
   font-size: 10px;
 }
@@ -2290,6 +2295,245 @@ body {
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+.media-card-container {
+  background: linear-gradient(145deg, #1a1a1a 0%, #141414 100%);
+  border: 1px solid #333;
+  border-radius: 12px;
+  max-width: 500px;
+  margin: 15px 0;
+  transition: transform .2s, box-shadow .2s;
+  display: flex;
+  overflow: hidden;
+  box-shadow: 0 4px 20px #0006;
+}
+
+.media-card-container:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px #00000080;
+}
+
+.media-image-wrapper {
+  border-right: 1px solid #333;
+  flex-shrink: 0;
+  width: 140px;
+  height: 210px;
+  overflow: hidden;
+}
+
+.media-image-wrapper.rounded-full {
+  border: 3px solid #3a3a3a;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  margin: 20px;
+}
+
+.media-image {
+  -o-object-fit: cover;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  transition: transform .3s;
+}
+
+.media-card-container:hover .media-image {
+  transform: scale(1.05);
+}
+
+.media-placeholder {
+  background: linear-gradient(135deg, #252525 0%, #1a1a1a 100%);
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+.media-content {
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  padding: 16px;
+  display: flex;
+}
+
+.media-header {
+  margin-bottom: 8px;
+}
+
+.media-type-tag {
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.media-type-tag.movie {
+  color: #fff;
+  background: #e74c3c;
+}
+
+.media-type-tag.tv {
+  color: #fff;
+  background: #3498db;
+}
+
+.media-type-tag.person {
+  color: #fff;
+  background: #9b59b6;
+}
+
+.media-title {
+  color: #fff;
+  margin: 6px 0 0;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.media-stats {
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+  font-size: 13px;
+  display: flex;
+}
+
+.rating-star {
+  color: #f1c40f;
+}
+
+.rating-value {
+  color: #f1c40f;
+  font-weight: 600;
+}
+
+.stat-separator {
+  color: #666;
+}
+
+.release-year {
+  color: #999;
+}
+
+.media-overview {
+  color: #ccc;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  flex: 1;
+  margin-bottom: 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  display: -webkit-box;
+  overflow: hidden;
+}
+
+.known-for-section {
+  margin-bottom: 12px;
+}
+
+.known-for-label {
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  margin-bottom: 6px;
+  font-size: 11px;
+}
+
+.known-for-chips {
+  flex-wrap: wrap;
+  gap: 8px;
+  display: flex;
+}
+
+.known-for-chip {
+  color: #ddd;
+  cursor: pointer;
+  background: #252525;
+  border: 1px solid #333;
+  border-radius: 20px;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  transition: all .2s;
+  display: flex;
+}
+
+.known-for-chip:hover {
+  background: #333;
+  border-color: #444;
+}
+
+.chip-poster {
+  -o-object-fit: cover;
+  object-fit: cover;
+  border-radius: 3px;
+  width: 24px;
+  height: 36px;
+}
+
+.chip-title {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100px;
+  overflow: hidden;
+}
+
+.view-tmdb-btn {
+  color: #aaa;
+  background: #252525;
+  border: 1px solid #3a3a3a;
+  border-radius: 8px;
+  align-self: flex-start;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  font-size: 12px;
+  text-decoration: none;
+  transition: all .2s;
+  display: flex;
+}
+
+.view-tmdb-btn:hover {
+  color: #fff;
+  background: #333;
+  border-color: #555;
+}
+
+.media-card-grid {
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  gap: 16px;
+  margin: 16px 0;
+  display: grid;
+}
+
+@media (max-width: 640px) {
+  .media-card-container {
+    flex-direction: column;
+    max-width: 100%;
+  }
+
+  .media-image-wrapper {
+    border-bottom: 1px solid #333;
+    border-right: none;
+    width: 100%;
+    height: 200px;
+  }
+
+  .media-image-wrapper.rounded-full {
+    width: 100px;
+    height: 100px;
+    margin: 16px auto;
+  }
+
+  .media-card-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .placeholder\:text-gray-500::placeholder {

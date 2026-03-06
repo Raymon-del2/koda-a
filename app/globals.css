@@ -115,3 +115,246 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* ==========================================
+   TMDB Media Card Styles
+   ========================================== */
+
+.media-card-container {
+  display: flex;
+  background: linear-gradient(145deg, #1a1a1a 0%, #141414 100%);
+  border: 1px solid #333;
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 15px 0;
+  max-width: 500px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.media-card-container:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+}
+
+.media-image-wrapper {
+  width: 140px;
+  height: 210px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-right: 1px solid #333;
+}
+
+.media-image-wrapper.rounded-full {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin: 20px;
+  border: 3px solid #3a3a3a;
+}
+
+.media-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.media-card-container:hover .media-image {
+  transform: scale(1.05);
+}
+
+.media-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #252525 0%, #1a1a1a 100%);
+}
+
+.media-content {
+  padding: 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.media-header {
+  margin-bottom: 8px;
+}
+
+.media-type-tag {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.media-type-tag.movie {
+  background: #e74c3c;
+  color: white;
+}
+
+.media-type-tag.tv {
+  background: #3498db;
+  color: white;
+}
+
+.media-type-tag.person {
+  background: #9b59b6;
+  color: white;
+}
+
+.media-title {
+  margin: 6px 0 0 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.3;
+}
+
+.media-stats {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+  font-size: 13px;
+}
+
+.rating-star {
+  color: #f1c40f;
+}
+
+.rating-value {
+  color: #f1c40f;
+  font-weight: 600;
+}
+
+.stat-separator {
+  color: #666;
+}
+
+.release-year {
+  color: #999;
+}
+
+.media-overview {
+  font-size: 13px;
+  color: #ccc;
+  line-height: 1.5;
+  margin-bottom: 12px;
+  flex: 1;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+}
+
+/* Known For Section */
+.known-for-section {
+  margin-bottom: 12px;
+}
+
+.known-for-label {
+  font-size: 11px;
+  color: #888;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.known-for-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.known-for-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: #252525;
+  border: 1px solid #333;
+  border-radius: 20px;
+  font-size: 12px;
+  color: #ddd;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.known-for-chip:hover {
+  background: #333;
+  border-color: #444;
+}
+
+.chip-poster {
+  width: 24px;
+  height: 36px;
+  object-fit: cover;
+  border-radius: 3px;
+}
+
+.chip-title {
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.view-tmdb-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: #252525;
+  border: 1px solid #3a3a3a;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #aaa;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  align-self: flex-start;
+}
+
+.view-tmdb-btn:hover {
+  background: #333;
+  border-color: #555;
+  color: #fff;
+}
+
+/* Media Card Grid */
+.media-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  gap: 16px;
+  margin: 16px 0;
+}
+
+@media (max-width: 640px) {
+  .media-card-container {
+    flex-direction: column;
+    max-width: 100%;
+  }
+  
+  .media-image-wrapper {
+    width: 100%;
+    height: 200px;
+    border-right: none;
+    border-bottom: 1px solid #333;
+  }
+  
+  .media-image-wrapper.rounded-full {
+    width: 100px;
+    height: 100px;
+    margin: 16px auto;
+  }
+  
+  .media-card-grid {
+    grid-template-columns: 1fr;
+  }
+}

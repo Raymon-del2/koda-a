@@ -2,7 +2,16 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, User, Brain, Link2, Square, Loader2, Settings2 } from "lucide-react";
+import { 
+  Sparkles, 
+  User, 
+  Brain, 
+  Link2, 
+  Square, 
+  Loader2, 
+  Settings2 
+} from "lucide-react";
+import { MediaCard, MediaCardGrid, EntertainmentEntity } from "./MediaCard";
 import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
@@ -81,6 +90,7 @@ interface StreamingMessageProps {
   newsArticles?: NewsArticle[];
   movieResults?: MovieResult[];
   personResults?: PersonResult[];
+  entertainmentEntities?: EntertainmentEntity[];
 }
 
 // Search loading skeleton - shows when AI is searching the web
@@ -480,6 +490,7 @@ export default function StreamingMessage({
   newsArticles = [],
   movieResults = [],
   personResults = [],
+  entertainmentEntities = [],
 }: StreamingMessageProps) {
   const [displayedContent, setDisplayedContent] = useState("");
   const [isTyping, setIsTyping] = useState(false);
@@ -756,6 +767,13 @@ export default function StreamingMessage({
         {/* Movie Results */}
         {!isStreaming && movieResults.length > 0 && (
           <MovieCardGrid movies={movieResults} />
+        )}
+
+        {/* Entertainment Media Cards (TMDB) */}
+        {!isStreaming && entertainmentEntities && entertainmentEntities.length > 0 && (
+          <div className="mt-4 ml-12">
+            <MediaCardGrid entities={entertainmentEntities} />
+          </div>
         )}
       </div>
     </motion.div>

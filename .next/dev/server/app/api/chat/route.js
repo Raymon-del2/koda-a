@@ -1,5 +1,5 @@
 var R=require("../../../chunks/[turbopack]_runtime.js")("server/app/api/chat/route.js")
-R.c("server/chunks/node_modules_@vercel_oidc_dist_ad8793f9._.js")
+R.c("server/chunks/_ec34ecbb._.js")
 R.c("server/chunks/[root-of-the-server]__04d089d5._.js")
 R.c("server/chunks/node_modules_next_dist_0eee38d6._.js")
 R.c("server/chunks/node_modules_@opentelemetry_api_build_esm_7e8f41ca._.js")

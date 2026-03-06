@@ -39,6 +39,7 @@ interface Message {
   newsArticles?: any[];
   movieResults?: any[];
   personResults?: any[];
+  entertainmentEntities?: any[];
 }
 
 interface Chat {
@@ -984,6 +985,7 @@ export default function GeminiChatPage() {
       let messageNewsArticles: any[] | undefined;
       let messageMovieResults: any[] | undefined;
       let messagePersonResults: any[] | undefined;
+      let messageEntertainmentEntities: any[] | undefined;
 
       if (reader) {
         while (true) {
@@ -1007,6 +1009,7 @@ export default function GeminiChatPage() {
                     messageNewsArticles = parsed.newsArticles || [];
                     messageMovieResults = parsed.movieResults || [];
                     messagePersonResults = parsed.personResults || [];
+                    messageEntertainmentEntities = parsed.entertainmentEntities || [];
                     metadataParsed = true;
                   }
                   // Remove metadata from text chunk
@@ -1038,6 +1041,7 @@ export default function GeminiChatPage() {
                         newsArticles: messageNewsArticles,
                         movieResults: messageMovieResults,
                         personResults: messagePersonResults,
+                        entertainmentEntities: messageEntertainmentEntities,
                       },
                     ],
                   }
@@ -1063,6 +1067,10 @@ export default function GeminiChatPage() {
                     modelType: modelType,
                     sources: messageSources,
                     youtubeVideos: messageVideos,
+                    newsArticles: messageNewsArticles,
+                    movieResults: messageMovieResults,
+                    personResults: messagePersonResults,
+                    entertainmentEntities: messageEntertainmentEntities,
                   },
                 ],
               }
@@ -1408,6 +1416,7 @@ export default function GeminiChatPage() {
                           newsArticles={message.newsArticles}
                           movieResults={message.movieResults}
                           personResults={message.personResults}
+                          entertainmentEntities={message.entertainmentEntities}
                         />
                         
                         {/* YouTube Video Cards */}

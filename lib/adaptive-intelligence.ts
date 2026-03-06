@@ -325,14 +325,14 @@ export function getCalibratedConfidenceThreshold(
   baseConfidence: number
 ): number {
   const thresholds = metricsStore.getThresholds();
-  const intentConfig = thresholds.intentThresholds[intent];
+  const intentConfig = thresholds.intentThresholds?.[intent];
   
-  // Apply intent-specific adjustments
+  // Apply intent-specific adjustments (with fallback if intentConfig undefined)
   const adjustedThreshold = thresholds.selfConsistencyThreshold + 
-    (intentConfig.confidenceBoost || 0);
+    (intentConfig?.confidenceBoost || 0);
   
   // Apply intent-specific override if available
-  return intentConfig.selfConsistency || adjustedThreshold;
+  return intentConfig?.selfConsistency || adjustedThreshold;
 }
 
 export function shouldUseSelfConsistency(

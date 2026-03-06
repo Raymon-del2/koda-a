@@ -2125,11 +2125,11 @@ class MetricsStore {
 const metricsStore = new MetricsStore();
 function getCalibratedConfidenceThreshold(intent, baseConfidence) {
     const thresholds = metricsStore.getThresholds();
-    const intentConfig = thresholds.intentThresholds[intent];
-    // Apply intent-specific adjustments
-    const adjustedThreshold = thresholds.selfConsistencyThreshold + (intentConfig.confidenceBoost || 0);
+    const intentConfig = thresholds.intentThresholds?.[intent];
+    // Apply intent-specific adjustments (with fallback if intentConfig undefined)
+    const adjustedThreshold = thresholds.selfConsistencyThreshold + (intentConfig?.confidenceBoost || 0);
     // Apply intent-specific override if available
-    return intentConfig.selfConsistency || adjustedThreshold;
+    return intentConfig?.selfConsistency || adjustedThreshold;
 }
 function shouldUseSelfConsistency(plan, complexity) {
     const threshold = getCalibratedConfidenceThreshold(plan.intent, plan.confidence);
@@ -8614,6 +8614,61 @@ _This link expires in 24 hours._`;
                         console.error('Live resources fetch error:', error);
                     }
                 }
+                // Fetch entertainment data for movie/TV/actor queries
+                let entertainmentEntities = [];
+                const entertainmentKeywords = [
+                    'movie',
+                    'film',
+                    'actor',
+                    'actress',
+                    'director',
+                    'tv show',
+                    'series',
+                    'netflix',
+                    'disney',
+                    'marvel',
+                    'dc',
+                    'hollywood',
+                    'cinema'
+                ];
+                const isEntertainmentQuery = entertainmentKeywords.some((kw)=>userQuery.toLowerCase().includes(kw)) || /\b(played|cast|starring|in)\s+(?:the\s+)?(?:movie|film|show)/i.test(userQuery);
+                if (isEntertainmentQuery) {
+                    console.log('🎬 Entertainment query detected - fetching TMDB data...');
+                    try {
+                        // Import and call entertainment API directly
+                        const { POST } = await __turbopack_context__.A("[project]/app/api/entertainment/route.ts [app-route] (ecmascript, async loader)");
+                        const req = new Request('http://internal/api/entertainment', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                message: userQuery
+                            })
+                        });
+                        const res = await POST(req);
+                        const data = await res.json();
+                        if (data.hasEntity && data.entity) {
+                            entertainmentEntities = [
+                                data.entity
+                            ];
+                            // Add to context for AI to reference
+                            memoryContext += '\n\n### ENTERTAINMENT DATA\n';
+                            memoryContext += `Title: ${data.entity.title}\n`;
+                            memoryContext += `Type: ${data.entity.type}\n`;
+                            memoryContext += `Overview: ${data.entity.overview.substring(0, 200)}...\n`;
+                            if (data.entity.rating) {
+                                memoryContext += `Rating: ${data.entity.rating}/10\n`;
+                            }
+                            if (data.entity.known_for) {
+                                memoryContext += `Known For: ${data.entity.known_for.map((m)=>m.title).join(', ')}\n`;
+                            }
+                            console.log('✅ Entertainment data fetched:', data.entity.title);
+                        }
+                    } catch (error) {
+                        console.error('Entertainment fetch error:', error);
+                    }
+                }
                 // Send sources metadata (including live resources, news, movies)
                 const sourcesMetadata = JSON.stringify({
                     type: 'metadata',
@@ -8622,7 +8677,8 @@ _This link expires in 24 hours._`;
                     liveResourcesFetched,
                     newsArticles,
                     movieResults,
-                    personResults: movieResults.filter((r)=>r.type === 'person')
+                    personResults: movieResults.filter((r)=>r.type === 'person'),
+                    entertainmentEntities
                 });
                 controller.enqueue(new TextEncoder().encode(sourcesMetadata + '\n'));
                 // ==========================================
