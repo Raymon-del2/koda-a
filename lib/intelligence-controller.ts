@@ -14,7 +14,13 @@ import { generateText } from 'ai';
 import type { NyatiPlan, NyatiReflection, MemoryEvaluation } from '@/types/plan';
 import { generateControllerBias, getIntentBias } from './observability';
 
-// Initialize nyati-core for planning (same model, different role)
+// Local Ollama provider for SLOW MODE (no token limits!)
+const ollamaProvider = createOpenAI({
+  baseURL: 'http://localhost:11434/v1',
+  apiKey: 'ollama',
+});
+
+// Fast planning provider (Hugging Face) - for quick intent detection
 const nyatiCore = createOpenAI({
   baseURL: 'https://ryan33121-nyati-core-api.hf.space/v1',
   apiKey: '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',
@@ -94,7 +100,7 @@ export async function generateStrategicDraft(
   
   try {
     const result = await generateText({
-      model: nyatiCore.languageModel('llama3.2:1b'),
+      model: ollamaProvider.languageModel('llama3.2:3b'),
       system: STRATEGIC_PROMPT,
       messages: [
         {
@@ -146,7 +152,7 @@ Follow this reasoning when crafting your response.`;
   
   try {
     const result = await generateText({
-      model: nyatiCore.languageModel('llama3.2:1b'),
+      model: ollamaProvider.languageModel('llama3.2:3b'),
       system: executionPrompt,
       messages: [
         {
@@ -154,7 +160,7 @@ Follow this reasoning when crafting your response.`;
           content: `Original user request: "${userMessage}"\n\nRelevant context:\n${memoryContext || 'None'}`,
         },
       ],
-      temperature: 0.7,
+      temperature: 0.2, // Low temp for factual responses
     });
     
     return result.text;
