@@ -39,9 +39,10 @@
   * {
     @apply border-border;
   }
-  body {
+  html, body {
     @apply bg-[#0e0e0e] text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+    overflow-x: hidden;
   }
 }
 

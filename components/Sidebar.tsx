@@ -29,8 +29,10 @@ import {
   Plus,
   Megaphone,
   Calendar,
+  Pencil,
+  Check,
 } from "lucide-react";
-import { loadWhatsNewUpdates, addWhatsNewUpdate, deleteWhatsNewUpdate, type WhatsNewUpdate } from "../lib/firestore";
+import { loadWhatsNewUpdates, addWhatsNewUpdate, deleteWhatsNewUpdate, editWhatsNewUpdate, type WhatsNewUpdate } from "../lib/firestore";
 
 interface Chat {
   id: string;
@@ -109,7 +111,27 @@ export default function Sidebar({
   const [addUpdateModalOpen, setAddUpdateModalOpen] = useState(false);
   const [newUpdateTitle, setNewUpdateTitle] = useState('');
   const [newUpdateDescription, setNewUpdateDescription] = useState('');
+  const [newUpdateStatus, setNewUpdateStatus] = useState<'coming_soon' | 'out' | 'blog'>('out');
+  const [newUpdateLink, setNewUpdateLink] = useState('');
+  const [newUpdateTags, setNewUpdateTags] = useState('');
+  const [newUpdateType, setNewUpdateType] = useState<'blog' | 'feature' | 'improvement' | 'announcement'>('announcement');
   const [isSubmittingUpdate, setIsSubmittingUpdate] = useState(false);
+  
+  // WhatsNew Delete Confirmation State
+  const [deleteUpdateModalOpen, setDeleteUpdateModalOpen] = useState(false);
+  const [updateToDelete, setUpdateToDelete] = useState<string | null>(null);
+  const [isDeletingUpdate, setIsDeletingUpdate] = useState(false);
+  
+  // WhatsNew Edit State
+  const [editUpdateModalOpen, setEditUpdateModalOpen] = useState(false);
+  const [updateToEdit, setUpdateToEdit] = useState<WhatsNewUpdate | null>(null);
+  const [editUpdateTitle, setEditUpdateTitle] = useState('');
+  const [editUpdateDescription, setEditUpdateDescription] = useState('');
+  const [editUpdateStatus, setEditUpdateStatus] = useState<'coming_soon' | 'out' | 'blog'>('out');
+  const [editUpdateLink, setEditUpdateLink] = useState('');
+  const [editUpdateTags, setEditUpdateTags] = useState('');
+  const [editUpdateType, setEditUpdateType] = useState<'blog' | 'feature' | 'improvement' | 'announcement'>('announcement');
+  const [isEditingUpdate, setIsEditingUpdate] = useState(false);
 
   // Check if user is admin
   const isAdmin = user?.email === ADMIN_EMAIL;
@@ -143,13 +165,21 @@ export default function Sidebar({
       const newUpdate = await addWhatsNewUpdate(
         newUpdateTitle.trim(),
         newUpdateDescription.trim(),
-        user.id
+        user.id,
+        newUpdateStatus,
+        newUpdateLink,
+        newUpdateTags.split(',').map(tag => tag.trim()).filter(Boolean),
+        newUpdateType
       );
       
       if (newUpdate) {
         setUpdates(prev => [newUpdate, ...prev]);
         setNewUpdateTitle('');
         setNewUpdateDescription('');
+        setNewUpdateStatus('out');
+        setNewUpdateLink('');
+        setNewUpdateTags('');
+        setNewUpdateType('announcement');
         setAddUpdateModalOpen(false);
       }
     } catch (error) {
@@ -159,17 +189,85 @@ export default function Sidebar({
     }
   };
 
-  // Delete update (admin only)
-  const handleDeleteUpdate = async (updateId: string) => {
-    if (!confirm('Delete this update?')) return;
+  // Delete update (admin only) - opens confirmation modal
+  const handleDeleteClick = (updateId: string) => {
+    setUpdateToDelete(updateId);
+    setDeleteUpdateModalOpen(true);
+  };
+
+  // Confirm delete update
+  const confirmDeleteUpdate = async () => {
+    if (!updateToDelete) return;
     
+    setIsDeletingUpdate(true);
     try {
-      const success = await deleteWhatsNewUpdate(updateId);
+      const success = await deleteWhatsNewUpdate(updateToDelete);
       if (success) {
-        setUpdates(prev => prev.filter(u => u.id !== updateId));
+        setUpdates(prev => prev.filter(u => u.id !== updateToDelete));
+        setDeleteUpdateModalOpen(false);
+        setUpdateToDelete(null);
       }
     } catch (error) {
       console.error('Failed to delete update:', error);
+    } finally {
+      setIsDeletingUpdate(false);
+    }
+  };
+
+  // Edit update (admin only) - opens edit modal
+  const handleEditClick = (update: WhatsNewUpdate) => {
+    setUpdateToEdit(update);
+    setEditUpdateTitle(update.title);
+    setEditUpdateDescription(update.description);
+    setEditUpdateStatus(update.status || 'out');
+    setEditUpdateLink(update.link || '');
+    setEditUpdateTags(update.tags?.join(', ') || '');
+    setEditUpdateType(update.type || 'announcement');
+    setEditUpdateModalOpen(true);
+  };
+
+  // Save edited update
+  const handleSaveEdit = async () => {
+    if (!updateToEdit || !editUpdateTitle.trim() || !editUpdateDescription.trim()) return;
+    
+    setIsEditingUpdate(true);
+    try {
+      const success = await editWhatsNewUpdate(
+        updateToEdit.id,
+        editUpdateTitle.trim(),
+        editUpdateDescription.trim(),
+        editUpdateStatus,
+        editUpdateLink,
+        editUpdateTags.split(',').map(tag => tag.trim()).filter(Boolean),
+        editUpdateType
+      );
+      if (success) {
+        setUpdates(prev => prev.map(u => 
+          u.id === updateToEdit.id 
+            ? { 
+                ...u, 
+                title: editUpdateTitle.trim(), 
+                description: editUpdateDescription.trim(),
+                status: editUpdateStatus,
+                link: editUpdateLink,
+                tags: editUpdateTags.split(',').map(tag => tag.trim()).filter(Boolean),
+                type: editUpdateType
+              }
+            : u
+        ));
+        setEditUpdateModalOpen(false);
+        setUpdateToEdit(null);
+        setEditUpdateTitle('');
+        setEditUpdateDescription('');
+        setEditUpdateStatus('out');
+        setEditUpdateLink('');
+        setEditUpdateTags('');
+        setEditUpdateType('announcement');
+      }
+    } catch (error) {
+      console.error('Failed to edit update:', error);
+    } finally {
+      setIsEditingUpdate(false);
     }
   };
 
@@ -1000,26 +1098,71 @@ export default function Sidebar({
                       >
                         <div className="flex items-start justify-between gap-3">
                           <div className="flex-1 min-w-0">
-                            <h3 className="text-sm font-medium text-white truncate">
-                              {update.title}
-                            </h3>
-                            <p className="text-xs text-gray-400 mt-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <h3 className="text-sm font-medium text-white truncate">
+                                {update.title}
+                              </h3>
+                              {/* Status Badge */}
+                              <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
+                                update.status === 'out' ? 'bg-green-500/20 text-green-400' :
+                                update.status === 'coming_soon' ? 'bg-yellow-500/20 text-yellow-400' :
+                                'bg-blue-500/20 text-blue-400'
+                              }`}>
+                                {update.status === 'coming_soon' ? 'Coming Soon' : update.status === 'blog' ? 'Blog' : 'Out'}
+                              </span>
+                            </div>
+                            {/* Type Badge */}
+                            <span className="inline-block text-[10px] px-2 py-0.5 rounded-full font-medium bg-purple-500/20 text-purple-400 mb-2">
+                              {update.type || 'Announcement'}
+                            </span>
+                            <p className="text-xs text-gray-400">
                               {update.description}
                             </p>
+                            {/* Tags */}
+                            {update.tags && update.tags.length > 0 && (
+                              <div className="flex flex-wrap gap-1 mt-2">
+                                {update.tags.map((tag, idx) => (
+                                  <span key={idx} className="text-[10px] px-2 py-0.5 rounded-full bg-gray-700 text-gray-300">
+                                    #{tag}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                            {/* Link */}
+                            {update.link && (
+                              <a 
+                                href={update.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-1 mt-2 text-xs text-blue-400 hover:text-blue-300 transition-colors"
+                              >
+                                <Link size={12} />
+                                Visit Link
+                              </a>
+                            )}
                             <div className="flex items-center gap-2 mt-3 text-xs text-gray-500">
                               <Calendar size={12} />
                               <span>{update.date}</span>
                             </div>
                           </div>
-                          {/* Delete button - only visible to admin */}
+                          {/* Admin actions - Edit and Delete buttons */}
                           {isAdmin && (
-                            <button
-                              onClick={() => handleDeleteUpdate(update.id)}
-                              className="p-1.5 hover:bg-red-500/20 rounded-full transition-colors text-red-400 shrink-0"
-                              title="Delete update"
-                            >
-                              <Trash2 size={14} />
-                            </button>
+                            <div className="flex items-center gap-1 shrink-0">
+                              <button
+                                onClick={() => handleEditClick(update)}
+                                className="p-1.5 hover:bg-blue-500/20 rounded-full transition-colors text-blue-400"
+                                title="Edit update"
+                              >
+                                <Edit3 size={14} />
+                              </button>
+                              <button
+                                onClick={() => handleDeleteClick(update.id)}
+                                className="p-1.5 hover:bg-red-500/20 rounded-full transition-colors text-red-400"
+                                title="Delete update"
+                              >
+                                <Trash2 size={14} />
+                              </button>
+                            </div>
                           )}
                         </div>
                       </motion.div>
@@ -1076,7 +1219,48 @@ export default function Sidebar({
                 onChange={(e) => setNewUpdateDescription(e.target.value)}
                 placeholder="Describe the update..."
                 rows={3}
-                className="w-full bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl p-3 text-white text-sm placeholder-gray-500 resize-none focus:outline-none focus:border-purple-500/50 mb-4"
+                className="w-full bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl p-3 text-white text-sm placeholder-gray-500 resize-none focus:outline-none focus:border-purple-500/50 mb-3"
+              />
+
+              {/* Status Dropdown */}
+              <select
+                value={newUpdateStatus}
+                onChange={(e) => setNewUpdateStatus(e.target.value as 'coming_soon' | 'out' | 'blog')}
+                className="w-full bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl p-3 text-white text-sm focus:outline-none focus:border-purple-500/50 mb-3"
+              >
+                <option value="out">Out</option>
+                <option value="coming_soon">Coming Soon</option>
+                <option value="blog">Blog</option>
+              </select>
+
+              {/* Type Dropdown */}
+              <select
+                value={newUpdateType}
+                onChange={(e) => setNewUpdateType(e.target.value as 'blog' | 'feature' | 'improvement' | 'announcement')}
+                className="w-full bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl p-3 text-white text-sm focus:outline-none focus:border-purple-500/50 mb-3"
+              >
+                <option value="announcement">Announcement</option>
+                <option value="blog">Blog</option>
+                <option value="feature">Feature</option>
+                <option value="improvement">Improvement</option>
+              </select>
+
+              {/* Link Input */}
+              <input
+                type="url"
+                value={newUpdateLink}
+                onChange={(e) => setNewUpdateLink(e.target.value)}
+                placeholder="Link URL (optional)..."
+                className="w-full bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl p-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-purple-500/50 mb-3"
+              />
+
+              {/* Tags Input */}
+              <input
+                type="text"
+                value={newUpdateTags}
+                onChange={(e) => setNewUpdateTags(e.target.value)}
+                placeholder="Tags (comma separated)..."
+                className="w-full bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl p-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-purple-500/50 mb-4"
               />
 
               <div className="flex gap-3">
@@ -1097,6 +1281,179 @@ export default function Sidebar({
                     <>
                       <Plus size={16} />
                       Add Update
+                    </>
+                  )}
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Delete Confirmation Modal */}
+      <AnimatePresence>
+        {deleteUpdateModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/70 z-[60] flex items-center justify-center p-4"
+            onClick={() => setDeleteUpdateModalOpen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              className="bg-[#1e1e1e] border border-[#2a2a2a] rounded-2xl p-6 max-w-sm w-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="text-center mb-6">
+                <div className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Trash2 size={24} className="text-red-400" />
+                </div>
+                <h3 className="text-lg font-semibold text-white mb-2">
+                  Delete Update?
+                </h3>
+                <p className="text-sm text-gray-400">
+                  Are you sure you want to delete this update? This action cannot be undone and others will no longer see it.
+                </p>
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setDeleteUpdateModalOpen(false)}
+                  disabled={isDeletingUpdate}
+                  className="flex-1 px-4 py-2 bg-[#2a2a2a] hover:bg-[#3a3a3a] rounded-xl transition-colors text-gray-300 disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={confirmDeleteUpdate}
+                  disabled={isDeletingUpdate}
+                  className="flex-1 px-4 py-2 bg-red-500 hover:bg-red-400 rounded-xl transition-colors text-white font-medium flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isDeletingUpdate ? (
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <>
+                      <Trash2 size={16} />
+                      Delete
+                    </>
+                  )}
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Edit Update Modal */}
+      <AnimatePresence>
+        {editUpdateModalOpen && updateToEdit && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/70 z-[60] flex items-center justify-center p-4"
+            onClick={() => setEditUpdateModalOpen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              className="bg-[#1e1e1e] border border-[#2a2a2a] rounded-2xl p-6 max-w-md w-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center">
+                  <Pencil size={20} className="text-blue-400" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-white">
+                    Edit Update
+                  </h3>
+                  <p className="text-sm text-gray-400">
+                    Modify this announcement
+                  </p>
+                </div>
+              </div>
+
+              <input
+                type="text"
+                value={editUpdateTitle}
+                onChange={(e) => setEditUpdateTitle(e.target.value)}
+                placeholder="Update title..."
+                className="w-full bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl p-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-blue-500/50 mb-3"
+              />
+
+              <textarea
+                value={editUpdateDescription}
+                onChange={(e) => setEditUpdateDescription(e.target.value)}
+                placeholder="Describe the update..."
+                rows={3}
+                className="w-full bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl p-3 text-white text-sm placeholder-gray-500 resize-none focus:outline-none focus:border-blue-500/50 mb-3"
+              />
+
+              {/* Status Dropdown */}
+              <select
+                value={editUpdateStatus}
+                onChange={(e) => setEditUpdateStatus(e.target.value as 'coming_soon' | 'out' | 'blog')}
+                className="w-full bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl p-3 text-white text-sm focus:outline-none focus:border-blue-500/50 mb-3"
+              >
+                <option value="out">Out</option>
+                <option value="coming_soon">Coming Soon</option>
+                <option value="blog">Blog</option>
+              </select>
+
+              {/* Type Dropdown */}
+              <select
+                value={editUpdateType}
+                onChange={(e) => setEditUpdateType(e.target.value as 'blog' | 'feature' | 'improvement' | 'announcement')}
+                className="w-full bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl p-3 text-white text-sm focus:outline-none focus:border-blue-500/50 mb-3"
+              >
+                <option value="announcement">Announcement</option>
+                <option value="blog">Blog</option>
+                <option value="feature">Feature</option>
+                <option value="improvement">Improvement</option>
+              </select>
+
+              {/* Link Input */}
+              <input
+                type="url"
+                value={editUpdateLink}
+                onChange={(e) => setEditUpdateLink(e.target.value)}
+                placeholder="Link URL (optional)..."
+                className="w-full bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl p-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-blue-500/50 mb-3"
+              />
+
+              {/* Tags Input */}
+              <input
+                type="text"
+                value={editUpdateTags}
+                onChange={(e) => setEditUpdateTags(e.target.value)}
+                placeholder="Tags (comma separated)..."
+                className="w-full bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl p-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-blue-500/50 mb-4"
+              />
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setEditUpdateModalOpen(false)}
+                  disabled={isEditingUpdate}
+                  className="flex-1 px-4 py-2 bg-[#2a2a2a] hover:bg-[#3a3a3a] rounded-xl transition-colors text-gray-300 disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSaveEdit}
+                  disabled={!editUpdateTitle.trim() || !editUpdateDescription.trim() || isEditingUpdate}
+                  className="flex-1 px-4 py-2 bg-blue-500 hover:bg-blue-400 rounded-xl transition-colors text-white font-medium flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isEditingUpdate ? (
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <>
+                      <Check size={16} />
+                      Save Changes
                     </>
                   )}
                 </button>

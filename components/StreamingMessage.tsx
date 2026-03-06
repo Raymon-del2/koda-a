@@ -316,7 +316,7 @@ function SuggestionChip({
   return (
     <button
       onClick={onClick}
-      className="px-4 py-2 bg-[#1e1e1e] hover:bg-[#2a2a2a] border border-[#3a3a3a] rounded-full text-sm text-gray-300 hover:text-white transition-all whitespace-nowrap"
+      className="px-4 py-2 bg-[#1e1e1e] hover:bg-[#2a2a2a] border border-[#3a3a3a] rounded-full text-sm text-gray-300 hover:text-white transition-all text-left"
     >
       {suggestion}
     </button>

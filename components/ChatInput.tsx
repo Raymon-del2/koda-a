@@ -119,10 +119,10 @@ export default function ChatInput({
     : "Ask anything...";
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-[#0e0e0e] via-[#0e0e0e]/95 to-transparent z-50">
+    <div className="fixed bottom-0 left-0 right-0 p-4 pb-6 sm:pb-4 bg-[#0e0e0e] z-50">
       <div className="max-w-3xl mx-auto">
         {/* Suggestion Chips */}
-        <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-hide">
+        <div className="flex flex-wrap gap-2 pb-3 max-w-full">
           {currentSuggestions.map((suggestion, index) => (
             <motion.button
               key={index}
@@ -130,7 +130,7 @@ export default function ChatInput({
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
               onClick={() => handleSuggestionClick(suggestion)}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-muted-foreground bg-card border border-border rounded-2xl hover:bg-secondary hover:border-muted-foreground/50 transition-all duration-200 whitespace-nowrap"
+              className="flex-shrink-0 px-4 py-2 text-sm font-medium text-muted-foreground bg-card border border-border rounded-2xl hover:bg-secondary hover:border-muted-foreground/50 transition-all duration-200"
             >
               {suggestion}
             </motion.button>

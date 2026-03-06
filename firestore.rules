@@ -42,7 +42,7 @@ service cloud.firestore {
     // Whats new - admin write, public read
     match /whats_new/{document=**} {
       allow read: if true;
-      allow write: if request.auth != null && request.auth.token.email == 'codedwaves01@gmail.com';
+      allow write: if request.auth != null && request.auth.token.email == 'wambuiraymond03@gmail.com';
     }
   }
 }

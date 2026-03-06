@@ -357,6 +357,10 @@ export interface WhatsNewUpdate {
   date: string;
   timestamp: Timestamp | number;
   authorId?: string;
+  status: 'coming_soon' | 'out' | 'blog';
+  link?: string;
+  tags: string[];
+  type: 'blog' | 'feature' | 'improvement' | 'announcement';
 }
 
 // Load all WhatsNew updates from Firestore
@@ -376,6 +380,10 @@ export const loadWhatsNewUpdates = async (): Promise<WhatsNewUpdate[]> => {
         date: data.date || '',
         timestamp: data.timestamp || Date.now(),
         authorId: data.authorId,
+        status: data.status || 'out',
+        link: data.link || '',
+        tags: data.tags || [],
+        type: data.type || 'announcement',
       });
     });
     
@@ -391,7 +399,11 @@ export const loadWhatsNewUpdates = async (): Promise<WhatsNewUpdate[]> => {
 export const addWhatsNewUpdate = async (
   title: string,
   description: string,
-  authorId: string
+  authorId: string,
+  status: 'coming_soon' | 'out' | 'blog' = 'out',
+  link?: string,
+  tags: string[] = [],
+  type: 'blog' | 'feature' | 'improvement' | 'announcement' = 'announcement'
 ): Promise<WhatsNewUpdate | null> => {
   try {
     const updatesRef = collection(db, "whats_new");
@@ -408,6 +420,10 @@ export const addWhatsNewUpdate = async (
       date: dateStr,
       timestamp: serverTimestamp(),
       authorId,
+      status,
+      link: link || '',
+      tags,
+      type,
     };
     
     const docRef = doc(updatesRef);
@@ -434,6 +450,37 @@ export const deleteWhatsNewUpdate = async (updateId: string): Promise<boolean> =
     return true;
   } catch (error) {
     console.error("Error deleting WhatsNew update:", error);
+    return false;
+  }
+};
+
+// Edit a WhatsNew update (admin only)
+export const editWhatsNewUpdate = async (
+  updateId: string,
+  title: string,
+  description: string,
+  status?: 'coming_soon' | 'out' | 'blog',
+  link?: string,
+  tags?: string[],
+  type?: 'blog' | 'feature' | 'improvement' | 'announcement'
+): Promise<boolean> => {
+  try {
+    const updateRef = doc(db, "whats_new", updateId);
+    const updateData: any = {
+      title,
+      description,
+      timestamp: serverTimestamp(),
+    };
+    if (status) updateData.status = status;
+    if (link !== undefined) updateData.link = link;
+    if (tags) updateData.tags = tags;
+    if (type) updateData.type = type;
+    
+    await setDoc(updateRef, updateData, { merge: true });
+    console.log(`✓ WhatsNew update edited: ${title}`);
+    return true;
+  } catch (error) {
+    console.error("Error editing WhatsNew update:", error);
     return false;
   }
 };
