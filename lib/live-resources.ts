@@ -137,6 +137,7 @@ export interface ResourceFetchResult {
 
 // Default configuration
 const DEFAULT_CONFIG: LiveResourceConfig = {
+  youtubeApiKey: 'AIzaSyA82ZQFsZYuf_yzCsd4QN0tkpRMvKcs6EA',
   maxResultsPerQuery: 10,
   freshnessDays: 365, // 1 year
   minViewCount: 1000,
@@ -444,8 +445,13 @@ export async function fetchYouTubeResources(
       return [];
     }
     
-    // Get video IDs for detailed info
-    const videoIds = data.items.map((item: any) => item.id.videoId).join(',');
+    // Get video IDs for detailed info - handle both string IDs and object IDs
+    const videoIds = data.items.map((item: any) => item.id?.videoId || item.id).filter(Boolean).join(',');
+    
+    if (!videoIds) {
+      console.warn('⚠️ No valid video IDs found in search results');
+      return [];
+    }
     
     // Fetch detailed video info (duration, stats)
     const detailsUrl = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,statistics,status&id=${videoIds}&key=${apiKey}`;
@@ -456,24 +462,42 @@ export async function fetchYouTubeResources(
     const videos: YouTubeVideo[] = [];
     
     for (const item of data.items) {
-      const detail = detailsData.items?.find((d: any) => d.id === item.id.videoId);
+      // Defensive: Extract video ID from different possible API response structures
+      const videoId = item.id?.videoId || item.id;
       
-      if (!detail) continue;
+      if (!videoId || typeof videoId !== 'string') {
+        console.warn('⚠️ Skipping item with missing/invalid video ID:', item);
+        continue;
+      }
+      
+      const detail = detailsData.items?.find((d: any) => d.id === videoId);
+      
+      if (!detail) {
+        console.warn('⚠️ No details found for video:', videoId);
+        continue;
+      }
+      
+      // Defensive: Extract thumbnail with multiple fallbacks
+      const thumbnails = item.snippet?.thumbnails;
+      const thumbnailUrl = thumbnails?.high?.url 
+        || thumbnails?.medium?.url 
+        || thumbnails?.default?.url 
+        || `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`; // Fallback to direct YouTube thumbnail
       
       const video: YouTubeVideo = {
-        id: item.id.videoId,
-        title: item.snippet.title,
-        description: item.snippet.description,
-        channelTitle: item.snippet.channelTitle,
-        publishedAt: item.snippet.publishedAt,
-        duration: parseDuration(detail.contentDetails.duration),
-        viewCount: parseInt(detail.statistics.viewCount || '0'),
-        likeCount: parseInt(detail.statistics.likeCount || '0'),
-        thumbnail: item.snippet.thumbnails?.medium?.url || item.snippet.thumbnails?.default?.url,
-        url: `https://youtube.com/watch?v=${item.id.videoId}`,
-        tags: item.snippet.tags || [],
-        categoryId: detail.contentDetails.categoryId,
-        isEmbeddable: detail.status.embeddable,
+        id: videoId,
+        title: item.snippet?.title || 'Untitled Video',
+        description: item.snippet?.description || '',
+        channelTitle: item.snippet?.channelTitle || 'Unknown Channel',
+        publishedAt: item.snippet?.publishedAt || new Date().toISOString(),
+        duration: parseDuration(detail.contentDetails?.duration || 'PT0S'),
+        viewCount: parseInt(detail.statistics?.viewCount || '0'),
+        likeCount: parseInt(detail.statistics?.likeCount || '0'),
+        thumbnail: thumbnailUrl,
+        url: `https://youtube.com/watch?v=${videoId}`,
+        tags: item.snippet?.tags || [],
+        categoryId: detail.contentDetails?.categoryId || '0',
+        isEmbeddable: detail.status?.embeddable || false,
       };
       
       // Apply filters
@@ -661,7 +685,14 @@ function getMockYouTubeVideos(
   
   // Find matching category
   const category = params.category || 'coding';
-  const key = Object.keys(mockVideos).find(k => query.toLowerCase().includes(k)) || 'python';
+  const lowerQuery = query.toLowerCase();
+  
+  // Check for specific topics in query
+  if (lowerQuery.includes('rick') || lowerQuery.includes('morty')) {
+    return []; // Return empty for Rick and Morty to avoid wrong mock data
+  }
+  
+  const key = Object.keys(mockVideos).find(k => lowerQuery.includes(k)) || 'python';
   
   return mockVideos[key] || mockVideos['python'];
 }

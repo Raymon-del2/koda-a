@@ -1,738 +1,350 @@
-[00:00:04.360] Server  LOG     ✓ Ready in 3.2s
-[00:00:08.628] Server  LOG     ○ Compiling / ...
-[00:00:16.581] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:17.804] Browser LOG     Loading data from Firestore for user: 6FRuBsoyWqesjUga7ziY6KF9p4O2
-[00:00:18.670] Browser LOG     ✓ Loaded 2 chats from Firestore
-[00:00:19.968] Browser LOG     ✓ Saved 0 instructions (enabled: true)
-[00:00:20.742] Browser LOG     ✓ Saved 0 instructions (enabled: true)
-[00:00:21.316] Browser LOG     ✓ Chat saved to Firestore: 1772788517559
-[00:00:21.710] Browser LOG     ✓ Chat saved to Firestore: 1772791224927
-[00:00:23.285] Browser LOG     Deleting chat: 1772791224927
-[00:00:23.285] Browser LOG     Deleting from Firestore for user: 6FRuBsoyWqesjUga7ziY6KF9p4O2
-[00:00:23.681] Browser LOG     ✓ Chat deleted from Firestore: 1772791224927
-[00:00:23.681] Browser LOG     Successfully deleted from Firestore
-[00:00:25.726] Browser LOG     ✓ Chat saved to Firestore: 1772788517559
-[00:00:37.968] Server  LOG     🔧 Tool registered: "Calculator" "(stage: autonomous)"
-[00:00:37.970] Server  LOG     🔧 Tool registered: "Web Search" "(stage: pending)"
-[00:00:37.970] Server  LOG     🔧 Tool registered: "Code Executor" "(stage: pending)"
-[00:00:37.971] Server  LOG     🔧 Tool registered: "File Operations" "(stage: pending)"
-[00:00:38.194] Server  LOG     🔀 Intent Router: "DIRECT" "(0.9)"
-[00:00:38.204] Server  LOG     🧠 Intelligence Controller: Creating plan...
-[00:00:38.405] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:38.405] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:38.405] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:38.405] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:38.405] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:38.405] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:38.405] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:38.405] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:38.405] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:38.405] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:38.405] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:38.405] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:38.405] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:38.405] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:38.405] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:38.405] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:38.405] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:38.405] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:38.405] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:38.405] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:38.405] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:38.405] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:38.405] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:38.405] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:38.405] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:38.405] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     ✓ Chat saved to Firestore: 1772791593763
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     ✓ Chat saved to Firestore: 1772788517559
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:40.620] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.249] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.249] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.249] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.249] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.249] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.249] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.249] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.249] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.249] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.249] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.249] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.249] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.249] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.249] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.249] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.249] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.249] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.249] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.249] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.250] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.250] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.250] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.250] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.250] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.250] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.250] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.250] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.250] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.250] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.250] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.250] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.250] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.250] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.250] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.250] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.250] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.250] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.250] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.250] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.250] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.250] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.250] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.250] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:43.250] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.186] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.186] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.186] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.186] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.186] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.186] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.186] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:46.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:48.637] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:51.374] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:52.016] Server  LOG     🧠 Intelligence Controller Plan: {}
-[00:00:52.029] Server  LOG     🔍 Query check: {}
-[00:00:52.031] Server  LOG     🚫 Not an entertainment query
-[00:00:52.047] Server  LOG     📤 Sending metadata with entertainment: {}
-[00:00:52.068] Server  LOG     � Executing tools: [{...}]
-[00:00:52.147] Server  LOG     💬 Generating response...
-[00:00:52.155] Server  LOG     🎯 Dual-LLM: Starting strategic reasoning...
-[00:00:52.161] Server  LOG     🔄 Dual-LLM: Skipping strategic draft (simple query), using single-pass...
-[00:00:53.270] Server  LOG     📊 Performance metrics recorded: {}
-[00:00:53.274] Server  LOG     🧪 Evaluating memory storage (adaptive quality scoring)...
-[00:00:53.277] Server  LOG     🚫 Not storing: "Does not meet storage criteria"
-[00:00:53.345] Server  LOG     📝 Reflection logged: {}
-[00:00:53.596] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:53.596] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:53.596] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:53.596] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:54.021] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:54.021] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:54.021] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:54.021] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:54.022] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:54.022] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:54.022] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:54.022] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:54.023] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:54.023] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:54.023] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:54.023] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:54.023] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:54.023] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:54.023] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:54.023] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:54.023] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:54.023] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:54.023] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:54.023] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:56.211] Browser LOG     ✓ Chat saved to Firestore: 1772791593763
-[00:00:56.649] Browser LOG     ✓ Chat saved to Firestore: 1772788517559
-[00:00:58.131] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:58.131] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:58.131] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:00:58.131] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:05.311] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:04:07.850] Browser LOG     Loading data from Firestore for user: 6FRuBsoyWqesjUga7ziY6KF9p4O2
-[00:04:08.834] Browser LOG     ✓ Loaded 2 chats from Firestore
-[00:04:09.868] Browser LOG     ✓ Saved 0 instructions (enabled: true)
-[00:04:10.920] Browser LOG     ✓ Saved 0 instructions (enabled: true)
-[00:04:11.281] Browser LOG     ✓ Chat saved to Firestore: 1772788517559
-[00:04:11.662] Browser LOG     ✓ Chat saved to Firestore: 1772791593763
-[00:04:14.033] Browser LOG     Deleting chat: 1772791593763
-[00:04:14.033] Browser LOG     Deleting from Firestore for user: 6FRuBsoyWqesjUga7ziY6KF9p4O2
-[00:04:14.449] Browser LOG     ✓ Chat deleted from Firestore: 1772791593763
-[00:04:14.449] Browser LOG     Successfully deleted from Firestore
-[00:04:17.975] Browser LOG     ✓ Chat saved to Firestore: 1772788517559
-[00:04:29.134] Server  LOG     🔧 Tool registered: "Calculator" "(stage: autonomous)"
-[00:04:29.136] Server  LOG     🔧 Tool registered: "Web Search" "(stage: pending)"
-[00:04:29.137] Server  LOG     🔧 Tool registered: "Code Executor" "(stage: pending)"
-[00:04:29.137] Server  LOG     🔧 Tool registered: "File Operations" "(stage: pending)"
-[00:04:29.225] Server  LOG     🔀 Intent Router: "DIRECT" "(0.9)"
-[00:04:29.235] Server  LOG     🧠 Intelligence Controller: Creating plan...
-[00:04:29.293] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:29.293] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:29.293] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:29.293] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:29.293] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:29.293] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:29.297] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:29.297] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:29.297] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:29.297] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:29.297] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:29.297] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:29.297] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:29.297] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:29.297] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:29.297] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:29.297] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:29.297] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:29.297] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:29.297] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:29.297] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:29.297] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:29.297] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:29.297] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:29.297] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:29.298] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.176] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.176] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     ✓ Chat saved to Firestore: 1772791812403
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     ✓ Chat saved to Firestore: 1772788517559
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.177] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.178] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.178] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:32.178] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.824] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.824] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:34.825] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.759] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.760] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.760] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:37.760] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:40.243] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:42.000] Server  LOG     🧠 Intelligence Controller Plan: {}
-[00:04:42.001] Server  LOG     🔬 Exploration triggered: {}
-[00:04:42.002] Server  LOG     🔬 Exploration mode: "threshold_optimization"
-[00:04:42.003] Server  LOG     🎬 Checking for entertainment entities in: "Tell me about inception"
-[00:04:42.047] Server  LOG     🔍 Extracting entity from: "Tell me about inception"
-[00:04:43.100] Server  ERROR   Entity extraction error: AI_APICallError: Invalid API Key
-[00:04:43.100] Server  LOG     📋 Extraction result: {}
-[00:04:43.101] Server  LOG     ❌ Entity extraction failed or low confidence
-[00:04:43.103] Server  LOG     📡 TMDB API response: {}
-[00:04:43.104] Server  LOG     ❌ No entity found in TMDB response
-[00:04:43.109] Server  LOG     📤 Sending metadata with entertainment: {}
-[00:04:43.111] Server  LOG     � Executing tools: [{...}]
-[00:04:43.112] Server  LOG     💬 Generating response...
-[00:04:43.112] Server  LOG     🎯 Dual-LLM: Starting strategic reasoning...
-[00:04:43.113] Server  LOG     🔄 Dual-LLM: Skipping strategic draft (simple query), using single-pass...
-[00:04:43.211] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.211] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.211] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.211] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.211] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.211] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.212] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.288] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.288] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.288] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.288] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.753] Server  LOG     📊 Performance metrics recorded: {}
-[00:04:43.753] Server  LOG     🧪 Evaluating memory storage (adaptive quality scoring)...
-[00:04:43.766] Server  LOG     🚫 Not storing: "Does not meet storage criteria"
-[00:04:43.771] Server  LOG     🔬 Exploration outcome: {}
-[00:04:43.780] Server  LOG     📝 Reflection logged: {}
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.992] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.993] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.993] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.993] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.993] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.993] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.993] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.993] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.993] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.993] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.993] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.993] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.993] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.993] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:43.993] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:44.554] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:44.554] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:44.554] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:44.554] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
-[00:04:46.372] Browser LOG     ✓ Chat saved to Firestore: 1772791812403
-[00:04:46.773] Browser LOG     ✓ Chat saved to Firestore: 1772788517559
+[00:00:04.627] Server  LOG     ✓ Ready in 3.4s
+[00:00:11.372] Server  LOG     ○ Compiling / ...
+[00:00:18.578] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:20.622] Browser LOG     Loading data from Firestore for user: 6FRuBsoyWqesjUga7ziY6KF9p4O2
+[00:00:22.147] Browser ERROR   Error loading chats from Firestore: {"code":"permission-denied","name":"FirebaseError"}
+[00:00:22.545] Browser ERROR   Error loading instructions: {"code":"permission-denied","name":"FirebaseError"}
+[00:00:22.729] Browser ERROR   Error saving instructions: {"code":"permission-denied","name":"FirebaseError"}
+[00:00:24.973] Browser ERROR   Error saving instructions: {"code":"permission-denied","name":"FirebaseError"}
+[00:00:43.463] Server  LOG     🔧 Tool registered: "Calculator" "(stage: autonomous)"
+[00:00:43.465] Server  LOG     🔧 Tool registered: "Web Search" "(stage: pending)"
+[00:00:43.466] Server  LOG     🔧 Tool registered: "Code Executor" "(stage: pending)"
+[00:00:43.467] Server  LOG     🔧 Tool registered: "File Operations" "(stage: pending)"
+[00:00:43.511] Server  LOG     🔀 Intent Router: "DIRECT" "(0.9)"
+[00:00:43.518] Server  LOG     🧠 Intelligence Controller: Creating plan...
+[00:00:43.520] Server  LOG     ⚡ Fast path intent detection: "conversation"
+[00:00:43.522] Server  LOG     🎬 Checking for entertainment entities in: "hello"
+[00:00:43.567] Server  LOG     🔍 Extracting entity from: "hello"
+[00:00:43.599] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:43.600] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:43.600] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:43.600] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:43.600] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:43.600] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:43.600] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:43.600] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:43.600] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:43.600] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:43.600] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:43.600] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:43.600] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:43.600] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:43.600] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:43.600] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:43.600] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:43.600] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:43.600] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:43.600] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:43.600] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:43.600] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:43.600] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:43.600] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:43.600] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:43.600] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:43.749] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:43.749] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:43.749] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:43.749] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:43.749] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:43.749] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:45.582] Server  LOG     📋 Extraction result: {}
+[00:00:45.583] Server  LOG     ❌ Entity extraction failed or low confidence
+[00:00:45.589] Server  LOG     📡 TMDB API response: {}
+[00:00:45.592] Server  LOG     ❌ No entity found in TMDB response
+[00:00:45.594] Server  LOG     📤 Sending metadata with entertainment: {}
+[00:00:45.596] Server  LOG     💬 Generating response...
+[00:00:45.598] Server  LOG     ⚡ Quick/Hybrid Mode: Using llama-3.3-70b-versatile with full tool access
+[00:00:46.176] Server  LOG     📊 Performance metrics recorded: {}
+[00:00:46.176] Server  LOG     🧪 Evaluating memory storage (adaptive quality scoring)...
+[00:00:46.178] Server  LOG     🚫 Not storing: "Small talk, not valuable for long-term memory"
+[00:00:46.179] Server  LOG     📝 Reflection logged: {}
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.403] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:46.404] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:00:49.901] Browser ERROR   Error saving chat to Firestore: {"code":"permission-denied","name":"FirebaseError"}
+[00:03:55.726] Server  LOG     ○ Compiling /api/feedback ...
+[00:03:57.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:03:57.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:03:57.187] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:03:57.188] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:04:13.170] Server  WARN    [2026-03-06T15:46:29.468Z]  @firebase/firestore: "Firestore (12.10.0): GrpcConnection" "RPC 'Write' stream 0x725ff3f2 error. Code:" "3" "Message:" "3 INVALID_ARGUMENT: Invalid resource field value in the request."
+[00:04:13.938] Server  WARN    [2026-03-06T15:46:30.293Z]  @firebase/firestore: "Firestore (12.10.0): GrpcConnection" "RPC 'Write' stream 0x725ff3f3 error. Code:" "3" "Message:" "3 INVALID_ARGUMENT: Invalid resource field value in the request."
+[00:04:14.939] Server  WARN    [2026-03-06T15:46:31.274Z]  @firebase/firestore: "Firestore (12.10.0): GrpcConnection" "RPC 'Write' stream 0x725ff3f4 error. Code:" "3" "Message:" "3 INVALID_ARGUMENT: Invalid resource field value in the request."
+[00:04:16.051] Server  WARN    [2026-03-06T15:46:32.401Z]  @firebase/firestore: "Firestore (12.10.0): GrpcConnection" "RPC 'Write' stream 0x725ff3f5 error. Code:" "3" "Message:" "3 INVALID_ARGUMENT: Invalid resource field value in the request."
+[00:04:17.893] Server  WARN    [2026-03-06T15:46:34.229Z]  @firebase/firestore: "Firestore (12.10.0): GrpcConnection" "RPC 'Write' stream 0x725ff3f6 error. Code:" "3" "Message:" "3 INVALID_ARGUMENT: Invalid resource field value in the request."
+[00:04:20.694] Server  WARN    [2026-03-06T15:46:37.041Z]  @firebase/firestore: "Firestore (12.10.0): GrpcConnection" "RPC 'Write' stream 0x725ff3f7 error. Code:" "3" "Message:" "3 INVALID_ARGUMENT: Invalid resource field value in the request."
+[00:04:25.335] Server  WARN    [2026-03-06T15:46:41.686Z]  @firebase/firestore: "Firestore (12.10.0): GrpcConnection" "RPC 'Write' stream 0x725ff3f8 error. Code:" "3" "Message:" "3 INVALID_ARGUMENT: Invalid resource field value in the request."
+[00:04:26.018] Server  LOG     ✓ Finished filesystem cache database compaction in 12.0s
+[00:04:35.403] Server  WARN    [2026-03-06T15:46:51.721Z]  @firebase/firestore: "Firestore (12.10.0): GrpcConnection" "RPC 'Write' stream 0x725ff3f9 error. Code:" "3" "Message:" "3 INVALID_ARGUMENT: Invalid resource field value in the request."
+[00:04:46.778] Server  WARN    [2026-03-06T15:47:03.132Z]  @firebase/firestore: "Firestore (12.10.0): GrpcConnection" "RPC 'Write' stream 0x725ff3fa error. Code:" "3" "Message:" "3 INVALID_ARGUMENT: Invalid resource field value in the request."
+[00:04:56.742] Server  LOG     ✓ Compiled in 2.4s
+[00:04:56.755] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:04:56.755] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:04:56.755] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:04:56.755] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:05:05.304] Server  WARN    [2026-03-06T15:47:21.658Z]  @firebase/firestore: "Firestore (12.10.0): GrpcConnection" "RPC 'Write' stream 0x725ff3fb error. Code:" "3" "Message:" "3 INVALID_ARGUMENT: Invalid resource field value in the request."
+[00:05:25.120] Server  WARN    [2026-03-06T15:47:41.474Z]  @firebase/firestore: "Firestore (12.10.0): GrpcConnection" "RPC 'Write' stream 0x725ff3fc error. Code:" "3" "Message:" "3 INVALID_ARGUMENT: Invalid resource field value in the request."
+[00:05:54.329] Server  LOG     ○ Compiling /[username]/[chatId] ...
+[00:06:02.970] Server  WARN    [2026-03-06T15:48:19.295Z]  @firebase/firestore: "Firestore (12.10.0): GrpcConnection" "RPC 'Write' stream 0x725ff3fd error. Code:" "3" "Message:" "3 INVALID_ARGUMENT: Invalid resource field value in the request."
+[00:06:02.984] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:06:04.263] Browser LOG     Loading data from Firestore for user: 6FRuBsoyWqesjUga7ziY6KF9p4O2
+[00:06:05.970] Browser ERROR   Error loading chats from Firestore: {"code":"permission-denied","name":"FirebaseError"}
+[00:06:06.389] Browser ERROR   Error loading instructions: {"code":"permission-denied","name":"FirebaseError"}
+[00:06:06.505] Browser ERROR   Error saving instructions: {"code":"permission-denied","name":"FirebaseError"}
+[00:06:08.994] Browser ERROR   Error saving instructions: {"code":"permission-denied","name":"FirebaseError"}
+[00:07:15.010] Server  LOG     ✓ Finished filesystem cache database compaction in 28.0s
+[00:07:15.034] Server  LOG     ✓ Finished writing to filesystem cache in 18.5s
+[00:07:18.065] Server  WARN    [2026-03-06T15:49:34.396Z]  @firebase/firestore: "Firestore (12.10.0): GrpcConnection" "RPC 'Write' stream 0x725ff3fe error. Code:" "3" "Message:" "3 INVALID_ARGUMENT: Invalid resource field value in the request."
+[00:08:04.618] Server  LOG     ✓ Compiled in 11.1s
+[00:08:28.542] Server  WARN    [2026-03-06T15:50:44.866Z]  @firebase/firestore: "Firestore (12.10.0): GrpcConnection" "RPC 'Write' stream 0x725ff3ff error. Code:" "3" "Message:" "3 INVALID_ARGUMENT: Invalid resource field value in the request."
+[00:09:43.348] Server  WARN    [2026-03-06T15:51:59.674Z]  @firebase/firestore: "Firestore (12.10.0): GrpcConnection" "RPC 'Write' stream 0x725ff400 error. Code:" "3" "Message:" "3 INVALID_ARGUMENT: Invalid resource field value in the request."
+[00:10:42.904] Server  WARN    [2026-03-06T15:52:59.258Z]  @firebase/firestore: "Firestore (12.10.0): GrpcConnection" "RPC 'Write' stream 0x725ff401 error. Code:" "3" "Message:" "3 INVALID_ARGUMENT: Invalid resource field value in the request."
+[00:11:35.147] Server  WARN    [2026-03-06T15:53:51.500Z]  @firebase/firestore: "Firestore (12.10.0): GrpcConnection" "RPC 'Write' stream 0x725ff402 error. Code:" "3" "Message:" "3 INVALID_ARGUMENT: Invalid resource field value in the request."
+[00:12:50.761] Server  WARN    [2026-03-06T15:55:07.116Z]  @firebase/firestore: "Firestore (12.10.0): GrpcConnection" "RPC 'Write' stream 0x725ff403 error. Code:" "3" "Message:" "3 INVALID_ARGUMENT: Invalid resource field value in the request."
+[00:13:12.623] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:13:12.623] Browser LOG     Loading data from Firestore for user: 6FRuBsoyWqesjUga7ziY6KF9p4O2
+[00:13:12.623] Browser ERROR   Error loading chats from Firestore: {"code":"permission-denied","name":"FirebaseError"}
+[00:13:12.623] Browser ERROR   Error loading instructions: {"code":"permission-denied","name":"FirebaseError"}
+[00:13:12.623] Browser ERROR   Error saving instructions: {"code":"permission-denied","name":"FirebaseError"}
+[00:13:13.927] Browser ERROR   Error saving instructions: {"code":"permission-denied","name":"FirebaseError"}
+[00:13:18.207] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:13:18.915] Browser LOG     Loading data from Firestore for user: 6FRuBsoyWqesjUga7ziY6KF9p4O2
+[00:13:19.799] Browser ERROR   Error loading chats from Firestore: {"code":"permission-denied","name":"FirebaseError"}
+[00:13:20.345] Browser ERROR   Error loading instructions: {"code":"permission-denied","name":"FirebaseError"}
+[00:13:20.968] Browser ERROR   Error saving instructions: {"code":"permission-denied","name":"FirebaseError"}
+[00:13:22.885] Browser ERROR   Error saving instructions: {"code":"permission-denied","name":"FirebaseError"}
+[00:13:40.609] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:13:41.460] Browser LOG     Loading data from Firestore for user: 6FRuBsoyWqesjUga7ziY6KF9p4O2
+[00:13:42.208] Browser ERROR   Error loading chats from Firestore: {"code":"permission-denied","name":"FirebaseError"}
+[00:13:42.569] Browser ERROR   Error loading instructions: {"code":"permission-denied","name":"FirebaseError"}
+[00:13:43.754] Browser ERROR   Error saving instructions: {"code":"permission-denied","name":"FirebaseError"}
+[00:13:44.784] Browser ERROR   Error saving instructions: {"code":"permission-denied","name":"FirebaseError"}
+[00:13:48.034] Server  WARN    [2026-03-06T15:56:04.387Z]  @firebase/firestore: "Firestore (12.10.0): GrpcConnection" "RPC 'Write' stream 0x725ff404 error. Code:" "3" "Message:" "3 INVALID_ARGUMENT: Invalid resource field value in the request."
+[00:14:44.772] Server  LOG     ✓ Compiled in 8s
+[00:14:44.773] Browser LOG     Fetching chat from URL: 1772811779103
+[00:14:44.773] Browser LOG     Loading data from Firestore for user: 6FRuBsoyWqesjUga7ziY6KF9p4O2
+[00:14:45.048] Browser ERROR   Error loading chats from Firestore: {"code":"permission-denied","name":"FirebaseError"}
+[00:14:45.487] Browser ERROR   Error loading instructions: {"code":"permission-denied","name":"FirebaseError"}
+[00:14:45.487] Browser ERROR   Error getting chat from Firestore: {"code":"permission-denied","name":"FirebaseError"}
+[00:14:45.487] Browser LOG     Chat not found in Firestore: 1772811779103
+[00:14:47.361] Server  WARN    [2026-03-06T15:57:03.702Z]  @firebase/firestore: "Firestore (12.10.0): GrpcConnection" "RPC 'Write' stream 0x725ff405 error. Code:" "3" "Message:" "3 INVALID_ARGUMENT: Invalid resource field value in the request."
+[00:14:47.921] Browser ERROR   Error saving instructions: {"code":"permission-denied","name":"FirebaseError"}
+[00:14:51.803] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:14:53.467] Browser LOG     Fetching chat from URL: 1772811779103
+[00:14:53.467] Browser LOG     Loading data from Firestore for user: 6FRuBsoyWqesjUga7ziY6KF9p4O2
+[00:14:54.287] Browser ERROR   Error getting chat from Firestore: {"code":"permission-denied","name":"FirebaseError"}
+[00:14:54.287] Browser LOG     Chat not found in Firestore: 1772811779103
+[00:14:54.287] Browser ERROR   Error loading chats from Firestore: {"code":"permission-denied","name":"FirebaseError"}
+[00:14:54.735] Browser ERROR   Error loading instructions: {"code":"permission-denied","name":"FirebaseError"}
+[00:14:55.801] Browser ERROR   Error saving instructions: {"code":"permission-denied","name":"FirebaseError"}
+[00:14:57.406] Browser ERROR   Error saving instructions: {"code":"permission-denied","name":"FirebaseError"}
+[00:15:36.657] Server  WARN    [2026-03-06T15:57:53.009Z]  @firebase/firestore: "Firestore (12.10.0): GrpcConnection" "RPC 'Write' stream 0x725ff406 error. Code:" "3" "Message:" "3 INVALID_ARGUMENT: Invalid resource field value in the request."
+[00:15:51.319] Server  LOG     ✓ Compiled in 2.2s
+[00:15:51.409] Browser ERROR   The final argument passed to %s changed size between renders. The order and size of this array must remain constant.
+
+Previous: %s
+Incoming: %s useEffect [1772811779103, true, [object Object], ] [1772811779103, true, 6FRuBsoyWqesjUga7ziY6KF9p4O2]
+[00:15:51.409] Browser LOG     Fetching chat from URL: 1772811779103
+[00:15:52.389] Browser ERROR   Error getting chat from Firestore: {"code":"permission-denied","name":"FirebaseError"}
+[00:15:52.389] Browser LOG     Chat not found in Firestore: 1772811779103
+[00:16:11.300] Server  LOG     ✓ Compiled in 1702ms
+[00:16:11.301] Browser LOG     Fetching chat from URL: 1772811779103
+[00:16:11.301] Browser LOG     Loading data from Firestore for user: 6FRuBsoyWqesjUga7ziY6KF9p4O2
+[00:16:11.373] Browser ERROR   Error loading chats from Firestore: {"code":"permission-denied","name":"FirebaseError"}
+[00:16:11.824] Browser ERROR   Error getting chat from Firestore: {"code":"permission-denied","name":"FirebaseError"}
+[00:16:11.824] Browser LOG     Chat not found in Firestore: 1772811779103
+[00:16:12.465] Browser ERROR   Error loading instructions: {"code":"permission-denied","name":"FirebaseError"}
+[00:16:13.601] Browser ERROR   Error saving instructions: {"code":"permission-denied","name":"FirebaseError"}
+[00:16:15.006] Browser ERROR   Error saving instructions: {"code":"permission-denied","name":"FirebaseError"}
+[00:16:47.638] Server  WARN    [2026-03-06T15:59:03.947Z]  @firebase/firestore: "Firestore (12.10.0): GrpcConnection" "RPC 'Write' stream 0x725ff407 error. Code:" "3" "Message:" "3 INVALID_ARGUMENT: Invalid resource field value in the request."
+[00:16:47.946] Server  LOG     ✓ Compiled in 1399ms
+[00:17:48.797] Server  WARN    [2026-03-06T16:00:05.146Z]  @firebase/firestore: "Firestore (12.10.0): GrpcConnection" "RPC 'Write' stream 0x725ff408 error. Code:" "3" "Message:" "3 INVALID_ARGUMENT: Invalid resource field value in the request."
+[00:18:11.895] Server  LOG     ✓ Compiled in 3.2s
+[00:18:11.908] Browser ERROR   The final argument passed to %s changed size between renders. The order and size of this array must remain constant.
+
+Previous: %s
+Incoming: %s useEffect [1772811779103, true, 6FRuBsoyWqesjUga7ziY6KF9p4O2] [1772811779103, true, 6FRuBsoyWqesjUga7ziY6KF9p4O2, false]
+[00:19:01.582] Server  LOG     ✓ Compiled in 1623ms
+[00:19:01.590] Browser LOG     Fetching chat from URL: 1772811779103 retry: 0
+[00:19:01.590] Browser LOG     Loading data from Firestore for user: 6FRuBsoyWqesjUga7ziY6KF9p4O2
+[00:19:03.275] Browser ERROR   Error loading chats from Firestore: {"code":"permission-denied","name":"FirebaseError"}
+[00:19:03.275] Browser ERROR   Error getting chat from Firestore: {"code":"permission-denied","name":"FirebaseError"}
+[00:19:03.275] Browser LOG     Chat not found in Firestore: 1772811779103
+[00:19:03.854] Browser ERROR   Error loading instructions: {"code":"permission-denied","name":"FirebaseError"}
+[00:19:05.771] Browser ERROR   Error saving instructions: {"code":"permission-denied","name":"FirebaseError"}
+[00:19:07.414] Browser ERROR   Error saving instructions: {"code":"permission-denied","name":"FirebaseError"}
+[00:19:17.058] Server  WARN    [2026-03-06T16:01:33.411Z]  @firebase/firestore: "Firestore (12.10.0): GrpcConnection" "RPC 'Write' stream 0x725ff409 error. Code:" "3" "Message:" "3 INVALID_ARGUMENT: Invalid resource field value in the request."
+[00:19:56.699] Server  WARN    [2026-03-06T16:02:13.052Z]  @firebase/firestore: "Firestore (12.10.0): GrpcConnection" "RPC 'Write' stream 0x725ff40a error. Code:" "3" "Message:" "3 INVALID_ARGUMENT: Invalid resource field value in the request."
+[00:20:17.542] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:20:19.769] Browser LOG     Fetching chat from URL: 1772811779103 retry: 0
+[00:20:19.769] Browser LOG     Loading data from Firestore for user: 6FRuBsoyWqesjUga7ziY6KF9p4O2
+[00:20:20.875] Browser LOG     ✓ Loaded 1 chats from Firestore
+[00:20:20.875] Browser LOG     Chat not found in Firestore: 1772811779103
+[00:20:22.362] Browser LOG     ✓ Saved 0 instructions (enabled: true)
+[00:20:22.856] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:22.856] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:22.857] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:22.857] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:22.857] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:22.857] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:22.857] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:22.857] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:22.857] Browser LOG     Fetching chat from URL: 1772808653199 retry: 0
+[00:20:22.857] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:22.857] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:22.857] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:22.857] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:22.857] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:22.857] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:22.857] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:22.857] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:23.401] Browser LOG     Found chat in Firestore: 1772808653199
+[00:20:23.401] Browser LOG     ✓ Saved 0 instructions (enabled: true)
+[00:20:23.854] Browser LOG     ✓ Chat saved to Firestore: 1772808653199
+[00:20:26.543] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:20:27.453] Browser LOG     Fetching chat from URL: 1772808653199 retry: 0
+[00:20:27.453] Browser LOG     Loading data from Firestore for user: 6FRuBsoyWqesjUga7ziY6KF9p4O2
+[00:20:29.209] Browser LOG     ✓ Loaded 1 chats from Firestore
+[00:20:29.209] Browser LOG     Found chat in Firestore: 1772808653199
+[00:20:29.209] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:29.209] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:29.209] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:29.209] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:29.209] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:29.209] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:29.209] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:29.209] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:29.209] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:29.209] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:29.209] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:29.209] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:29.209] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:29.209] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:29.209] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:29.209] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:30.119] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:30.119] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:30.119] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:30.119] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:30.119] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:30.119] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:30.119] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:30.119] Browser LOG     🎬 StreamingMessage received entertainmentEntities: 0 []
+[00:20:30.119] Browser LOG     ✓ Saved 0 instructions (enabled: true)
+[00:20:31.930] Browser LOG     ✓ Saved 0 instructions (enabled: true)
+[00:20:32.435] Browser LOG     ✓ Chat saved to Firestore: 1772808653199
+[00:21:24.831] Server  WARN    [2026-03-06T16:03:41.185Z]  @firebase/firestore: "Firestore (12.10.0): GrpcConnection" "RPC 'Write' stream 0x725ff40b error. Code:" "3" "Message:" "3 INVALID_ARGUMENT: Invalid resource field value in the request."
+[00:22:19.663] Server  WARN    [2026-03-06T16:04:36.016Z]  @firebase/firestore: "Firestore (12.10.0): GrpcConnection" "RPC 'Write' stream 0x725ff40c error. Code:" "3" "Message:" "3 INVALID_ARGUMENT: Invalid resource field value in the request."
+[00:22:49.923] Server  WARN    [2026-03-06T16:05:06.277Z]  @firebase/firestore: "Firestore (12.10.0): GrpcConnection" "RPC 'Write' stream 0x725ff40d error. Code:" "3" "Message:" "3 INVALID_ARGUMENT: Invalid resource field value in the request."
+[00:24:13.966] Server  WARN    [2026-03-06T16:06:30.319Z]  @firebase/firestore: "Firestore (12.10.0): GrpcConnection" "RPC 'Write' stream 0x725ff40e error. Code:" "3" "Message:" "3 INVALID_ARGUMENT: Invalid resource field value in the request."

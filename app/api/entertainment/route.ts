@@ -186,12 +186,27 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'No message provided' }, { status: 400 });
     }
 
+    // Skip entity extraction for YouTube video queries - they're handled separately
+    const lowerMessage = message.toLowerCase();
+    const isYouTubeQuery = lowerMessage.includes('youtube') || 
+                           lowerMessage.includes('video') ||
+                           lowerMessage.includes('mrbeast') ||
+                           lowerMessage.includes('mr beast') ||
+                           lowerMessage.includes('pewdiepie') ||
+                           lowerMessage.includes('logan paul') ||
+                           lowerMessage.includes('ksi');
+    
+    if (isYouTubeQuery) {
+      console.log('📺 Skipping TMDB lookup for YouTube query:', message);
+      return NextResponse.json({ hasEntity: false });
+    }
+
     // Step 1: Extract entity from message
     console.log('🔍 Extracting entity from:', message);
     const extraction = await extractEntity(message);
     console.log('📋 Extraction result:', extraction);
     
-    if (!extraction.hasEntity || !extraction.confidence || extraction.confidence < 0.7) {
+    if (!extraction.hasEntity || !extraction.confidence || extraction.confidence < 0.6) {
       console.log('❌ Entity extraction failed or low confidence');
       return NextResponse.json({ hasEntity: false });
     }

@@ -513,10 +513,6 @@ body {
   margin-bottom: 1.5rem;
 }
 
-.mb-8 {
-  margin-bottom: 2rem;
-}
-
 .ml-0\.5 {
   margin-left: .125rem;
 }
@@ -724,6 +720,10 @@ body {
 
 .max-h-40 {
   max-height: 10rem;
+}
+
+.max-h-\[150px\] {
+  max-height: 150px;
 }
 
 .max-h-\[50vh\] {
@@ -1273,6 +1273,10 @@ body {
   border-color: rgb(31 41 55 / var(--tw-border-opacity, 1));
 }
 
+.border-green-500\/30 {
+  border-color: #22c55e4d;
+}
+
 .border-purple-500\/30 {
   border-color: #a855f74d;
 }
@@ -1280,6 +1284,10 @@ body {
 .border-purple-600 {
   --tw-border-opacity: 1;
   border-color: rgb(147 51 234 / var(--tw-border-opacity, 1));
+}
+
+.border-red-500\/30 {
+  border-color: #ef44444d;
 }
 
 .border-teal-200 {
@@ -1293,6 +1301,11 @@ body {
 
 .border-transparent {
   border-color: #0000;
+}
+
+.border-white {
+  --tw-border-opacity: 1;
+  border-color: rgb(255 255 255 / var(--tw-border-opacity, 1));
 }
 
 .border-white\/10 {
@@ -1465,6 +1478,10 @@ body {
   background-color: rgb(75 85 99 / var(--tw-bg-opacity, 1));
 }
 
+.bg-green-400\/10 {
+  background-color: #4ade801a;
+}
+
 .bg-green-500 {
   --tw-bg-opacity: 1;
   background-color: rgb(34 197 94 / var(--tw-bg-opacity, 1));
@@ -1488,6 +1505,10 @@ body {
 
 .bg-purple-600\/20 {
   background-color: #9333ea33;
+}
+
+.bg-red-400\/10 {
+  background-color: #f871711a;
 }
 
 .bg-red-500 {
@@ -2130,6 +2151,10 @@ body {
   outline: 2px solid #0000;
 }
 
+.outline {
+  outline-style: solid;
+}
+
 .ring {
   --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
   --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(3px + var(--tw-ring-offset-width)) var(--tw-ring-color);
@@ -2606,6 +2631,10 @@ body {
   background-color: rgb(96 165 250 / var(--tw-bg-opacity, 1));
 }
 
+.hover\:bg-blue-400\/10:hover {
+  background-color: #60a5fa1a;
+}
+
 .hover\:bg-blue-500:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(59 130 246 / var(--tw-bg-opacity, 1));
@@ -2734,6 +2763,23 @@ body {
 .focus\:border-\[\#3a3a3a\]:focus {
   --tw-border-opacity: 1;
   border-color: rgb(58 58 58 / var(--tw-border-opacity, 1));
+}
+
+.focus\:border-blue-500\/50:focus {
+  border-color: #3b82f680;
+}
+
+.focus\:outline-none:focus {
+  outline-offset: 2px;
+  outline: 2px solid #0000;
+}
+
+.disabled\:cursor-not-allowed:disabled {
+  cursor: not-allowed;
+}
+
+.disabled\:opacity-50:disabled {
+  opacity: .5;
 }
 
 .group[open] .group-open\:rotate-180 {

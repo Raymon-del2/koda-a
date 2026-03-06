@@ -150,6 +150,20 @@ export function routeQuery(query: string, selectedTool?: string | null): RouterR
     };
   }
   
+  // Check for YouTube video queries FIRST - before celebrity patterns
+  const isYouTubeVideoQuery = lowerQuery.includes('youtube') && 
+                              (lowerQuery.includes('video') || 
+                               lowerQuery.includes('videos'));
+  
+  if (isYouTubeVideoQuery) {
+    return {
+      intent: 'DUCKDUCKGO',
+      confidence: 0.9,
+      reasoning: 'YouTube video query - using web search for videos',
+      suggestedSearchQuery: extractSearchQuery(query),
+    };
+  }
+  
   // Check for direct patterns first (fastest path)
   for (const pattern of DIRECT_PATTERNS) {
     if (pattern.test(lowerQuery)) {

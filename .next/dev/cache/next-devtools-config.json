@@ -2,5 +2,7 @@
   "devToolsPosition": "top-right",
   "devToolsPanelPosition": {
     "__nextjs-dev-tools-shared-panel-location": "top-right"
-  }
+  },
+  "theme": "dark",
+  "scale": 1
 }

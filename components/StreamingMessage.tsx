@@ -20,6 +20,7 @@ import { NewsCardGrid } from "./NewsCard";
 import { MovieCardGrid } from "./MovieCard";
 import { PersonCard, PersonCardGrid } from "./PersonCard";
 import { SourcePills, SourceCountBadge } from "./SourcePills";
+import MessageActions from "./MessageActions";
 
 interface Source {
   id: number;
@@ -495,9 +496,18 @@ export default function StreamingMessage({
   // Debug logging
   console.log('🎬 StreamingMessage received entertainmentEntities:', entertainmentEntities.length, entertainmentEntities);
   
+  const isAI = role === "assistant";
   const [displayedContent, setDisplayedContent] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  const isAI = role === "assistant";
+  // Debug logging for entertainment data
+  useEffect(() => {
+    if (movieResults && movieResults.length > 0) {
+      console.log('🎬 StreamingMessage received movieResults:', movieResults.length, 'movies');
+    }
+    if (entertainmentEntities && entertainmentEntities.length > 0) {
+      console.log('🎭 StreamingMessage received entertainmentEntities:', entertainmentEntities.length, 'entities');
+    }
+  }, [movieResults, entertainmentEntities]);
 
   // Parse thinking tags and Nyati JSON metadata
   const parseThinking = (text: string): { thought: string | null; message: string } => {
@@ -767,16 +777,25 @@ export default function StreamingMessage({
           <NewsCardGrid articles={newsArticles} />
         )}
         
-        {/* Movie Results */}
-        {!isStreaming && movieResults.length > 0 && (
+        {/* Movie Results - Always show when available */}
+        {movieResults.length > 0 && (
           <MovieCardGrid movies={movieResults} />
         )}
 
-        {/* Entertainment Media Cards (TMDB) */}
-        {!isStreaming && entertainmentEntities && entertainmentEntities.length > 0 && (
+        {/* Entertainment Media Cards (TMDB) - Always show when available */}
+        {entertainmentEntities && entertainmentEntities.length > 0 && (
           <div className="mt-4 ml-12">
             <MediaCardGrid entities={entertainmentEntities} />
           </div>
+        )}
+
+        {/* Message Actions - Feedback, Copy, PDF */}
+        {!isStreaming && isComplete && (
+          <MessageActions
+            content={message}
+            onFeedback={(type) => console.log('Feedback:', type)}
+            showPDFButton={true}
+          />
         )}
       </div>
     </motion.div>

@@ -14,10 +14,10 @@ import { generateText } from 'ai';
 import type { NyatiPlan, NyatiReflection, MemoryEvaluation } from '@/types/plan';
 import { generateControllerBias, getIntentBias } from './observability';
 
-// Local Ollama provider for SLOW MODE (no token limits!)
+// Ollama provider via Hugging Face Space for SLOW MODE
 const ollamaProvider = createOpenAI({
-  baseURL: 'http://localhost:11434/v1',
-  apiKey: 'ollama',
+  baseURL: 'https://ryan33121-nyati-core-api.hf.space/v1',
+  apiKey: process.env.HUGGINGFACE_TOKEN || '',
 });
 
 // Fast planning provider (Hugging Face) - for quick intent detection

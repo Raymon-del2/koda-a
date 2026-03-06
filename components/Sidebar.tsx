@@ -21,6 +21,10 @@ import {
   ChevronRight,
   Library,
   HelpCircle,
+  MessageCircle,
+  Bug,
+  Lightbulb,
+  Send,
 } from "lucide-react";
 
 interface Chat {
@@ -83,6 +87,11 @@ export default function Sidebar({
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [settingsMenuOpen, setSettingsMenuOpen] = useState(false);
+  const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
+  const [feedbackType, setFeedbackType] = useState<'bug' | 'feature' | 'general'>('general');
+  const [feedbackText, setFeedbackText] = useState('');
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
+  const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
   const [location, setLocation] = useState<{country: string; city: string; loading: boolean}>({country: '', city: '', loading: true});
 
   // Detect user location
@@ -472,6 +481,18 @@ export default function Sidebar({
                         <Library size={16} />
                         <span>Bxarchi books for you</span>
                       </button>
+                      
+                      {/* Feedback Button */}
+                      <button
+                        onClick={() => {
+                          setFeedbackModalOpen(true);
+                          setSettingsMenuOpen(false);
+                        }}
+                        className="w-full px-4 py-2.5 flex items-center gap-3 text-sm text-gray-300 hover:bg-white/5 transition-colors text-left"
+                      >
+                        <MessageCircle size={16} />
+                        <span>Send Feedback</span>
+                      </button>
                     </div>
                     
                     {/* Location Info */}
@@ -622,6 +643,181 @@ export default function Sidebar({
                   Delete All
                 </button>
               </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      {/* Feedback Modal */}
+      <AnimatePresence>
+        {feedbackModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4"
+            onClick={() => setFeedbackModalOpen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              className="bg-[#1e1e1e] border border-[#2a2a2a] rounded-2xl p-6 max-w-md w-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {!feedbackSubmitted ? (
+                <>
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center">
+                      <MessageCircle size={20} className="text-blue-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-white">
+                        Send Feedback
+                      </h3>
+                      <p className="text-sm text-gray-400">
+                        Help us improve Koda-A
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Feedback Type Selection */}
+                  <div className="flex gap-2 mb-4">
+                    <button
+                      onClick={() => setFeedbackType('bug')}
+                      className={`flex-1 p-2 rounded-lg flex items-center justify-center gap-2 text-sm transition-colors ${
+                        feedbackType === 'bug'
+                          ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+                          : 'bg-[#2a2a2a] text-gray-400 hover:bg-[#3a3a3a]'
+                      }`}
+                    >
+                      <Bug size={16} />
+                      Bug Report
+                    </button>
+                    <button
+                      onClick={() => setFeedbackType('feature')}
+                      className={`flex-1 p-2 rounded-lg flex items-center justify-center gap-2 text-sm transition-colors ${
+                        feedbackType === 'feature'
+                          ? 'bg-green-500/20 text-green-400 border border-green-500/30'
+                          : 'bg-[#2a2a2a] text-gray-400 hover:bg-[#3a3a3a]'
+                      }`}
+                    >
+                      <Lightbulb size={16} />
+                      Feature
+                    </button>
+                    <button
+                      onClick={() => setFeedbackType('general')}
+                      className={`flex-1 p-2 rounded-lg flex items-center justify-center gap-2 text-sm transition-colors ${
+                        feedbackType === 'general'
+                          ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
+                          : 'bg-[#2a2a2a] text-gray-400 hover:bg-[#3a3a3a]'
+                      }`}
+                    >
+                      <MessageCircle size={16} />
+                      General
+                    </button>
+                  </div>
+
+                  {/* Feedback Text Area */}
+                  <textarea
+                    value={feedbackText}
+                    onChange={(e) => setFeedbackText(e.target.value)}
+                    placeholder={
+                      feedbackType === 'bug'
+                        ? "Describe the error you encountered..."
+                        : feedbackType === 'feature'
+                        ? "What feature would you like to see?"
+                        : "Share your thoughts..."
+                    }
+                    rows={4}
+                    className="w-full bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl p-3 text-white text-sm placeholder-gray-500 resize-none focus:outline-none focus:border-blue-500/50 mb-4"
+                  />
+
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => setFeedbackModalOpen(false)}
+                      className="flex-1 px-4 py-2 bg-[#2a2a2a] hover:bg-[#3a3a3a] rounded-xl transition-colors text-gray-300"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={async () => {
+                        if (!feedbackText.trim()) return;
+                        setIsSubmittingFeedback(true);
+                        
+                        try {
+                          const response = await fetch('/api/feedback', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                              type: feedbackType,
+                              message: feedbackText,
+                              timestamp: Date.now(),
+                              userAgent: navigator.userAgent,
+                              url: window.location.href,
+                            }),
+                          });
+                          
+                          if (response.ok) {
+                            setFeedbackSubmitted(true);
+                            setTimeout(() => {
+                              setFeedbackModalOpen(false);
+                              setFeedbackSubmitted(false);
+                              setFeedbackText('');
+                              setFeedbackType('general');
+                            }, 2000);
+                          }
+                        } catch (error) {
+                          console.error('Failed to submit feedback:', error);
+                          // Store locally if API fails
+                          const localFeedback = {
+                            id: Date.now().toString(),
+                            type: feedbackType,
+                            message: feedbackText,
+                            timestamp: Date.now(),
+                            pending: true,
+                          };
+                          const existing = JSON.parse(localStorage.getItem('pending_feedback') || '[]');
+                          localStorage.setItem('pending_feedback', JSON.stringify([...existing, localFeedback]));
+                          setFeedbackSubmitted(true);
+                          setTimeout(() => {
+                            setFeedbackModalOpen(false);
+                            setFeedbackSubmitted(false);
+                            setFeedbackText('');
+                            setFeedbackType('general');
+                          }, 2000);
+                        } finally {
+                          setIsSubmittingFeedback(false);
+                        }
+                      }}
+                      disabled={!feedbackText.trim() || isSubmittingFeedback}
+                      className="flex-1 px-4 py-2 bg-blue-500 hover:bg-blue-400 rounded-xl transition-colors text-white font-medium flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isSubmittingFeedback ? (
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      ) : (
+                        <>
+                          <Send size={16} />
+                          Send
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <div className="text-center py-8">
+                  <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg className="w-8 h-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-semibold text-white mb-2">
+                    Thank You!
+                  </h3>
+                  <p className="text-gray-400">
+                    Your feedback helps us improve Koda-A.
+                  </p>
+                </div>
+              )}
             </motion.div>
           </motion.div>
         )}

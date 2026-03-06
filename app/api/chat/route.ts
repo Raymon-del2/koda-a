@@ -43,10 +43,10 @@ const groqProvider = createGroq({
   apiKey: process.env.GROQ_API_KEY || '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',
 });
 
-// Local Ollama provider - NO API TOKENS NEEDED!
+// Ollama provider via Hugging Face Space
 const ollamaProvider = createOpenAI({
-  baseURL: 'http://localhost:11434/v1',
-  apiKey: 'ollama', // Required but unused by Ollama
+  baseURL: 'https://ryan33121-nyati-core-api.hf.space/v1',
+  apiKey: process.env.HUGGINGFACE_TOKEN || '',
 });
 
 // Fallback remote provider (Hugging Face) - only used if Ollama fails
@@ -55,67 +55,74 @@ const nyatiCore = createOpenAI({
   apiKey: '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',
 });
 
-const SYSTEM_PROMPT = `You are Koda-A, a highly opinionated, expert software engineer and technically skilled AI assistant.
+// Quick/Fast model system prompt - Claude-like intelligence with hybrid capabilities
+const QUICK_SYSTEM_PROMPT = `You are Koda-A, a highly capable and intelligent AI assistant created by Koda Labs. The current date is Monday, September 29, 2025.
 
 **WHO YOU ARE**:
-- You are an expert software engineer with strong opinions on technology
-- You help with coding, technical questions, learning resources, and conversation
+- You are Koda-A, a sophisticated AI assistant with broad knowledge and strong reasoning capabilities
+- You help with coding, analysis, writing, math, research, creative tasks, and conversation
 - You have ZERO tolerance for hallucinations - if you don't know something, say "I don't know"
 - You NEVER invent facts, people, events, or technical details
 - You rely on provided context and web search for factual information
 
-**STRICT RULES (NEVER BREAK THESE)**:
-- If you don't know the answer, say "I don't know" - never make things up
-- Never hallucinate names, dates, events, or technical specifications
-- Only state facts you are certain about or that are in your context
-- For current events: use search or say you don't have real-time information
-- Never mention "servers", "systems", or technical infrastructure in casual chat
+**CAPABILITIES & LIMITATIONS**:
+- You CANNOT generate, create, edit, or produce images, photos, or visual content
+- You CANNOT open URLs, links, or videos - ask the user to paste content directly
+- You CAN search the web and access real-time information when needed
+- You CAN make plans, reason step-by-step, and provide structured analysis
+- You have access to memory, web search, news, movies, and code execution tools
 
-**PERSONALITY**:
-- You're a sharp, opinionated peer - talk like a senior engineer chatting with a junior
-- You have strong preferences and aren't afraid to share them
-- Be direct and concise - no fluff, no generic pleasantries
-- Match the user's energy but keep it professional
-- Never use phrases like "How can I help you?" or "What do you need assistance with?"
+**BEHAVIOR & PERSONALITY**:
+- Respond naturally and authentically - no generic pleasantries
+- Be intellectually curious and engage thoughtfully with ideas
+- Provide thorough responses to complex questions, concise to simple ones
+- Think step-by-step for math, logic, and complex problems
+- Vary your language - avoid repetitive phrases and rote responses
+- Start responses directly without "Certainly!" or "Of course!" affirmations
+- Never sign off with "Let me know if you need anything else"
 
 **CONVERSATION STYLE**:
 - For greetings: Respond naturally. "hey" → "yo, what's up?" or "hey!" or "sup"
 - For "hru" or "how are you": "good, you?" or "doing well"
 - For "thanks": "np" or "anytime"
 - For questions: Get straight to the point with accurate information
-- Never sign off with "Let me know if you need anything else"
+
+**PLANNING & REASONING**:
+- For complex tasks: Show your reasoning in <thinking> tags before answering
+- When a plan is needed: Start with "Need a plan..." and outline your approach
+- Break down multi-step problems clearly
+- Use systematic thinking for puzzles and logic problems
 
 **CITATIONS & SOURCES**:
 - When using information from context, cite it like [1], [2], [3]
 - Each citation corresponds to a source in the order you use them
-- At the end of your response, include a sources section if you cited anything
+- Include a sources section if you cited anything
 
 **SUGGESTIONS**:
-- After answering, suggest 2-3 follow-up questions the user might ask
+- After answering, suggest 2-3 relevant follow-up questions
 - Format: Put each suggestion on a new line starting with "→ "
 
-**THINKING FORMAT** (for complex questions):
-Before answering complex questions, show your reasoning in <thinking> tags:
-<thinking>
-Analyzing: What the user wants.
-Key points: A, B, C.
-Approach: Will explain X then provide example.
-</thinking>
-
-**TECHNICAL STUFF**:
-- When code questions come up: provide optimal, production-ready code
+**TECHNICAL RESPONSES**:
+- Provide optimal, production-ready code when asked
 - Use accurate technical terminology - never guess
 - Be precise and factual (low creativity mode for tech)
 - If unsure about a library version or API, say so
 
 **SELF-CORRECTION**:
-- If you realize you need more information to answer accurately, output: [NEED_SEARCH: your search query]
-- This will trigger a web search to get fresh data before continuing
-- Use this when you're uncertain about current events or facts
+- If you realize you need more information: output [NEED_SEARCH: your search query]
+- This triggers a web search to get fresh data before continuing
+- Use this when uncertain about current events or facts
+- **EXCEPTION**: NEVER use [NEED_SEARCH] for YouTube video queries - those are handled automatically
 
-**CONTEXT**:
-User: {{user_name}}
-Role: {{user_role}}`;
+**HYBRID MODE ACTIVE**:
+You have access to multiple data sources:
+- Web search (DuckDuckGo) for real-time information
+- News API for current events
+- TMDB for movies/TV/actors
+- Qdrant memory for personal context
+- Live resources (YouTube videos, tutorials)
+
+When answering, intelligently combine information from these sources for comprehensive responses.`;
 
 // Intelligence Controller: RAG with privacy filtering
 async function retrieveMemoryWithPrivacy(
@@ -173,6 +180,93 @@ async function retrieveMemoryWithPrivacy(
   return { sources, context };
 }
 
+/**
+ * Extract conversation context from recent messages for continuity
+ * Helps AI understand references like "her", "it", "that" from previous messages
+ */
+function extractConversationContext(messages: any[]): string {
+  if (!messages || messages.length < 2) return '';
+  
+  // Get last 4 messages (2 exchanges) for context
+  const recentMessages = messages.slice(-4);
+  
+  // Extract entities, topics, and key information
+  let contextParts: string[] = [];
+  let mentionedPeople: string[] = [];
+  let mentionedTopics: string[] = [];
+  let lastTopic: string = '';
+  
+  for (const msg of recentMessages) {
+    if (msg.role === 'user') {
+      const content = msg.content.toLowerCase();
+      
+      // Extract potential person names (capitalized words that aren't common words)
+      // Use Unicode-aware regex to handle accented characters like é in Timothée
+      const personMatches = msg.content.match(/\b([A-Z][a-zA-Z\u00C0-\u00FF]+(?:\s+[A-Z][a-zA-Z\u00C0-\u00FF]+)*)\b/g);
+      if (personMatches) {
+        personMatches.forEach((name: string) => {
+          // Filter out common words - expanded list including words with accents
+          const commonWords = ['The', 'You', 'For', 'And', 'But', 'How', 'What', 'When', 'Where', 'Why', 'Who', 'This', 'That', 'These', 'Those', 'They', 'Them', 'Their', 'Then', 'Than', 'With', 'From', 'About', 'Into', 'Through', 'During', 'Before', 'After', 'Above', 'Below', 'Between', 'Under', 'Over', 'Again', 'Further', 'Once', 'Here', 'There', 'When', 'Where', 'Which', 'While', 'Because', 'Until', 'Since', 'Although', 'However', 'Therefore', 'Moreover', 'Otherwise', 'Instead', 'Meanwhile', 'Besides', 'Anyway', 'Actually', 'Basically', 'Definitely', 'Especially', 'Finally', 'Generally', 'Honestly', 'Immediately', 'Just', 'Likely', 'Maybe', 'Naturally', 'Obviously', 'Particularly', 'Probably', 'Quite', 'Rather', 'Really', 'Simply', 'Somewhat', 'Still', 'Such', 'Surely', 'Technically', 'Truly', 'Usually', 'Very', 'Well', 'Without', 'Yes'];
+          if (name.length > 2 && !commonWords.includes(name)) {
+            mentionedPeople.push(name);
+          }
+        });
+      }
+      
+      // Extract topics (nouns after "about", "regarding", "discussing")
+      const topicMatches = content.match(/(?:about|regarding|discussing|talking about|learning|working on|coding|building|creating|using|trying to)\s+(\w+(?:\s+\w+){0,5})/gi);
+      if (topicMatches) {
+        topicMatches.forEach((match: string) => {
+          const topic = match.replace(/^(about|regarding|discussing|talking about|learning|working on|coding|building|creating|using|trying to)\s+/i, '');
+          if (topic && topic.length > 2) {
+            mentionedTopics.push(topic);
+            lastTopic = topic;
+          }
+        });
+      }
+      
+      // Check for pronouns that need context
+      const pronouns = ['he', 'she', 'her', 'him', 'his', 'they', 'them', 'their', 'it', 'this', 'that', 'these', 'those'];
+      const hasPronouns = pronouns.some(p => content.includes(` ${p} `) || content.startsWith(`${p} `));
+      
+      if (hasPronouns && mentionedPeople.length > 0) {
+        contextParts.push(`User may be referring to: ${mentionedPeople.slice(-2).join(' or ')}`);
+      }
+      
+      if (lastTopic && (content.includes(' it ') || content.includes('that') || content.includes('this'))) {
+        contextParts.push(`User may be referring to "${lastTopic}" when saying "it" or "that"`);
+      }
+    } else if (msg.role === 'assistant') {
+      // Extract what we told the user about
+      const content = msg.content.toLowerCase();
+      
+      // Remember what we searched for or discussed
+      if (content.includes('searched for') || content.includes('found')) {
+        const searchMatch = msg.content.match(/(?:searched for|found|here are|found some)\s+([^,.]+)/i);
+        if (searchMatch) {
+          mentionedTopics.push(searchMatch[1]);
+        }
+      }
+    }
+  }
+  
+  // Build context summary
+  let context = '';
+  if (mentionedPeople.length > 0) {
+    context += `\n### CONVERSATION CONTEXT\n`;
+    context += `Recently discussed: ${[...new Set(mentionedPeople)].slice(0, 3).join(', ')}\n`;
+  }
+  if (mentionedTopics.length > 0) {
+    if (!context) context += `\n### CONVERSATION CONTEXT\n`;
+    context += `Current topic: ${[...new Set(mentionedTopics)].slice(0, 2).join(', ')}\n`;
+  }
+  if (contextParts.length > 0) {
+    context += `\nNotes:\n- ${contextParts.join('\n- ')}\n`;
+  }
+  
+  return context;
+}
+
 export async function POST(req: Request) {
   const { messages, model, userId, searchMode, selectedTool, modelType, userProfile } = await req.json();
   
@@ -189,7 +283,12 @@ export async function POST(req: Request) {
   // Build dynamic system prompt with user context
   const userName = userProfile?.firstName || userProfile?.name || null;
   const userRole = userProfile?.role || 'Developer';
-  let dynamicSystemPrompt = SYSTEM_PROMPT
+  
+  // Use enhanced Claude-like prompt for quick/hybrid mode, standard for others
+  const isQuickMode = searchMode?.startsWith('quick') || model === 'groq' || model === 'pro';
+  const basePrompt = isQuickMode ? QUICK_SYSTEM_PROMPT : QUICK_SYSTEM_PROMPT;
+  
+  let dynamicSystemPrompt = basePrompt
     .replace(/\{\{user_name\}\}/g, userName || 'Guest')
     .replace(/\{\{user_role\}\}/g, userRole)
     .replace(/\{\{current_context\}\}/g, searchMode || 'conversation');
@@ -225,8 +324,12 @@ export async function POST(req: Request) {
     }
   }
   
-  // MOVIE: Use TMDB for movie/TV queries
-  if (routingResult.intent === 'MOVIE') {
+  // MOVIE: Use TMDB for movie/TV queries (skip for YouTube video queries)
+  const isYouTubeVideoQueryCheck = userQuery.toLowerCase().includes('youtube') && 
+                                   (userQuery.toLowerCase().includes('video') || 
+                                    userQuery.toLowerCase().includes('videos'));
+  
+  if (routingResult.intent === 'MOVIE' && !isYouTubeVideoQueryCheck) {
     console.log('🎬 Performing TMDB search...');
     const searchQuery = routingResult.suggestedSearchQuery || userQuery;
     const movieResult = await multiSearch(searchQuery);
@@ -371,6 +474,37 @@ export async function POST(req: Request) {
     }
   }
   
+  // Detect YouTube video queries for special handling
+  const lowerQuery = userQuery.toLowerCase();
+  const isYouTubeVideoQuery = lowerQuery.includes('youtube') && 
+                              (lowerQuery.includes('video') || 
+                               lowerQuery.includes('videos'));
+  
+  // Detect person-related YouTube queries with proper word boundaries
+  const isPersonYouTubeQuery = isYouTubeVideoQuery && (
+    lowerQuery.includes(' him') ||
+    lowerQuery.includes(' her') ||
+    lowerQuery.includes(' them') ||
+    lowerQuery.includes(' their') ||
+    lowerQuery.includes('actor') ||
+    lowerQuery.includes('actress') ||
+    lowerQuery.includes('celebrity') ||
+    lowerQuery.includes('star')
+  );
+  
+  // Enhance prompt for ALL YouTube video queries to tell AI videos are already fetched
+  if (isYouTubeVideoQuery) {
+    dynamicSystemPrompt += `
+
+**YOUTUBE VIDEO QUERY ACTIVE**:
+YouTube videos are being fetched automatically and will be displayed as cards below your response.
+- DO NOT output [NEED_SEARCH] patterns
+- DO NOT output follow-up suggestions/questions (no "→ " suggestions)
+- Keep your response brief - just acknowledge the request
+- Let the video cards speak for themselves
+- Be concise - users want to see the videos, not read a lot of text`;
+  }
+  
   // Enhance prompt for deep-search tool
   if (selectedTool === 'deep-search') {
     dynamicSystemPrompt += `
@@ -398,6 +532,13 @@ export async function POST(req: Request) {
   if (enrichedContext) {
     dynamicSystemPrompt += `\n\n**CONTEXT FOR YOUR RESPONSE:**${enrichedContext}`;
     dynamicSystemPrompt += `\n\nUse the above context to answer. Cite sources with [1], [2] format.`;
+  }
+  
+  // Add conversation continuity context (pronouns, previous topics)
+  const conversationContext = extractConversationContext(messages);
+  if (conversationContext) {
+    dynamicSystemPrompt += conversationContext;
+    console.log('💬 Conversation context added:', conversationContext.slice(0, 100) + '...');
   }
   
   // Check if this is a capability query or report request
@@ -521,80 +662,103 @@ _This link expires in 24 hours._`;
           }
         }
         
-        // Fetch live resources for learning-related queries
-        const learningKeywords = ['tutorial', 'learn', 'how to', 'course', 'guide', 'blender', 'python', 'roblox', 'youtube', 'video', 'animation', 'coding', 'programming'];
-        const isLearningQuery = learningKeywords.some(kw => userQuery.toLowerCase().includes(kw));
-        
-        if (isLearningQuery && !searchMode?.startsWith('quick')) {
-          console.log('🎓 Learning query detected - fetching live resources...');
+        // Fetch live resources for ALL YouTube video queries
+        if (isYouTubeVideoQuery) {
+          console.log('📺 YouTube video query detected - fetching videos...');
           try {
-            // Determine category from query
-            let category: ContentCategory = 'coding';
-            if (userQuery.toLowerCase().includes('blender') || userQuery.toLowerCase().includes('3d') || userQuery.toLowerCase().includes('animation')) {
-              category = 'animation';
-            } else if (userQuery.toLowerCase().includes('roblox') || userQuery.toLowerCase().includes('game') || userQuery.toLowerCase().includes('unity')) {
-              category = 'game-dev';
-            } else if (userQuery.toLowerCase().includes('youtube') || userQuery.toLowerCase().includes('video') || userQuery.toLowerCase().includes('content')) {
+            // Smart query building based on what user wants
+            let videoQuery = userQuery;
+            let category: ContentCategory = 'youtube';
+            
+            // Check for coding/learning queries
+            if (userQuery.toLowerCase().includes('coding') || 
+                userQuery.toLowerCase().includes('python') || 
+                userQuery.toLowerCase().includes('tutorial') ||
+                userQuery.toLowerCase().includes('learn') ||
+                userQuery.toLowerCase().includes('course')) {
+              category = 'coding';
+              videoQuery = userQuery.replace(/youtube|video|videos/gi, '').trim() + ' tutorial';
+            }
+            // Check for relaxing/ASMR content
+            else if (userQuery.toLowerCase().includes('relax') || 
+                     userQuery.toLowerCase().includes('asmr') || 
+                     userQuery.toLowerCase().includes('calm') ||
+                     userQuery.toLowerCase().includes('sleep') ||
+                     userQuery.toLowerCase().includes('rain') ||
+                     userQuery.toLowerCase().includes('nature')) {
               category = 'youtube';
+              videoQuery = 'relaxing ' + userQuery.replace(/youtube|video|videos|find|get|me|a|an/gi, '').trim();
+            }
+            // Check for MrBeast or entertainment
+            else if (userQuery.toLowerCase().includes('mr beast') || 
+                     userQuery.toLowerCase().includes('mrbeast') ||
+                     userQuery.toLowerCase().includes('entertainment')) {
+              category = 'youtube';
+              videoQuery = userQuery.replace(/youtube|video|videos|find|get|me|a|an/gi, '').trim();
             }
             
-            const liveResources = await fetchLiveResources(userQuery, {
+            const liveResources = await fetchLiveResources(videoQuery, {
               category,
               skillLevel: 'beginner',
               ageRating: '13+',
               maxResults: 5,
             });
             
-            youtubeVideos = liveResources.youtubeVideos.map(v => ({
-              title: v.title,
-              url: v.url,
-              channel: v.channelTitle,
-              duration: Math.round(v.duration / 60),
-            }));
-            
-            liveResourcesFetched = true;
-            
-            // Add live resources to context
-            if (liveResources.youtubeVideos.length > 0 || liveResources.webTutorials.length > 0) {
-              memoryContext += '\n\n### LIVE LEARNING RESOURCES\n';
+            if (liveResources.youtubeVideos && liveResources.youtubeVideos.length > 0) {
+              youtubeVideos = liveResources.youtubeVideos.map(v => ({
+                id: v.id,
+                title: v.title,
+                url: v.url,
+                channel: v.channelTitle,
+                duration: Math.round(v.duration / 60),
+                thumbnail: v.thumbnail,
+              }));
               
-              if (liveResources.youtubeVideos.length > 0) {
-                memoryContext += 'Recommended Videos:\n';
-                liveResources.youtubeVideos.slice(0, 3).forEach((v, i) => {
-                  memoryContext += `${i + 1}. ${v.title} (${v.channelTitle}, ${Math.round(v.duration / 60)} min)\n`;
-                });
-              }
+              liveResourcesFetched = true;
               
-              if (liveResources.webTutorials.length > 0) {
-                memoryContext += '\nTutorials & Documentation:\n';
-                liveResources.webTutorials.slice(0, 2).forEach((t, i) => {
-                  memoryContext += `${i + 1}. ${t.title} (${t.source}, ${t.readingTime} min read)\n`;
-                });
-              }
+              // Add to context
+              memoryContext += '\n\n### YOUTUBE VIDEOS AVAILABLE\n';
+              youtubeVideos.slice(0, 3).forEach((v: any, i: number) => {
+                memoryContext += `${i + 1}. ${v.title} (${v.channel})\n`;
+              });
+              
+              console.log('✅ YouTube videos fetched:', youtubeVideos.length);
             }
-            
-            console.log('✅ Live resources fetched:', {
-              videos: liveResources.youtubeVideos.length,
-              tutorials: liveResources.webTutorials.length,
-            });
           } catch (error) {
-            console.error('Live resources fetch error:', error);
+            console.error('❌ YouTube fetch error:', error);
           }
         }
         
-        // Fetch entertainment data for movie/TV/actor queries
+        // Fetch entertainment data for movie/TV/actor queries (skip for YouTube video searches)
         let entertainmentEntities: any[] = [];
         
-        // Always try to extract entertainment entities - let the LLM decide
-        console.log('🎬 Checking for entertainment entities in:', userQuery);
+        // Always try to extract entertainment entities - let the LLM decide (except for YouTube queries)
+        // BUT: If it's a YouTube query about a person, we DO need the entity to know who they're talking about
+        if (!isYouTubeVideoQuery || isPersonYouTubeQuery) {
+          console.log('🎬 Checking for entertainment entities in:', userQuery);
         
         try {
+          // Resolve pronouns using conversation context if needed
+          let resolvedQuery = userQuery;
+          if (isPersonYouTubeQuery && conversationContext) {
+            // Extract person names from conversation context
+            const personMatch = conversationContext.match(/Recently discussed:\s*([^\n]+)/);
+            if (personMatch) {
+              const discussedPeople = personMatch[1].split(',').map((p: string) => p.trim());
+              if (discussedPeople.length > 0) {
+                // Replace pronouns with the most recently discussed person
+                resolvedQuery = `${discussedPeople[0]} ${userQuery.replace(/\b(him|her|them|their)\b/gi, '')}`;
+                console.log('🔍 Resolved pronoun query:', userQuery, '→', resolvedQuery);
+              }
+            }
+          }
+          
           // Import and call entertainment API directly
           const { POST } = await import('../entertainment/route');
           const req = new Request('http://internal/api/entertainment', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: userQuery }),
+            body: JSON.stringify({ message: resolvedQuery }),
           });
           const res = await POST(req);
           const data = await res.json();
@@ -616,12 +780,62 @@ _This link expires in 24 hours._`;
             if (data.entity.known_for) {
               memoryContext += `Known For: ${data.entity.known_for.map((m: any) => m.title).join(', ')}\n`;
             }
+            
+            // If this is a YouTube query about an entity, fetch YouTube videos for it
+            if (isPersonYouTubeQuery && data.entity) {
+              const entityName = data.entity.title || data.entity.name;
+              const entityType = data.entity.type;
+              console.log('📺 Fetching YouTube videos for', entityType + ':', entityName);
+              
+              try {
+                // Build search query based on entity type
+                let videoQuery = entityName;
+                if (entityType === 'person') {
+                  videoQuery = `${entityName} interviews clips`;
+                } else if (entityType === 'movie') {
+                  videoQuery = `${entityName} movie trailer scenes`;
+                } else if (entityType === 'tv') {
+                  videoQuery = `${entityName} series clips trailer`;
+                }
+                
+                const liveResources = await fetchLiveResources(videoQuery, {
+                  category: 'youtube',
+                  skillLevel: 'beginner',
+                  ageRating: '13+',
+                  maxResults: 5,
+                });
+                
+                if (liveResources.youtubeVideos && liveResources.youtubeVideos.length > 0) {
+                  youtubeVideos = liveResources.youtubeVideos.map(v => ({
+                    id: v.id,
+                    title: v.title,
+                    url: v.url,
+                    channel: v.channelTitle,
+                    duration: Math.round(v.duration / 60),
+                    thumbnail: v.thumbnail,
+                  }));
+                  
+                  liveResourcesFetched = true;
+                  
+                  // Add to context
+                  memoryContext += '\n\n### YOUTUBE VIDEOS AVAILABLE\n';
+                  youtubeVideos.slice(0, 3).forEach((v: any, i: number) => {
+                    memoryContext += `${i + 1}. ${v.title} (${v.channel})\n`;
+                  });
+                  
+                  console.log('✅ YouTube videos fetched for', entityType + ':', youtubeVideos.length);
+                }
+              } catch (ytError) {
+                console.error('❌ Failed to fetch YouTube videos for entity:', ytError);
+              }
+            }
           } else {
             console.log('❌ No entity found in TMDB response');
           }
         } catch (error) {
           console.error('❌ Entertainment fetch error:', error);
         }
+        } // Close isYouTubeVideoQuery if block
         
         // Send sources metadata (including live resources, news, movies)
         const sourcesMetadata = JSON.stringify({ 
@@ -665,12 +879,24 @@ _This link expires in 24 hours._`;
         const enhancedSystemPrompt = dynamicSystemPrompt + memoryContext;
         
         if (model === 'groq' || model === 'pro') {
-          // Fast agent only (Koda-A) - single pass for speed
+          // Quick/Hybrid Mode: Smart model with full tool access
+          console.log('⚡ Quick/Hybrid Mode: Using llama-3.3-70b-versatile with full tool access');
+          
+          // Send planning indicator for complex queries
+          if (plan.needs_memory || plan.needs_tools || plan.intent !== 'conversation') {
+            const planningMsg = JSON.stringify({ 
+              type: 'status', 
+              message: plan.needs_tools ? 'Need a plan... analyzing tools needed' : 'Need a plan... retrieving context',
+              step: 'planning'
+            });
+            controller.enqueue(new TextEncoder().encode(planningMsg + '\n'));
+          }
+          
           const result = await streamText({
-            model: groqProvider.languageModel('llama-3.1-8b-instant'),
+            model: groqProvider.languageModel('llama-3.3-70b-versatile'), // Smarter model
             system: enhancedSystemPrompt,
             messages,
-            temperature: 0.2, // Lower temp for factual responses
+            temperature: 0.3, // Balanced for intelligence
           });
           
           for await (const chunk of result.textStream) {
@@ -679,7 +905,8 @@ _This link expires in 24 hours._`;
               
               // Self-correction: Detect [NEED_SEARCH: ...] pattern
               const needSearchMatch = fullResponseText.match(/\[NEED_SEARCH:\s*([^\]]+)\]/);
-              if (needSearchMatch) {
+              // For ALL YouTube video queries, don't trigger search - just remove the pattern
+              if (needSearchMatch && !isYouTubeVideoQuery) {
                 const searchQuery = needSearchMatch[1].trim();
                 console.log('🔄 Self-correction triggered, searching:', searchQuery);
                 
@@ -711,7 +938,14 @@ _This link expires in 24 hours._`;
                 break;
               }
               
-              controller.enqueue(new TextEncoder().encode(chunk));
+              // For YouTube video queries, strip NEED_SEARCH from chunk before sending
+              let cleanedChunk = chunk;
+              if (isYouTubeVideoQuery && chunk.includes('[NEED_SEARCH')) {
+                cleanedChunk = chunk.replace(/\[NEED_SEARCH[^\]]*\]?/g, '');
+                fullResponseText = fullResponseText.replace(/\[NEED_SEARCH:[^\]]+\]/, '');
+              }
+              
+              controller.enqueue(new TextEncoder().encode(cleanedChunk));
             } catch (enqueueError) {
               break;
             }

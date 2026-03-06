@@ -160,6 +160,17 @@ function InputPill({
 
   const interimTranscript = interimText;
   const showListeningPill = isRecording;
+  
+  // Textarea ref for auto-resizing
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Auto-resize textarea
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  }, [inputValue]);
 
   // Instructions handlers
   const handleAddInstruction = () => {
@@ -243,8 +254,8 @@ function InputPill({
       >
         {/* Top: Clean Input Area with Streaming Transcription */}
         <div className="mb-3 relative">
-          <input
-            type="text"
+          <textarea
+            ref={textareaRef}
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={(e) => {
@@ -254,8 +265,8 @@ function InputPill({
               }
             }}
             placeholder={placeholder}
-            className="w-full bg-transparent border-none outline-none text-white text-base placeholder:text-gray-500"
-            style={{ height: inputHeight }}
+            rows={1}
+            className="w-full bg-transparent border-none outline-none text-white text-base placeholder:text-gray-500 resize-none overflow-y-auto max-h-[150px] min-h-[24px]"
           />
           
           {/* Real-time streaming transcription overlay */}
@@ -616,10 +627,15 @@ function InputPill({
   );
 }
 
-export default function GeminiChatPage() {
+interface GeminiChatPageProps {
+  initialChatId?: string;
+  initialUsername?: string;
+}
+
+export default function GeminiChatPage({ initialChatId, initialUsername }: GeminiChatPageProps) {
   const { user, isLoading: authLoading, isAuthenticated, signInWithGoogle, logout } = useFirebaseAuth();
   const [chats, setChats] = useState<Chat[]>([]);
-  const [currentChatId, setCurrentChatId] = useState<string | null>(null);
+  const [currentChatId, setCurrentChatId] = useState<string | null>(initialChatId || null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeEngine, setActiveEngine] = useState<"groq" | "hf">("groq");
   const [isLoading, setIsLoading] = useState(false);
@@ -660,6 +676,88 @@ export default function GeminiChatPage() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const isNearBottomRef = useRef(true);
   const modeSelectorRef = useRef<HTMLDivElement>(null);
+  const fetchedChatIdsRef = useRef<Set<string>>(new Set()); // Track which chats we've fetched
+
+  // URL routing - sync current chat to URL
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    const userIdentifier = user?.email?.split('@')[0] || user?.displayName?.toLowerCase().replace(/\s+/g, '-') || 'guest';
+    
+    if (currentChatId) {
+      const newUrl = `/${userIdentifier}/${currentChatId}`;
+      if (window.location.pathname !== newUrl) {
+        window.history.pushState({}, '', newUrl);
+      }
+    } else {
+      // Reset to root when no chat selected
+      if (window.location.pathname !== '/') {
+        window.history.pushState({}, '', '/');
+      }
+    }
+  }, [currentChatId, user]);
+
+  // Load initial chat from URL if provided
+  useEffect(() => {
+    if (initialChatId && !currentChatId) {
+      setCurrentChatId(initialChatId);
+    }
+  }, [initialChatId]);
+
+  // Clear fetched chat IDs when auth state changes significantly
+  useEffect(() => {
+    // When user logs out, clear the fetched set
+    if (!isAuthenticated) {
+      fetchedChatIdsRef.current.clear();
+    }
+  }, [isAuthenticated, user?.id]);
+
+  // Fetch specific chat from Firestore when URL chatId is set but not in chats list
+  useEffect(() => {
+    const fetchChatFromUrl = async (retryCount = 0) => {
+      // Wait for auth to be ready (not loading)
+      if (!isAuthenticated || !user || !currentChatId || authLoading) {
+        return;
+      }
+      
+      // Check if we already fetched this chat (using ref to avoid stale closure)
+      if (fetchedChatIdsRef.current.has(currentChatId)) {
+        return;
+      }
+      
+      console.log('Fetching chat from URL:', currentChatId, 'retry:', retryCount);
+      try {
+        // Mark as fetched before async call to prevent duplicate requests
+        fetchedChatIdsRef.current.add(currentChatId);
+        
+        // Import function to get single chat
+        const { getChatFromFirestore } = await import('../lib/firestore');
+        const chat = await getChatFromFirestore(user.id, currentChatId);
+        if (chat) {
+          console.log('Found chat in Firestore:', chat.id);
+          setChats(prev => {
+            // Avoid duplicates
+            if (prev.find(c => c.id === chat.id)) return prev;
+            return [chat, ...prev];
+          });
+        } else {
+          console.log('Chat not found in Firestore:', currentChatId);
+        }
+      } catch (error: any) {
+        console.error('Failed to fetch chat from URL:', error);
+        // Remove from fetched set so we can retry
+        fetchedChatIdsRef.current.delete(currentChatId);
+        
+        // If it's a permission error and we haven't retried too many times, wait and retry
+        if (error?.code === 'permission-denied' && retryCount < 3) {
+          console.log(`Retrying in ${(retryCount + 1) * 1000}ms...`);
+          setTimeout(() => fetchChatFromUrl(retryCount + 1), (retryCount + 1) * 1000);
+        }
+      }
+    };
+    
+    fetchChatFromUrl();
+  }, [currentChatId, isAuthenticated, user?.id, authLoading]);
 
   const greetings = [
     "Where do you want to begin?",
@@ -1001,8 +1099,8 @@ export default function GeminiChatPage() {
             if (line.trim().startsWith('{')) {
               try {
                 const parsed = JSON.parse(line);
-                // Filter out all JSON metadata messages (plan, metadata, etc.)
-                if (parsed.type === 'plan' || parsed.type === 'metadata') {
+                // Filter out all JSON metadata messages (plan, metadata, status, etc.)
+                if (parsed.type === 'plan' || parsed.type === 'metadata' || parsed.type === 'status') {
                   if (parsed.type === 'metadata') {
                     messageSources = parsed.sources;
                     messageVideos = parsed.youtubeVideos;
@@ -1011,6 +1109,10 @@ export default function GeminiChatPage() {
                     messagePersonResults = parsed.personResults || [];
                     messageEntertainmentEntities = parsed.entertainmentEntities || [];
                     metadataParsed = true;
+                  }
+                  // Handle status messages for planning indicators
+                  if (parsed.type === 'status' && parsed.message) {
+                    setDisplayedLoadingText(parsed.message);
                   }
                   // Remove metadata from text chunk
                   textChunk = textChunk.replace(line, '').trimStart();
@@ -1422,20 +1524,26 @@ export default function GeminiChatPage() {
                         {/* YouTube Video Cards */}
                         {message.youtubeVideos && message.youtubeVideos.length > 0 && (
                           <div className="mt-4 ml-12 grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {message.youtubeVideos.map((video) => (
+                            {message.youtubeVideos.map((video, videoIdx) => (
                               <a
-                                key={video.id}
-                                href={`https://youtube.com/watch?v=${video.id}`}
+                                key={video.id || `video-${videoIdx}`}
+                                href={video.id ? `https://youtube.com/watch?v=${video.id}` : '#'}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="group flex gap-3 p-3 bg-[#1e1e1e] hover:bg-[#252525] border border-[#2a2a2a] hover:border-[#3a3a3a] rounded-xl transition-all"
                               >
-                                <div className="relative w-32 h-20 flex-shrink-0 rounded-lg overflow-hidden">
-                                  <img
-                                    src={video.thumbnail}
-                                    alt={video.title}
-                                    className="w-full h-full object-cover"
-                                  />
+                                <div className="relative w-32 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-[#2a2a2a]">
+                                  {video.thumbnail ? (
+                                    <img
+                                      src={video.thumbnail}
+                                      alt={video.title}
+                                      className="w-full h-full object-cover"
+                                    />
+                                  ) : (
+                                    <div className="w-full h-full flex items-center justify-center">
+                                      <Play size={24} className="text-gray-600" />
+                                    </div>
+                                  )}
                                   <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover:bg-black/20 transition-colors">
                                     <Play size={20} className="text-white opacity-80" />
                                   </div>
@@ -1506,6 +1614,10 @@ export default function GeminiChatPage() {
                     inputHeight={inputHeight}
                     setInputHeight={setInputHeight}
                   />
+                  {/* Disclaimer - below input pill */}
+                  <p className="text-xs text-gray-500 text-center mt-3">
+                    Koda can make mistakes so check for important information
+                  </p>
                 </div>
               </>
             ) : (
@@ -1560,7 +1672,7 @@ export default function GeminiChatPage() {
                   </div>
 
                   {/* Input Pill - positioned higher on welcome screen */}
-                  <div className="mb-8">
+                  <div className="mb-2">
                     <InputPill 
                       inputValue={inputValue}
                       setInputValue={setInputValue}
@@ -1579,6 +1691,10 @@ export default function GeminiChatPage() {
                       inputHeight={inputHeight}
                       setInputHeight={setInputHeight}
                     />
+                    {/* Disclaimer - below input pill on welcome screen */}
+                    <p className="text-xs text-gray-500 text-center mt-3">
+                      Koda can make mistakes so check for important information
+                    </p>
                   </div>
 
                 </motion.div>
@@ -1997,9 +2113,9 @@ export default function GeminiChatPage() {
                           book.title?.toLowerCase().includes(bookSearchQuery.toLowerCase()) ||
                           book.authorName?.toLowerCase().includes(bookSearchQuery.toLowerCase())
                         )
-                        .map((book) => (
+                        .map((book, index) => (
                           <motion.div
-                            key={book.id}
+                            key={book.id || `book-${index}`}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             className="group bg-[#252525] rounded-xl overflow-hidden border border-[#2a2a2a] hover:border-[#3a3a3a] transition-all cursor-pointer"
