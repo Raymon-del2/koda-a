@@ -456,7 +456,7 @@ export default function MotionMessage({
         exit="exit"
         className="flex justify-end py-4"
       >
-        <div className="max-w-[80%] bg-[#4a4a4a] text-white px-4 py-3 rounded-2xl rounded-br-md">
+        <div className="max-w-[80%] bg-[#4a4a4a] text-white px-4 py-3 rounded-2xl rounded-br-md min-w-0 break-words overflow-wrap-anywhere">
           <FormattedMessage text={message} sources={sources} onSourceClick={onSourceClick} modelType={modelType} />
         </div>
       </motion.div>

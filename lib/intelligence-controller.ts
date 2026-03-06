@@ -16,14 +16,14 @@ import { generateControllerBias, getIntentBias } from './observability';
 
 // Ollama provider via Hugging Face Space for SLOW MODE
 const ollamaProvider = createOpenAI({
-  baseURL: 'https://ryan33121-nyati-core-api.hf.space/v1',
+  baseURL: process.env.HUGGINGFACE_BASE_URL || 'https://ryan33121-nyati-core-api.hf.space/v1',
   apiKey: process.env.HUGGINGFACE_TOKEN || '',
 });
 
 // Fast planning provider (Hugging Face) - for quick intent detection
 const nyatiCore = createOpenAI({
-  baseURL: 'https://ryan33121-nyati-core-api.hf.space/v1',
-  apiKey: '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',
+  baseURL: process.env.HUGGINGFACE_BASE_URL || 'https://ryan33121-nyati-core-api.hf.space/v1',
+  apiKey: process.env.HUGGINGFACE_TOKEN || '',
 });
 
 // ==========================================

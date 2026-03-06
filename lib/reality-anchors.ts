@@ -19,7 +19,7 @@ import { generateText } from 'ai';
 // Initialize nyati-core for delayed validation
 const nyatiCore = createOpenAI({
   baseURL: 'https://ryan33121-nyati-core-api.hf.space/v1',
-  apiKey: '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',
+  apiKey: process.env.HUGGINGFACE_TOKEN || '',
 });
 
 // ==========================================

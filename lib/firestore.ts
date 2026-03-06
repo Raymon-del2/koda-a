@@ -348,3 +348,92 @@ export const deleteAllInstructions = async (userId: string): Promise<boolean> =>
     return false;
   }
 };
+
+// WhatsNew Update interfaces
+export interface WhatsNewUpdate {
+  id: string;
+  title: string;
+  description: string;
+  date: string;
+  timestamp: Timestamp | number;
+  authorId?: string;
+}
+
+// Load all WhatsNew updates from Firestore
+export const loadWhatsNewUpdates = async (): Promise<WhatsNewUpdate[]> => {
+  try {
+    const updatesRef = collection(db, "whats_new");
+    const q = query(updatesRef, orderBy("timestamp", "desc"), limit(20));
+    const snapshot = await getDocs(q);
+    
+    const updates: WhatsNewUpdate[] = [];
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+      updates.push({
+        id: doc.id,
+        title: data.title || '',
+        description: data.description || '',
+        date: data.date || '',
+        timestamp: data.timestamp || Date.now(),
+        authorId: data.authorId,
+      });
+    });
+    
+    console.log(`✓ Loaded ${updates.length} WhatsNew updates`);
+    return updates;
+  } catch (error) {
+    console.error("Error loading WhatsNew updates:", error);
+    return [];
+  }
+};
+
+// Add a new WhatsNew update (admin only)
+export const addWhatsNewUpdate = async (
+  title: string,
+  description: string,
+  authorId: string
+): Promise<WhatsNewUpdate | null> => {
+  try {
+    const updatesRef = collection(db, "whats_new");
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('en-US', { 
+      weekday: 'short', 
+      month: 'short', 
+      day: 'numeric' 
+    }).replace(/,/g, '');
+    
+    const newUpdate = {
+      title,
+      description,
+      date: dateStr,
+      timestamp: serverTimestamp(),
+      authorId,
+    };
+    
+    const docRef = doc(updatesRef);
+    await setDoc(docRef, newUpdate);
+    
+    console.log(`✓ WhatsNew update added: ${title}`);
+    return {
+      id: docRef.id,
+      ...newUpdate,
+      timestamp: Date.now(),
+    };
+  } catch (error) {
+    console.error("Error adding WhatsNew update:", error);
+    return null;
+  }
+};
+
+// Delete a WhatsNew update (admin only)
+export const deleteWhatsNewUpdate = async (updateId: string): Promise<boolean> => {
+  try {
+    const updateRef = doc(db, "whats_new", updateId);
+    await deleteDoc(updateRef);
+    console.log(`✓ WhatsNew update deleted: ${updateId}`);
+    return true;
+  } catch (error) {
+    console.error("Error deleting WhatsNew update:", error);
+    return false;
+  }
+};

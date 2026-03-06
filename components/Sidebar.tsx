@@ -25,7 +25,12 @@ import {
   Bug,
   Lightbulb,
   Send,
+  Bell,
+  Plus,
+  Megaphone,
+  Calendar,
 } from "lucide-react";
+import { loadWhatsNewUpdates, addWhatsNewUpdate, deleteWhatsNewUpdate, type WhatsNewUpdate } from "../lib/firestore";
 
 interface Chat {
   id: string;
@@ -62,6 +67,9 @@ interface SidebarProps {
   onOpenBooks?: () => void;
 }
 
+// Admin email - only this user can post updates
+const ADMIN_EMAIL = "wambuiraymond03@gmail.com";
+
 export default function Sidebar({
   isOpen,
   setIsOpen,
@@ -93,6 +101,77 @@ export default function Sidebar({
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
   const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
   const [location, setLocation] = useState<{country: string; city: string; loading: boolean}>({country: '', city: '', loading: true});
+  
+  // WhatsNew Updates State
+  const [updatesOpen, setUpdatesOpen] = useState(false);
+  const [updates, setUpdates] = useState<WhatsNewUpdate[]>([]);
+  const [loadingUpdates, setLoadingUpdates] = useState(false);
+  const [addUpdateModalOpen, setAddUpdateModalOpen] = useState(false);
+  const [newUpdateTitle, setNewUpdateTitle] = useState('');
+  const [newUpdateDescription, setNewUpdateDescription] = useState('');
+  const [isSubmittingUpdate, setIsSubmittingUpdate] = useState(false);
+
+  // Check if user is admin
+  const isAdmin = user?.email === ADMIN_EMAIL;
+
+  // Load WhatsNew updates
+  const loadUpdates = async () => {
+    setLoadingUpdates(true);
+    try {
+      const loadedUpdates = await loadWhatsNewUpdates();
+      setUpdates(loadedUpdates);
+    } catch (error) {
+      console.error('Failed to load updates:', error);
+    } finally {
+      setLoadingUpdates(false);
+    }
+  };
+
+  // Load updates when popup opens
+  useEffect(() => {
+    if (updatesOpen && updates.length === 0) {
+      loadUpdates();
+    }
+  }, [updatesOpen]);
+
+  // Add new update (admin only)
+  const handleAddUpdate = async () => {
+    if (!newUpdateTitle.trim() || !newUpdateDescription.trim() || !user?.id) return;
+    
+    setIsSubmittingUpdate(true);
+    try {
+      const newUpdate = await addWhatsNewUpdate(
+        newUpdateTitle.trim(),
+        newUpdateDescription.trim(),
+        user.id
+      );
+      
+      if (newUpdate) {
+        setUpdates(prev => [newUpdate, ...prev]);
+        setNewUpdateTitle('');
+        setNewUpdateDescription('');
+        setAddUpdateModalOpen(false);
+      }
+    } catch (error) {
+      console.error('Failed to add update:', error);
+    } finally {
+      setIsSubmittingUpdate(false);
+    }
+  };
+
+  // Delete update (admin only)
+  const handleDeleteUpdate = async (updateId: string) => {
+    if (!confirm('Delete this update?')) return;
+    
+    try {
+      const success = await deleteWhatsNewUpdate(updateId);
+      if (success) {
+        setUpdates(prev => prev.filter(u => u.id !== updateId));
+      }
+    } catch (error) {
+      console.error('Failed to delete update:', error);
+    }
+  };
 
   // Detect user location
   const detectLocation = async () => {
@@ -471,6 +550,23 @@ export default function Sidebar({
                   >
                     {/* Menu Items */}
                     <div className="border-t border-gray-800 py-1">
+                      {/* Updates Button */}
+                      <button
+                        onClick={() => {
+                          setUpdatesOpen(true);
+                          setSettingsMenuOpen(false);
+                        }}
+                        className="w-full px-4 py-2.5 flex items-center gap-3 text-sm text-gray-300 hover:bg-white/5 transition-colors text-left"
+                      >
+                        <Bell size={16} />
+                        <span>What's New</span>
+                        {updates.length > 0 && (
+                          <span className="ml-auto bg-purple-500 text-white text-xs px-2 py-0.5 rounded-full">
+                            {updates.length}
+                          </span>
+                        )}
+                      </button>
+
                       <button
                         onClick={() => {
                           onOpenBooks?.();
@@ -818,6 +914,193 @@ export default function Sidebar({
                   </p>
                 </div>
               )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* What's New Right Popup */}
+      <AnimatePresence>
+        {updatesOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setUpdatesOpen(false)}
+              className="fixed inset-0 bg-black/50 z-40 backdrop-blur-sm"
+            />
+            
+            {/* Right Popup */}
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className="fixed top-0 right-0 z-50 h-screen w-full max-w-md bg-[#1e1e1e] border-l border-gray-800 shadow-2xl flex flex-col"
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between p-4 border-b border-gray-800">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-purple-500/20 rounded-full flex items-center justify-center">
+                    <Megaphone size={20} className="text-purple-400" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-semibold text-white">What's New</h2>
+                    <p className="text-xs text-gray-400">Updates will appear here</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  {/* Add button - only visible to admin */}
+                  {isAdmin && (
+                    <button
+                      onClick={() => setAddUpdateModalOpen(true)}
+                      className="p-2 bg-purple-500/20 hover:bg-purple-500/30 rounded-full transition-colors"
+                      title="Add new update"
+                    >
+                      <Plus size={20} className="text-purple-400" />
+                    </button>
+                  )}
+                  <button
+                    onClick={() => setUpdatesOpen(false)}
+                    className="p-2 hover:bg-white/10 rounded-full transition-colors"
+                  >
+                    <X size={20} className="text-gray-400" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Updates List */}
+              <div className="flex-1 overflow-y-auto p-4">
+                {loadingUpdates ? (
+                  <div className="flex items-center justify-center h-32">
+                    <div className="w-6 h-6 border-2 border-purple-500 border-t-transparent rounded-full animate-spin" />
+                  </div>
+                ) : updates.length === 0 ? (
+                  <div className="text-center py-8">
+                    <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Bell size={24} className="text-gray-500" />
+                    </div>
+                    <p className="text-gray-400">
+                      No updates yet
+                    </p>
+                    <p className="text-sm text-gray-500 mt-1">
+                      Check back later for news!
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {updates.map((update) => (
+                      <motion.div
+                        key={update.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="bg-[#252525] rounded-xl p-4 border border-gray-800"
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex-1 min-w-0">
+                            <h3 className="text-sm font-medium text-white truncate">
+                              {update.title}
+                            </h3>
+                            <p className="text-xs text-gray-400 mt-1">
+                              {update.description}
+                            </p>
+                            <div className="flex items-center gap-2 mt-3 text-xs text-gray-500">
+                              <Calendar size={12} />
+                              <span>{update.date}</span>
+                            </div>
+                          </div>
+                          {/* Delete button - only visible to admin */}
+                          {isAdmin && (
+                            <button
+                              onClick={() => handleDeleteUpdate(update.id)}
+                              className="p-1.5 hover:bg-red-500/20 rounded-full transition-colors text-red-400 shrink-0"
+                              title="Delete update"
+                            >
+                              <Trash2 size={14} />
+                            </button>
+                          )}
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Add Update Modal (Admin Only) */}
+      <AnimatePresence>
+        {addUpdateModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/70 z-[60] flex items-center justify-center p-4"
+            onClick={() => setAddUpdateModalOpen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              className="bg-[#1e1e1e] border border-[#2a2a2a] rounded-2xl p-6 max-w-md w-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-purple-500/20 rounded-full flex items-center justify-center">
+                  <Megaphone size={20} className="text-purple-400" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-white">
+                    Add Update
+                  </h3>
+                  <p className="text-sm text-gray-400">
+                    Share what's new with users
+                  </p>
+                </div>
+              </div>
+
+              <input
+                type="text"
+                value={newUpdateTitle}
+                onChange={(e) => setNewUpdateTitle(e.target.value)}
+                placeholder="Update title..."
+                className="w-full bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl p-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-purple-500/50 mb-3"
+              />
+
+              <textarea
+                value={newUpdateDescription}
+                onChange={(e) => setNewUpdateDescription(e.target.value)}
+                placeholder="Describe the update..."
+                rows={3}
+                className="w-full bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl p-3 text-white text-sm placeholder-gray-500 resize-none focus:outline-none focus:border-purple-500/50 mb-4"
+              />
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setAddUpdateModalOpen(false)}
+                  className="flex-1 px-4 py-2 bg-[#2a2a2a] hover:bg-[#3a3a3a] rounded-xl transition-colors text-gray-300"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleAddUpdate}
+                  disabled={!newUpdateTitle.trim() || !newUpdateDescription.trim() || isSubmittingUpdate}
+                  className="flex-1 px-4 py-2 bg-purple-500 hover:bg-purple-400 rounded-xl transition-colors text-white font-medium flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isSubmittingUpdate ? (
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <>
+                      <Plus size={16} />
+                      Add Update
+                    </>
+                  )}
+                </button>
+              </div>
             </motion.div>
           </motion.div>
         )}

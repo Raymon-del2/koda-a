@@ -245,7 +245,7 @@ function InputPill({
   }, []);
 
   return (
-    <div className="mx-auto" style={{ width: inputWidth, maxWidth: '100%' }}>
+    <div className="mx-auto w-full max-w-[650px] px-4 sm:px-0">
       {/* Main Input Pill - Gemini Style */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}

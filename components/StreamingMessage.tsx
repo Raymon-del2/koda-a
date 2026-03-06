@@ -619,7 +619,7 @@ export default function StreamingMessage({
         transition={{ duration: 0.3 }}
         className="flex justify-end py-4"
       >
-        <div className="max-w-[85%] bg-white/5 text-white px-5 py-3 rounded-3xl rounded-br-lg border border-white/10 backdrop-blur-sm">
+        <div className="max-w-[85%] bg-white/5 text-white px-5 py-3 rounded-3xl rounded-br-lg border border-white/10 backdrop-blur-sm min-w-0 break-words overflow-wrap-anywhere">
           <div className="text-[15px] leading-relaxed">{message}</div>
         </div>
       </motion.div>
