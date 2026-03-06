@@ -157,8 +157,8 @@ __turbopack_context__.s([
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$qdrant$2f$js$2d$client$2d$rest$2f$dist$2f$esm$2f$qdrant$2d$client$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@qdrant/js-client-rest/dist/esm/qdrant-client.js [app-ssr] (ecmascript)");
 ;
 // Qdrant Cloud configuration
-const QDRANT_URL = process.env.QDRANT_URL || 'https://cfbea264-4259-432f-b479-7ecbb21e36d6.europe-west3-0.gcp.cloud.qdrant.io';
-const QDRANT_API_KEY = process.env.QDRANT_API_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIn0.vxDcVmUJFpFxNj1IXn64Rhso3nncYsArieuhU_PCgNc';
+const QDRANT_URL = process.env.QDRANT_URL;
+const QDRANT_API_KEY = process.env.QDRANT_API_KEY;
 const qdrantClient = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$qdrant$2f$js$2d$client$2d$rest$2f$dist$2f$esm$2f$qdrant$2d$client$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["QdrantClient"]({
     url: QDRANT_URL,
     apiKey: QDRANT_API_KEY

@@ -137,7 +137,7 @@ export interface ResourceFetchResult {
 
 // Default configuration
 const DEFAULT_CONFIG: LiveResourceConfig = {
-  youtubeApiKey: 'AIzaSyA82ZQFsZYuf_yzCsd4QN0tkpRMvKcs6EA',
+  youtubeApiKey: process.env.YOUTUBE_API_KEY,
   maxResultsPerQuery: 10,
   freshnessDays: 365, // 1 year
   minViewCount: 1000,

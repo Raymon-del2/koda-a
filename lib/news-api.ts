@@ -25,7 +25,7 @@ export interface NewsSearchResult {
   error?: string;
 }
 
-const NEWS_API_KEY = '9a80f47dac094753935c8242f403caff';
+const NEWS_API_KEY = process.env.NEWS_API_KEY;
 const BASE_URL = 'https://newsapi.org/v2';
 
 /**

@@ -3,7 +3,7 @@
  * Search for videos and display as cards
  */
 
-const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY || 'AIzaSyA82ZQFsZYuf_yzCsd4QN0tkpRMvKcs6EA';
+const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 const YOUTUBE_API_BASE = 'https://www.googleapis.com/youtube/v3';
 
 export interface YouTubeVideo {
@@ -29,7 +29,7 @@ export async function searchYouTube(
       q: query,
       type: 'video',
       maxResults: maxResults.toString(),
-      key: YOUTUBE_API_KEY,
+      key: YOUTUBE_API_KEY || '',
       order: 'relevance',
     });
 

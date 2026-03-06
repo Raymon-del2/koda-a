@@ -11,26 +11,26 @@ import {
 } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
-// Koda Firebase Config
+// Koda Firebase Config - from environment variables
 const kodaFirebaseConfig = {
-  apiKey: "AIzaSyAyoBS2qSBYCQCzfJcoKig44H-gD2lpjqc",
-  authDomain: "koda-021.firebaseapp.com",
-  projectId: "koda-021",
-  storageBucket: "koda-021.firebasestorage.app",
-  messagingSenderId: "430672411340",
-  appId: "1:430672411340:web:69a7a82ddbe926a71c6069",
-  measurementId: "G-MY056KJXWS"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-// Bxarchi Firebase Config
+// Bxarchi Firebase Config - from environment variables
 const bxarchiFirebaseConfig = {
-  apiKey: "AIzaSyCIIVgDWr9SgOQnvCzqMqKhyw4D7Rv14M8",
-  authDomain: "bxarchi-10a7d.firebaseapp.com",
-  projectId: "bxarchi-10a7d",
-  storageBucket: "bxarchi-10a7d.firebasestorage.app",
-  messagingSenderId: "1085258654675",
-  appId: "1:1085258654675:web:d46facd4549334656a0526",
-  measurementId: "G-BVFCZEX873"
+  apiKey: process.env.NEXT_PUBLIC_BXARCHI_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_BXARCHI_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_BXARCHI_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_BXARCHI_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_BXARCHI_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_BXARCHI_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_BXARCHI_FIREBASE_MEASUREMENT_ID,
 };
 
 // Initialize Koda Firebase (primary app)

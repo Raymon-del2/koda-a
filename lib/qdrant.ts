@@ -1,8 +1,8 @@
 import { QdrantClient } from '@qdrant/js-client-rest';
 
 // Qdrant Cloud configuration
-const QDRANT_URL = process.env.QDRANT_URL || 'https://cfbea264-4259-432f-b479-7ecbb21e36d6.europe-west3-0.gcp.cloud.qdrant.io';
-const QDRANT_API_KEY = process.env.QDRANT_API_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIn0.vxDcVmUJFpFxNj1IXn64Rhso3nncYsArieuhU_PCgNc';
+const QDRANT_URL = process.env.QDRANT_URL;
+const QDRANT_API_KEY = process.env.QDRANT_API_KEY;
 
 // Initialize Qdrant client
 export const qdrantClient = new QdrantClient({
