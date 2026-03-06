@@ -606,7 +606,7 @@ export default function StreamingMessage({
       className="flex items-start gap-3 group py-4 justify-center"
     >
       {/* Agent Avatar with glow during thinking */}
-      <div className="shrink-0 relative">
+      <div className="shrink-0 relative w-8 h-8">
         {isStreaming && displayedContent.length < 50 && <ThinkingGlow />}
         <AgentAvatar modelType={modelType} />
       </div>
