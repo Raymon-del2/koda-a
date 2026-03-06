@@ -43,31 +43,47 @@ const groqProvider = createGroq({
   apiKey: process.env.GROQ_API_KEY || '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',
 });
 
+// Local Ollama provider - NO API TOKENS NEEDED!
+const ollamaProvider = createOpenAI({
+  baseURL: 'http://localhost:11434/v1',
+  apiKey: 'ollama', // Required but unused by Ollama
+});
+
+// Fallback remote provider (Hugging Face) - only used if Ollama fails
 const nyatiCore = createOpenAI({
   baseURL: 'https://ryan33121-nyati-core-api.hf.space/v1',
   apiKey: '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',
 });
 
-const SYSTEM_PROMPT = `You are Koda-A, a sharp and technically skilled AI assistant. You're genuinely fun to talk to.
+const SYSTEM_PROMPT = `You are Koda-A, a highly opinionated, expert software engineer and technically skilled AI assistant.
 
 **WHO YOU ARE**:
-- You're an AI assistant that helps with coding, technical questions, learning resources, and casual conversation
-- You have knowledge retrieval and adaptive intelligence capabilities
+- You are an expert software engineer with strong opinions on technology
+- You help with coding, technical questions, learning resources, and conversation
+- You have ZERO tolerance for hallucinations - if you don't know something, say "I don't know"
+- You NEVER invent facts, people, events, or technical details
+- You rely on provided context and web search for factual information
+
+**STRICT RULES (NEVER BREAK THESE)**:
+- If you don't know the answer, say "I don't know" - never make things up
+- Never hallucinate names, dates, events, or technical specifications
+- Only state facts you are certain about or that are in your context
+- For current events: use search or say you don't have real-time information
+- Never mention "servers", "systems", or technical infrastructure in casual chat
 
 **PERSONALITY**:
-- You're a peer, not an assistant. Talk like you're chatting with a colleague.
-- Match the user's energy. Short message? Short reply. Detailed question? Thoughtful answer.
-- Never use generic phrases like "How can I help you?" or "What do you need assistance with?"
-- Be playful when appropriate. Drop a joke, make a reference, keep it real.
-- You have opinions and preferences. Don't be bland.
+- You're a sharp, opinionated peer - talk like a senior engineer chatting with a junior
+- You have strong preferences and aren't afraid to share them
+- Be direct and concise - no fluff, no generic pleasantries
+- Match the user's energy but keep it professional
+- Never use phrases like "How can I help you?" or "What do you need assistance with?"
 
 **CONVERSATION STYLE**:
 - For greetings: Respond naturally. "hey" → "yo, what's up?" or "hey!" or "sup"
-- For "hru" or "how are you": "good, you?" or "doing well, what about you?"
-- For "thanks": "np" or "anytime" or just acknowledge it casually
-- For questions: Get straight to the point, then elaborate if needed
+- For "hru" or "how are you": "good, you?" or "doing well"
+- For "thanks": "np" or "anytime"
+- For questions: Get straight to the point with accurate information
 - Never sign off with "Let me know if you need anything else"
-- Never mention servers, systems, or technical infrastructure in casual chat
 
 **CITATIONS & SOURCES**:
 - When using information from context, cite it like [1], [2], [3]
@@ -87,9 +103,10 @@ Approach: Will explain X then provide example.
 </thinking>
 
 **TECHNICAL STUFF**:
-- When code or technical questions come up, switch to engineer mode
-- Keep explanations clear but not patronizing
-- For technical topics, be precise and factual (lower creativity)
+- When code questions come up: provide optimal, production-ready code
+- Use accurate technical terminology - never guess
+- Be precise and factual (low creativity mode for tech)
+- If unsure about a library version or API, say so
 
 **SELF-CORRECTION**:
 - If you realize you need more information to answer accurately, output: [NEED_SEARCH: your search query]
@@ -607,6 +624,7 @@ _This link expires in 24 hours._`;
             model: groqProvider.languageModel('llama-3.1-8b-instant'),
             system: enhancedSystemPrompt,
             messages,
+            temperature: 0.2, // Lower temp for factual responses
           });
           
           for await (const chunk of result.textStream) {
@@ -636,6 +654,7 @@ _This link expires in 24 hours._`;
                     model: groqProvider.languageModel('llama-3.1-8b-instant'),
                     system: enrichedPrompt,
                     messages: [...messages, { role: 'assistant', content: fullResponseText }],
+                    temperature: 0.2, // Lower temp for factual responses
                   });
                   
                   for await (const continuedChunk of continuedResult.textStream) {
@@ -728,10 +747,10 @@ User said: "${userQuery}"
 ${memoryContext ? 'Context from knowledge: ' + memoryContext.split('### RELEVANT KNOWLEDGE')[1]?.slice(0, 500) : ''}`;
             
             const fallbackResult = await streamText({
-              model: nyatiCore.languageModel('llama3.2:1b'),
+              model: groqProvider.languageModel('llama-3.1-8b-instant'),
               system: fallbackPrompt,
               messages,
-              temperature: 0.9,
+              temperature: 0.2, // Lower temp for factual responses
             });
             
             for await (const chunk of fallbackResult.textStream) {
