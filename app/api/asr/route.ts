@@ -33,7 +33,7 @@ async function processAudioWithASR(
   };
 }
 
-export function createASRWebSocketServer(port: number = 8080) {
+export async function createASRWebSocketServer(port: number = 8080) {
   const wss = new WebSocketServer({ port });
   
   console.log(`ASR WebSocket server running on port ${port}`);
