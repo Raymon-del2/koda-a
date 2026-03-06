@@ -143,17 +143,7 @@ function TypingIndicator() {
 // Glow effect around AI icon during thinking
 function ThinkingGlow() {
   return (
-    <motion.div
-      className="absolute inset-0 rounded-full"
-      animate={{
-        boxShadow: [
-          '0 0 0 0 rgba(59, 130, 246, 0)',
-          '0 0 20px 5px rgba(59, 130, 246, 0.3)',
-          '0 0 0 0 rgba(59, 130, 246, 0)',
-        ],
-      }}
-      transition={{ duration: 2, repeat: Infinity }}
-    />
+    <div className="absolute -inset-1 rounded-full bg-blue-500/20 blur-md animate-pulse" />
   );
 }
 
@@ -599,7 +589,7 @@ export default function StreamingMessage({
         transition={{ duration: 0.3 }}
         className="flex justify-end py-4"
       >
-        <div className="max-w-[85%] bg-[#4a4a4a] text-white px-4 py-3 rounded-2xl rounded-br-md">
+        <div className="max-w-[85%] bg-white/5 text-white px-5 py-3 rounded-3xl rounded-br-lg border border-white/10 backdrop-blur-sm">
           <div className="text-[15px] leading-relaxed">{message}</div>
         </div>
       </motion.div>
@@ -613,7 +603,7 @@ export default function StreamingMessage({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.3 }}
-      className="flex gap-3 group py-4 justify-center"
+      className="flex items-start gap-3 group py-4 justify-center"
     >
       {/* Agent Avatar with glow during thinking */}
       <div className="shrink-0 relative">
