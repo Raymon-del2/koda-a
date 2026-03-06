@@ -166,9 +166,12 @@ export async function POST(req: Request) {
     }
 
     // Step 1: Extract entity from message
+    console.log('🔍 Extracting entity from:', message);
     const extraction = await extractEntity(message);
+    console.log('📋 Extraction result:', extraction);
     
     if (!extraction.hasEntity || !extraction.confidence || extraction.confidence < 0.7) {
+      console.log('❌ Entity extraction failed or low confidence');
       return NextResponse.json({ hasEntity: false });
     }
 
